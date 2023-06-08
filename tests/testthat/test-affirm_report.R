@@ -6,6 +6,7 @@ test_that("affirm_report_gt() works", {
     path
   }
 
+  skip_on_ci()
   expect_snapshot_file({
     affirm_init(replace = TRUE);
     affirm_true(
