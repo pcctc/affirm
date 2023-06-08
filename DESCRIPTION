@@ -1,27 +1,20 @@
 Package: affirm
 Title: Secular affirmations against data
 Version: 0.0.0.9000
-Authors@R: 
-    c(
-      person(
-        "Daniel D.", "Sjoberg", , "danield.sjoberg@gmail.com", role = c("aut"),
-          comment = c(ORCID = "0000-0003-0862-2018"),
-      ),
-      person(
-        "Travis", "Gerke", , "tgerke@mail.harvard.edu", role = c("aut"), 
-          comment = c(ORCID = "0000-0002-9500-8907")
-      ),
-      person(
-        "Shannon", "Pileggi", , "shannon.pileggi@gmail.com", role = c("aut"),
-          comment = c(ORCID = "0000-0002-7732-4164")
-      ),
-      person(
-        "PCCTC, LLC", email = "zzPDL_PCCTC_Data_Science@mskcc.org", 
-          role = c("cph", "cre")
-      )
-    )
+Authors@R: c(
+    person("Daniel D.", "Sjoberg", , "danield.sjoberg@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0003-0862-2018")),
+    person("Travis", "Gerke", , "tgerke@mail.harvard.edu", role = "aut",
+           comment = c(ORCID = "0000-0002-9500-8907")),
+    person("Shannon", "Pileggi", , "shannon.pileggi@gmail.com", role = "aut",
+           comment = c(ORCID = "0000-0002-7732-4164")),
+    person("PCCTC, LLC", , , "zzPDL_PCCTC_Data_Science@mskcc.org", role = c("cph", "cre"))
+  )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
+URL: https://github.com/pages/pcctc/affirm/,
+    https://pcctc.github.io/affirm/
+BugReports: https://github.com/pcctc/affirm/issues
 Depends: 
     R (>= 4.1)
 Imports: 
@@ -30,17 +23,17 @@ Imports:
     dplyr (>= 1.1.2),
     gt (>= 0.9.0),
     htmltools (>= 0.5.5),
+    openxlsx,
     rlang (>= 1.1.1)
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
     webshot2 (>= 0.1.0)
+VignetteBuilder: 
+    knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-VignetteBuilder: knitr
-LazyData: true
-URL: https://github.com/pages/pcctc/affirm/, https://pcctc.github.io/affirm/
-BugReports: https://github.com/pcctc/affirm/issues
