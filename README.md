@@ -7,6 +7,9 @@
 
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![R-CMD-check](https://github.com/pcctc/affirm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pcctc/affirm/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/pcctc/affirm/branch/main/graph/badge.svg)](https://app.codecov.io/gh/pcctc/affirm?branch=main)
 <!-- badges: end -->
 
 The {affirm} package makes daily affirmation against our data. We use
