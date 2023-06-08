@@ -1,0 +1,101 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+options(pillar.print_min = 3) # only print 3 rows of tibbles
+```
+
+# affirm <a href="https://github.mskcc.org/pages/pcctc/affirm/"><img src="man/figures/logo.png" align="right" height="138" /></a>
+
+<!-- badges: start -->
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+![Coverage](`r mskRutils::use_covr_badge()`)
+<!-- badges: end -->
+
+The {affirm} package makes daily affirmation against our data.
+We use this package to affirm our raw data is as expected, and our derived variables continue to be accurate as data is updated.
+
+1. Raw EDC Data: Use the affirmation functions to make assertions about the raw EDC data. Report errors back to data management, and in some cases make 'corrections' to the data. The issue will still be reported to DM, but these small corrections let us continue our work without dealing with data that should not be present in the data base and simplifies much of our logic downstream.
+
+2. Derived Variables: Each time we derive a new variable, use data affirmation functions to affirm the derivation *continues* to be accurate as the data updates. We'll often use the `affirm_true(error=TRUE)` in this setting, which throws an error when our underlying assumptions are not true and will require us to address the issue before continuing.
+
+The [{pointblank}](https://rich-iannone.github.io/pointblank/) is another package that performs data validations. 
+{pointblank} is far more comprehensive than {affirm}, and {affirm} utilizes many of the ideas and reporting introduced in {pointblank} with defaults and reports tailored for the needs of the PCCTC organization.
+If {affirm} is not a perfect match for you, {pointblank} will likely meet all your validation needs! 
+
+## Installation
+
+1. **One-time** configuration of the [MSK RStudio Package Manager](https://github.mskcc.org/pages/datadojo/mskR/articles/rspm.html)
+
+    ```r
+    install.packages("rstudio.prefs")
+    rstudio.prefs::use_rstudio_secondary_repo(
+      MSK_RSPM = "http://rspm.mskcc.org/MSKREPO/latest"
+    )
+    ```
+
+2. Install {affirm} from the MSK RStudio Package Manager
+
+    ```r
+    install.packages("affirm")
+    ```
+
+3. Install from a development branch for testing
+
+    ```r
+    remotes::install_git("https://github.mskcc.org/pcctc/affirm.git", ref = "main")
+    ```
+
+## Examples
+
+Load the package and initialize a new affirmation session with `affirm_init()`
+
+```{r example}
+library(affirm)
+
+# initiate an affirmation session
+affirm_init(replace = TRUE)
+```
+
+Run the individual affirmations...
+
+```{r}
+as_tibble(mtcars) |>
+  affirm_true(
+    label = "No. cylinders must be 4, 6, or 8",
+    condition = cyl %in% c(4, 6, 8),
+    id = 1,
+    data_frames = "mtcars"
+  ) |>
+  affirm_true(
+    label = "MPG should be less than 33",
+    condition = mpg < 33,
+    id = 2,
+    data_frames = "mtcars"
+  )
+```
+
+Create a report of the results
+
+```r
+affirm_report_gt()
+```
+
+```{r, include=FALSE, echo=FALSE}
+gt::gtsave(affirm_report_gt(), filename = "man/figures/README-gt-report.png")
+```
+
+![](man/figures/README-gt-report.png)
+
+### About the hex logo
+
+The hex art is a depiction of Plato's [allegory of the cave](https://en.wikipedia.org/wiki/Allegory_of_the_cave). Each data table has an ideal [form](https://en.wikipedia.org/wiki/Theory_of_forms), and the {affirm} package will help us confirm that we are viewing it. Also, "forms"...get it? 😜

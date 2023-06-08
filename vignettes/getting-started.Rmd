@@ -1,0 +1,137 @@
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(affirm)
+library(dplyr)
+```
+
+The affirm package was build to run data checks, or affirmations, against data that continually updates.
+In this brief tutorial, we'll walk through the basics of using the package for identifying and reporting errors in the data.
+
+## Validate EDC Data
+
+Validating electronic data capture system data has some nuance different from other types of validation, and the examples below illustrate issues that often arise during EDC validation.
+
+### Initiate 
+
+```{r}
+affirm_init(replace = TRUE)
+
+# this option is used to auto-select columns that appear in the report listings 
+# (default are these IDs and the columns that appear in the condition being tested)
+options('affirm.id_cols' = "SUBJECT")
+```
+
+### Affirm
+
+Affirm that there are no missing subject IDs
+
+```{r}
+affirm_true(
+  RAND,
+  label = "RAND: Subject ID is not missing",
+  condition = !is.na(SUBJECT),
+  id = 1L,
+  priority = 1,
+  data_frames = "RAND"
+)
+```
+
+This time we'll affirm that the randomization assignment is not missing and if it is missing we take the further action of removing those rows from the returned data frame.
+
+```{r}
+RAND <-
+  affirm_true(
+    RAND,
+    label = "RAND: Randomization Group is not missing",
+    condition = !is.na(RAND_GROUP),
+    data_action = filter(., !is.na(RAND_GROUP)),
+    id = 2L,
+    priority = 1,
+    data_frames = "RAND"
+  )
+```
+
+In this affirmation, we merge in data from the DM data set, and check whether the reported subject age aligns with the age group in the randomization stratification variable.
+
+```{r}
+RAND |>
+  left_join(
+    DM |> prepend_df_name() |> select(SUBJECT, DM.AGE) , 
+    by = "SUBJECT"
+  ) |> 
+  affirm_true(
+    label = "RAND: Randomization strata match recorded subject age",
+    condition =
+      (RAND_STRATA %in% "<65yr" & DM.AGE < 65) | (RAND_STRATA %in% ">=65yr" & DM.AGE >= 65),
+    id = 3L,
+    priority = 1,
+    data_frames = "RAND, DM"
+  )
+```
+
+In this example, we will modify the data frame that will be reported to a data management team.
+We will return all rows from the data frame, and include a flag for row with bad inputs.
+
+```{r}
+affirm_true(
+  DM,
+  label = "DM: Subject race is one of 'Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'American Indian or Alaska Native', 'White'",
+  condition = RACE %in% c('Asian', 'Black or African American', 'Native Hawaiian or Other Pacific Islander', 'American Indian or Alaska Native', 'White'),
+  report_listing =
+    select(., SUBJECT, RACE) |> 
+    mutate(..flag.. = ifelse(!lgl_condition, label, NA)),
+  id = 4L,
+  data_frames = "DM"
+)
+
+# we'll take a peak at the 'report_listing' data frame now
+affirm_report_raw_data() |> 
+  filter(id == 4L) |> 
+  pull(data)
+```
+
+### Report
+
+Get a summary of the collection of data affirmations in a gt table with `affirm_report_gt()`.
+The table includes 
+
+```{r}
+affirm_report_gt()
+```
+
+
+## Validate Derived Variables
+
+Using EDC data to derive new variables requires a different style of data validations.
+When validating raw EDC data, we must report bad/inconsistent data to a data manager who will then investigate and correct the data in the source data base.
+When validating derived variables based on raw EDC data, we make assumptions about the data.
+Validations can be used to ensure that whatever assumptions we made on the day we first derived a new variable are still met as the raw EDC data continues to be updated.
+
+For example, imagine you are classifying tumor locations into a broader tumor region variable.
+The first time you write the code, you will classify every location into a broader region, but there is no way to know what may be entered as a new tumor location in the future.
+Therefore, we can write a validation that each location is mapped to a region.
+If a location is not mapped, rather than reporting this to a data management team, you may opt to return an error so you know that the new location needs to be handled. Return errors by using the `affirm_true(error=TRUE)` argument.
+The error message will reference the affirmation label, making it clear why a script has erred.
+
+In this case, you may want to set the following option at the top of a script that derives to analysis variables.
+
+```r
+options("affirm.error" = TRUE)
+```
+
+Every newly derived variable should be associated with **multiple** affirmations to ensure the derivation remains correct into the future.
