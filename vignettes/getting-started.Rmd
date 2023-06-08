@@ -111,11 +111,7 @@ Get a summary of the collection of data affirmations in a gt table with `affirm_
 The table includes 
 
 ```{r}
-affirm_report_gt() |> 
-  gt::opt_interactive(
-    use_filters = TRUE,
-    use_search = TRUE
-  )
+affirm_report_gt()
 ```
 
 
