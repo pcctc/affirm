@@ -22,4 +22,16 @@ test_that("affirm_values() works", {
       )},
     "argument must select one and only one column"
   )
+
+  # ! The `values` argument must be a vector.
+  expect_error({
+    affirm_init(replace = TRUE);
+    mtcars |>
+      affirm_values(
+        label = "No. cylinders must be 4, 6, or 8",
+        column = cyl,
+        values = list(4, 6, 8)
+      )},
+    "argument must be a vector"
+  )
 })
