@@ -1,13 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# affirm <a href="https://github.mskcc.org/pages/pcctc/affirm/"><img src="man/figures/logo.png" align="right" height="138" /></a>
+# affirm <a href="https://github.com/pages/pcctc/affirm/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-![Coverage](https://img.shields.io/badge/Code%20Coverage-97%25-brightgreen)
 <!-- badges: end -->
 
 The {affirm} package makes daily affirmation against our data. We use
@@ -37,26 +36,16 @@ match for you, {pointblank} will likely meet all your validation needs!
 
 ## Installation
 
-1.  **One-time** configuration of the [MSK RStudio Package
-    Manager](https://github.mskcc.org/pages/datadojo/mskR/articles/rspm.html)
+1.  Install the most recent release of {affirm} with
 
     ``` r
-    install.packages("rstudio.prefs")
-    rstudio.prefs::use_rstudio_secondary_repo(
-      MSK_RSPM = "http://rspm.mskcc.org/MSKREPO/latest"
-    )
+    devtools::install_github("pcctc/affirm@*release")
     ```
 
-2.  Install {affirm} from the MSK RStudio Package Manager
+2.  Install from a development branch for testing
 
     ``` r
-    install.packages("affirm")
-    ```
-
-3.  Install from a development branch for testing
-
-    ``` r
-    remotes::install_git("https://github.mskcc.org/pcctc/affirm.git", ref = "main")
+    devtools::install_github("pcctc/affirm")
     ```
 
 ## Examples

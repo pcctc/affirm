@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 options(pillar.print_min = 3) # only print 3 rows of tibbles
 ```
 
-# affirm <a href="https://github.mskcc.org/pages/pcctc/affirm/"><img src="man/figures/logo.png" align="right" height="138" /></a>
+# affirm <a href="https://github.com/pages/pcctc/affirm/"><img src="man/figures/logo.png" align="right" height="138" /></a>
 
 <!-- badges: start -->
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-![Coverage](`r mskRutils::use_covr_badge()`)
+[![R-CMD-check](https://github.com/pcctc/affirm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pcctc/affirm/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The {affirm} package makes daily affirmation against our data.
@@ -34,25 +34,16 @@ If {affirm} is not a perfect match for you, {pointblank} will likely meet all yo
 
 ## Installation
 
-1. **One-time** configuration of the [MSK RStudio Package Manager](https://github.mskcc.org/pages/datadojo/mskR/articles/rspm.html)
+1. Install the most recent release of {affirm} with
 
     ```r
-    install.packages("rstudio.prefs")
-    rstudio.prefs::use_rstudio_secondary_repo(
-      MSK_RSPM = "http://rspm.mskcc.org/MSKREPO/latest"
-    )
+    devtools::install_github("pcctc/affirm@*release")
     ```
 
-2. Install {affirm} from the MSK RStudio Package Manager
+2. Install from a development branch for testing
 
     ```r
-    install.packages("affirm")
-    ```
-
-3. Install from a development branch for testing
-
-    ```r
-    remotes::install_git("https://github.mskcc.org/pcctc/affirm.git", ref = "main")
+    devtools::install_github("pcctc/affirm")
     ```
 
 ## Examples

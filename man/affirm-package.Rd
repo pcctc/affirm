@@ -13,7 +13,9 @@ What the package does (one paragraph).
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.mskcc.org/pages/pcctc/affirm/}
+  \item \url{https://github.com/pages/pcctc/affirm/}
+  \item \url{https://pcctc.github.io/affirm/}
+  \item Report bugs at \url{https://github.com/pcctc/affirm/issues}
 }
 
 }

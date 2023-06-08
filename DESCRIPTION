@@ -26,4 +26,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 LazyData: true
-URL: https://github.mskcc.org/pages/pcctc/affirm/
+URL: https://github.com/pages/pcctc/affirm/, https://pcctc.github.io/affirm/
+BugReports: https://github.com/pcctc/affirm/issues

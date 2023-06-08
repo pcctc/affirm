@@ -1,7 +1,7 @@
-url: https://github.mskcc.org/pages/pcctc/affirm/
+url: https://pcctc.github.io/affirm/
 template:
   bootstrap: 5
-  bootswatch: spacelab
+  bootswatch: flatly
 
 # development:
 #   mode: auto
@@ -20,25 +20,24 @@ navbar:
     href: news/index.html
   right:
   - icon: fa-github fa-lg
-    href: https://github.mskcc.org/pcctc/affirm
+    href: https://github.com/pcctc/affirm
 
 reference:
-  - title: Initialize and Report Affirmations
-  - contents:
-      - affirm_init
-      - affirm_report_gt
+- title: Initialize and Report Affirmations
+- contents:
+  - affirm_init
+  - affirm_report_gt
 
-  - title: Make Affirmations
-  - contents:
-      - affirm_true
-      - affirm_values
+- title: Make Affirmations
+- contents:
+  - affirm_true
+  - affirm_values
 
-  - title: Affirmation Utilities
-  - contents:
-      - prepend_df_name
+- title: Affirmation Utilities
+- contents: prepend_df_name
 
-  - title: Data
-  - contents:
-      - RAND
-      - DM
+- title: Data
+- contents:
+  - RAND
+  - DM
 
