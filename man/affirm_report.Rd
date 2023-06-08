@@ -3,12 +3,20 @@
 \name{affirm_report}
 \alias{affirm_report}
 \alias{affirm_report_gt}
+\alias{affirm_export_excel}
 \alias{affirm_report_raw_data}
 \title{Affirmation Report}
 \usage{
 affirm_report_gt()
 
+affirm_export_excel(file, overwrite = TRUE)
+
 affirm_report_raw_data()
+}
+\arguments{
+\item{file}{A file path to save the xlsx file}
+
+\item{overwrite}{Overwrite existing file (Defaults to \code{TRUE} as with \code{write.table})}
 }
 \value{
 gt table
@@ -17,6 +25,7 @@ gt table
 \itemize{
 \item \code{affirm_report_gt()} returns styled gt table summarizing results of affirmation session.
 \item \code{affirm_report_raw_data()} returns raw data used to generate summary in \code{affirm_report_gt()}
+\item \code{affirm_export_excel()} returns excel file with one sheet per affirmation (excluding those with no errors)
 }
 }
 \examples{
