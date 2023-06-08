@@ -2,8 +2,24 @@ Package: affirm
 Title: Secular affirmations against data
 Version: 0.0.0.9000
 Authors@R: 
-    person("Daniel D.", "Sjoberg", , "danield.sjoberg@gmail.com", role = c("aut", "cre", "cph"),
-           comment = c(ORCID = "0000-0003-0862-2018"))
+    c(
+      person(
+        "Daniel D.", "Sjoberg", , "danield.sjoberg@gmail.com", role = c("aut"),
+          comment = c(ORCID = "0000-0003-0862-2018"),
+      ),
+      person(
+        "Travis", "Gerke", , "tgerke@mail.harvard.edu", role = c("aut"), 
+          comment = c(ORCID = "0000-0002-9500-8907")
+      ),
+      person(
+        "Shannon", "Pileggi", , "shannon.pileggi@gmail.com", role = c("aut"),
+          comment = c(ORCID = "0000-0002-7732-4164")
+      ),
+      person(
+        "PCCTC, LLC", email = "zzPDL_PCCTC_Data_Science@mskcc.org", 
+          role = c("cph", "cre")
+      )
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Depends: 

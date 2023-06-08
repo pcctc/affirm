@@ -20,7 +20,14 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Daniel D. Sjoberg \email{danield.sjoberg@gmail.com} (\href{https://orcid.org/0000-0003-0862-2018}{ORCID}) [copyright holder]
+\strong{Maintainer}: PCCTC, LLC \email{zzPDL_PCCTC_Data_Science@mskcc.org} [copyright holder]
+
+Authors:
+\itemize{
+  \item Daniel D. Sjoberg \email{danield.sjoberg@gmail.com} (\href{https://orcid.org/0000-0003-0862-2018}{ORCID})
+  \item Travis Gerke \email{tgerke@mail.harvard.edu} (\href{https://orcid.org/0000-0002-9500-8907}{ORCID})
+  \item Shannon Pileggi \email{shannon.pileggi@gmail.com} (\href{https://orcid.org/0000-0002-7732-4164}{ORCID})
+}
 
 }
 \keyword{internal}
