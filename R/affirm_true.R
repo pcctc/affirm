@@ -64,19 +64,21 @@ affirm_true <- function(data,
   .check_args_affirm_true(data = data, label = label, id = id, priority = priority, data_frames = data_frames, columns = columns)
 
   # capture inputs as expressions ----------------------------------------------
-  condition <- rlang::enexpr(condition)
-  report_listing <- rlang::enexpr(report_listing)
-  data_action <- rlang::enexpr(data_action)
+  condition <- rlang::enquo(condition)
+  report_listing <- rlang::enquo(report_listing)
+  data_action <- rlang::enquo(data_action)
   columns <- dplyr::coalesce(columns, all.vars(condition) |> paste(collapse = ", "))
-  if (.is_expression_null(report_listing))
-    report_listing <- expr(filter(., !.env$lgl_condition) |> select(any_of(getOption("affirm.id_cols")), any_of(all.vars(condition))))
+  if (.is_quo_null(report_listing))
+    report_listing <-
+    rlang::quo(filter(., !.env$lgl_condition) |> select(any_of(getOption("affirm.id_cols")), any_of(!!all.vars(condition)))) |>
+    structure(.Environment = rlang::caller_env()) # add the calling env as the quo env attribute
 
   # make affirmation -----------------------------------------------------------
   lgl_condition <- .evaluate_condition_argument(data, condition, label, error)
 
   # issues export --------------------------------------------------------------
   df_report_listing <-
-    rlang::eval_tidy(report_listing, data = list('.' = data))
+    rlang::eval_tidy(report_listing, data = list('.' = data, lgl_condition = lgl_condition, label = label))
 
   if (!is.data.frame(df_report_listing)) {
     cli::cli_abort(c("x" = "The result of evaluated expression of {.code report_listing=} must be a data frame."))
@@ -99,12 +101,12 @@ affirm_true <- function(data,
   cli::cli_inform(c(" " = "{.val {sum(!lgl_condition)}} issue{?s} identified."))
 
   # take an additional action if requested -------------------------------------
-  data_action_is_null <- .is_expression_null(data_action)
+  data_action_is_null <- .is_quo_null(data_action)
   if (!data_action_is_null) {
     data <-
       rlang::eval_tidy(
         expr = data_action,
-        data = as.list(data) |> c(list('.' = data))
+        data = as.list(data) |> c(list('.' = data, lgl_condition = lgl_condition, label = label))
       )
   }
 

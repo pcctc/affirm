@@ -11,6 +11,20 @@ test_that("affirm_values() works", {
       as_tibble()}
   )
 
+  # works with an externally defined object
+  expect_snapshot({
+    acceptable_levels <- c(4, 6, 8);
+    affirm_init(replace = TRUE);
+    affirm_values(
+      mtcars,
+      label = "externally defined object",
+      column = "cyl",
+      values = acceptable_levels
+    ) |>
+      as_tibble()}
+  )
+
+
   # ! The `column` argument must select one and only one column.
   expect_error({
     affirm_init(replace = TRUE);

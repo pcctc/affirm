@@ -47,10 +47,15 @@ affirm_values <- function(data,
   report_listing <- rlang::enexpr(report_listing)
   data_action <- rlang::enexpr(data_action)
 
+  # construct condition quo() --------------------------------------------------
+  quo_condition <-
+    rlang::quo(!!rlang::sym(column) %in% !!values) |>
+    structure(.Environment = rlang::caller_env()) # add the calling env as the quo env attribute
+
   # pass arguments to affirm_true() --------------------------------------------
   affirm_true(data = data,
               label = label,
-              condition = !!expr(!!rlang::sym(column) %in% !!values),
+              condition = !!quo_condition,
               id = id,
               priority = priority,
               data_frames = data_frames,

@@ -40,6 +40,12 @@
   )
 }
 
-.is_expression_null <- function(x) {
-  tryCatch(rlang::inject(is.null(!!x)), error = function(e) FALSE)
+
+# this is somewhat more complex than `rlang::quo_is_null()`
+# the rlang function only tests for an EXACT NULL value.
+# e.g. rlang::quo(NULL) |> rlang::quo_is_null() IS TRUE
+# e.g. test_null <- NULL; rlang::quo(test_null) |> rlang::quo_is_null() IS FALSE
+.is_quo_null <- function(x) {
+  tryCatch(rlang::eval_tidy(x) |> is.null(), error = function(e) FALSE)
+  # tryCatch(rlang::inject(is.null(!!x)), error = function(e) FALSE)
 }

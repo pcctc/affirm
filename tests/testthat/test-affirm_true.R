@@ -10,6 +10,18 @@ test_that("affirm_true() works", {
       as_tibble()}
   )
 
+  # works with an externally defined object
+  expect_snapshot({
+    acceptable_levels <- c(4, 6, 8);
+    affirm_init(replace = TRUE);
+    affirm_true(
+      mtcars,
+      label = "externally defined object",
+      condition = cyl %in% acceptable_levels
+    ) |>
+      as_tibble()}
+  )
+
   # return the full mtcars df in the report
   expect_snapshot({
     affirm_init(replace = TRUE);
