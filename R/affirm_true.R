@@ -67,7 +67,7 @@ affirm_true <- function(data,
   condition <- rlang::enquo(condition)
   report_listing <- rlang::enquo(report_listing)
   data_action <- rlang::enquo(data_action)
-  columns <- dplyr::coalesce(columns, all.vars(condition) |> paste(collapse = ", "))
+  columns <- dplyr::coalesce(columns, all.vars(condition) |> setdiff(c(".data", ".env")) |> paste(collapse = ", "))
   if (.is_quo_null(report_listing))
     report_listing <-
     rlang::quo(filter(., !.env$lgl_condition) |> select(any_of(getOption("affirm.id_cols")), any_of(!!all.vars(condition)))) |>
