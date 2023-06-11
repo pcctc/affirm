@@ -25,7 +25,10 @@ affirm_range(
 
 \item{column}{a single column to check values of}
 
-\item{range}{vector of length two indicating the upper and lower bounds of the range}
+\item{range}{vector of length two indicating the upper and lower bounds of the range.
+The class of the \code{range} must be compatible with the \code{column}, e.g. if \code{column}
+is numeric, \code{range} must also be numeric; if \code{column} is a date, range must be a
+date; if \code{column} is an integer, \code{range} must be an integer, etc.}
 
 \item{boundaries}{logical vector of length 2 indicating whether to include UB and LB in
 the range check. Default is \code{c(TRUE, TRUE)}}

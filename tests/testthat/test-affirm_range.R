@@ -36,6 +36,26 @@ test_that("affirm_range() works", {
     )
     affirm_report_raw_data()$data}
   )
+
+  # test a date column
+  expect_snapshot({
+    affirm_init(replace = TRUE)
+    affirm_range(
+      data = data.frame(x = as.Date("2000-01-01")),
+      label = "Check a date range",
+      column = "x",
+      range = c(as.Date("2000-01-01") - 1, as.Date("2000-01-01") + 1)
+    )
+    affirm_range(
+      data = data.frame(x = as.Date("2000-01-01")),
+      label = "Check a date range, excluding boundaries points",
+      column = "x",
+      range = c(as.Date("2000-01-01"), as.Date("2000-01-01") + 1),
+      boundaries = FALSE
+    )
+    affirm_report_raw_data()$data}
+  )
+
 })
 
 test_that("affirm_range() throws errors", {
@@ -46,7 +66,7 @@ test_that("affirm_range() throws errors", {
     "are required"
   )
 
-  # ! The `range` argument must be a numeric vector of length 2.
+  # ! The `range` argument must be a vector of length 2.
   expect_error({
     affirm_init(replace = TRUE)
     affirm_range(
@@ -55,7 +75,7 @@ test_that("affirm_range() throws errors", {
       column = "mpg",
       range = 1:6
     )},
-    "argument must be a numeric vector of length 2"
+    "argument must be a vector of length 2"
   )
 
   # ! The `column` argument must select one and only one column.
@@ -78,7 +98,7 @@ test_that("affirm_range() throws errors", {
       column = "mpg",
       range = c(20, 30)
     )},
-    "column must be numeric"
+    "argument class to match column"
   )
 
   # ! The `boundaries` argument must be class logical.

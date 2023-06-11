@@ -6,7 +6,10 @@
 #'
 #' @inheritParams affirm_true
 #' @param column a single column to check values of
-#' @param range vector of length two indicating the upper and lower bounds of the range
+#' @param range vector of length two indicating the upper and lower bounds of the range.
+#' The class of the `range` must be compatible with the `column`, e.g. if `column`
+#' is numeric, `range` must also be numeric; if `column` is a date, range must be a
+#' date; if `column` is an integer, `range` must be an integer, etc.
 #' @param boundaries logical vector of length 2 indicating whether to include UB and LB in
 #' the range check. Default is `c(TRUE, TRUE)`
 #' @param id,priority,data_frames Optional additional information that will be passed to affirmation report.
@@ -46,14 +49,17 @@ affirm_range <- function(data,
   if (missing(data) || missing(column) || missing(range)) {
     cli::cli_abort("Arguments {.code data}, {.code column}, and {.code range} are required.")
   }
-  if (!rlang::is_vector(range) || rlang::is_list(range) || length(range) != 2L || !is.numeric(range)) {
-    cli::cli_abort("The {.code range} argument must be a numeric vector of length 2.")
+  if (!rlang::is_vector(range) || rlang::is_list(range) || length(range) != 2L) {
+    cli::cli_abort("The {.code range} argument must be a vector of length 2.")
   }
   column <- dplyr::select(data, {{ column }}) |> colnames()
   if (length(column) != 1L)
     cli::cli_abort("The {.code column} argument must select one and only one column.")
-  if (!inherits(data[[column]], "numeric")) {
-    cli::cli_abort("The {.val {column}} column must be numeric.")
+  if (!inherits(data[[column]], class(range))) {
+    cli::cli_abort(
+      c("i" = "The class of column {.val {column}} ({.cls {class(data[[column]])}}) is incompatible with the class of {.code range} ({.cls {class(range)}}).",
+        "x" = "Update the {.code range} argument class to match column {.val {column}}")
+    )
   }
   if (!is.logical(boundaries)) {
     cli::cli_abort("The {.code boundaries} argument must be class logical.")

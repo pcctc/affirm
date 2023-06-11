@@ -272,3 +272,39 @@
       Maserati Bora       15.0 MPG is >=21 and <=30.4
       
 
+---
+
+    Code
+      affirm_init(replace = TRUE)
+    Message
+      v We're ready to make data affirmations...
+    Code
+      affirm_range(data = data.frame(x = as.Date("2000-01-01")), label = "Check a date range",
+      column = "x", range = c(as.Date("2000-01-01") - 1, as.Date("2000-01-01") + 1))
+    Message
+      * Check a date range
+        0 issues identified.
+    Output
+                 x
+      1 2000-01-01
+    Code
+      affirm_range(data = data.frame(x = as.Date("2000-01-01")), label = "Check a date range, excluding boundaries points",
+      column = "x", range = c(as.Date("2000-01-01"), as.Date("2000-01-01") + 1),
+      boundaries = FALSE)
+    Message
+      * Check a date range, excluding boundaries points
+        1 issue identified.
+    Output
+                 x
+      1 2000-01-01
+    Code
+      affirm_report_raw_data()$data
+    Output
+      [[1]]
+                 x
+      1 2000-01-01
+      
+      [[2]]
+      NULL
+      
+
