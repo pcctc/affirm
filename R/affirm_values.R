@@ -44,8 +44,8 @@ affirm_values <- function(data,
   if (missing(values) || !rlang::is_vector(values) || rlang::is_list(values))
     cli::cli_abort("The {.code values} argument must be a vector.")
 
-  report_listing <- rlang::enexpr(report_listing)
-  data_action <- rlang::enexpr(data_action)
+  report_listing <- rlang::enquo(report_listing)
+  data_action <- rlang::enquo(data_action)
 
   # construct condition quo() --------------------------------------------------
   quo_condition <-
