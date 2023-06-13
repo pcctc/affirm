@@ -1,4 +1,4 @@
-test_that("affirm_report_gt() works", {
+test_that("affirm_report() works", {
 
 
   expect_error({
@@ -19,13 +19,26 @@ test_that("affirm_report_gt() works", {
       label = "leave it all, no actions",
       condition = mpg > 33
     );
-    affirm_export_excel(file = tempfile(fileext = ".xlsx"))},
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
     NA
+  )
+
+  # labels are added to report when requested
+  expect_snapshot({
+    mtcars2 <- dplyr::as_tibble(mtcars)
+    attr(mtcars2$mpg, 'label') <- "MPG LABEL"
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars2,
+      label = "leave it all, no actions",
+      condition = mpg > 33
+    )
+    affirm_report_raw_data(variable_labels = TRUE)$data}
   )
 })
 
 
-test_that("affirm_report_gt() works, but skip in CI", {
+test_that("affirm_report() works, but skip in CI", {
   skip_on_ci()
 
   # helper function to create png of report, and return path

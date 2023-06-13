@@ -28,7 +28,7 @@ gt table
 \description{
 \itemize{
 \item \code{affirm_report_gt()} returns styled gt table summarizing results of affirmation session.
-\item \code{affirm_export_excel()} returns excel file with one sheet per affirmation (excluding those with no errors)
+\item \code{affirm_report_excel()} returns excel file with one sheet per affirmation (excluding those with no errors)
 \item \code{affirm_report_raw_data()} returns raw data used to generate summary in \code{affirm_report_gt()}
 }
 }
