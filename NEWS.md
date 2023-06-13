@@ -8,6 +8,8 @@
 
 * Added `affirm_range()` function to check ranges of numeric, date, and other types of columns.
 
+* Added `affirm_false()` function to check conditions expected to be false.
+
 * Updated package internals to use quosures instead of expressions for proper environment handling. (#5)
 
 # affirm 0.1.0
