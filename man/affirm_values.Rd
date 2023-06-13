@@ -71,6 +71,7 @@ affirm_close()
 }
 \seealso{
 Other Data Affirmations: 
+\code{\link{affirm_na}},
 \code{\link{affirm_true}()}
 }
 \concept{Data Affirmations}
