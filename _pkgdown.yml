@@ -32,6 +32,7 @@ reference:
 - contents:
   - affirm_true
   - affirm_values
+  - affirm_no_dupes
 
 - title: Affirmation Utilities
 - contents: prepend_df_name
