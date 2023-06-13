@@ -57,22 +57,20 @@
   # # this hides optional columns that are all NA
   # # this code does not work in gt 0.9.0, because it errors if no columns are selected.
   # # I submitted a PR to gt to allow for no columns being selected and should be in the next release
-  # gt::cols_hide(columns = where(all_na))
-}
-
-all_na <- function(x) {
-  all(is.na(x))
+  # gt::cols_hide(columns = where(\(x) all(is.na(x))))
 }
 
 
 # converts a data frame to a clickable CSV download link
-.as_csv_encoded_html_download_link <- function(data, output_file_name = "extract.csv") {
+.as_csv_encoded_html_download_link <- function(data,
+                                               output_file_name = "extract.csv",
+                                               variable_labels = FALSE) {
   if (is.null(data)) return("&mdash;")
 
   temp_file <-
     tempfile(pattern = paste0("csv_file"), fileext = ".csv")
 
-  utils::write.csv(data, file = temp_file, row.names = FALSE)
+  readr::write_csv(data, file = temp_file, col_names = !variable_labels)
   on.exit(unlink(temp_file))
 
   file_encoded <- base64enc::base64encode(temp_file)
@@ -98,4 +96,30 @@ all_na <- function(x) {
       )
     )
   )
+}
+
+
+# this function adds two new rows to the data frame: column names and column labels
+.add_row_of_column_labels <- function(data) {
+  # extract labels as list -----------------------------------------------------
+  lst_labels <-
+    mapply(
+      FUN = function(x, y) attr(x, 'label') %||% y,
+      data |> as.list(),
+      names(data),
+      SIMPLIFY = FALSE,
+      USE.NAMES = FALSE
+    ) |>
+    stats::setNames(names(data))
+
+  # make all columns character -------------------------------------------------
+  data <- data |> dplyr::mutate(dplyr::across(everything(), as.character))
+
+  # add a row with just the column names ---------------------------------------
+  data <- tibble::add_row(data, !!!stats::setNames(as.list(names(data)), names(data)), .before = 0L)
+
+  # add a row with the column labels -------------------------------------------
+  data <- tibble::add_row(data, !!!lst_labels, .before = 0L)
+
+  data
 }
