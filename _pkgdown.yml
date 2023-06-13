@@ -32,6 +32,7 @@ reference:
 - contents:
   - affirm_true
   - affirm_values
+  - affirm_class
   - affirm_na
   - affirm_no_dupes
   - affirm_range
