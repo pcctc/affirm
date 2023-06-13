@@ -1,5 +1,7 @@
 # affirm (development version)
 
+* Added `affirm_class()` function to check column classes.
+
 * Added `affirm_na()` and `affirm_not_na()` functions to check for NA values.
 
 * Added `affirm_no_dupes()` function to check for duplicate rows.
