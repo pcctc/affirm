@@ -36,6 +36,7 @@ reference:
   - affirm_na
   - affirm_no_dupes
   - affirm_range
+  - affirm_false
 
 - title: Affirmation Utilities
 - contents: prepend_df_name
