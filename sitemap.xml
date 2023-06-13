@@ -4,12 +4,6 @@
     <loc>https://pcctc.github.io/affirm/404.html</loc>
   </url>
   <url>
-    <loc>https://pcctc.github.io/affirm/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://pcctc.github.io/affirm/LICENSE.html</loc>
-  </url>
-  <url>
     <loc>https://pcctc.github.io/affirm/articles/getting-started.html</loc>
   </url>
   <url>
@@ -22,13 +16,13 @@
     <loc>https://pcctc.github.io/affirm/index.html</loc>
   </url>
   <url>
+    <loc>https://pcctc.github.io/affirm/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://pcctc.github.io/affirm/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>https://pcctc.github.io/affirm/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://pcctc.github.io/affirm/reference/DM.html</loc>
-  </url>
-  <url>
-    <loc>https://pcctc.github.io/affirm/reference/RAND.html</loc>
   </url>
   <url>
     <loc>https://pcctc.github.io/affirm/reference/affirm-package.html</loc>
@@ -46,10 +40,16 @@
     <loc>https://pcctc.github.io/affirm/reference/affirm_values.html</loc>
   </url>
   <url>
+    <loc>https://pcctc.github.io/affirm/reference/DM.html</loc>
+  </url>
+  <url>
     <loc>https://pcctc.github.io/affirm/reference/index.html</loc>
   </url>
   <url>
     <loc>https://pcctc.github.io/affirm/reference/prepend_df_name.html</loc>
+  </url>
+  <url>
+    <loc>https://pcctc.github.io/affirm/reference/RAND.html</loc>
   </url>
   <url>
     <loc>https://pcctc.github.io/affirm/reference/reexports.html</loc>
