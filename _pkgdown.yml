@@ -3,9 +3,9 @@ template:
   bootstrap: 5
   bootswatch: flatly
 
-# development:
-#   mode: auto
-#   version_label: default
+development:
+  mode: auto
+  version_label: default
 
 navbar:
   type: default
@@ -33,6 +33,7 @@ reference:
   - affirm_true
   - affirm_values
   - affirm_no_dupes
+  - affirm_range
 
 - title: Affirmation Utilities
 - contents: prepend_df_name
