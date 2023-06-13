@@ -6,13 +6,13 @@
 #   columns <- rlang::enexpr(columns)
 #
 #   # add rows expression to a filter() call -------------------------------------
-#   if (!.is_expression_null(rows)) {
+#   if (!.is_quo_null(rows)) {
 #     rows_expr <- rlang::expr(dplyr::filter(!!rows))
 #   }
 #   else rows_expr <- NULL
 #
 #   # add columns expression to a select() call ----------------------------------
-#   if (!.is_expression_null(columns)) {
+#   if (!.is_quo_null(columns)) {
 #     columns_expr <- rlang::expr(dplyr::select(!!columns))
 #   }
 #   else columns_expr <- NULL
