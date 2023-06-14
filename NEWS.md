@@ -1,4 +1,4 @@
-# affirm (development version)
+# affirm 0.2.0
 
 * Changed function name `affirm_export_excel()` to `affirm_report_excel()`.
 
