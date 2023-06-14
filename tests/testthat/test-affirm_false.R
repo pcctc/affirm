@@ -16,3 +16,15 @@ test_that("affirm_false() works", {
       affirm_report_raw_data()$data}
   )
 })
+
+test_that("affirm_false() throws errors", {
+  # ! Arguments `data`, `label`, and `condition` are required.
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_false(
+      mtcars,
+      condition = !cyl %in% c(4, 6)
+    )},
+    "are required"
+  )
+})

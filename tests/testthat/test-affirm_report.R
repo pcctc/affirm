@@ -1,13 +1,16 @@
 test_that("affirm_report() works", {
-
-
   expect_error({
-    affirm_init(replace = TRUE);
+    affirm_init(replace = TRUE)
+    affirm_not_na(
+      mtcars,
+      label = "mpg is not missing",
+      column = mpg
+    )
     affirm_true(
       mtcars,
       label = "leave it all, no actions",
       condition = mpg > 33
-    );
+    )
     affirm_report_gt()},
     NA
   )

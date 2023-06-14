@@ -41,4 +41,11 @@ test_that("affirm_no_dupes() throws errors", {
     )},
     "argument must select at least one column from"
   )
+
+  # ! Arguments `data`, `label`, and `columns` are required.
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_no_dupes()},
+    "are required"
+  )
 })

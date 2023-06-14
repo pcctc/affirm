@@ -31,8 +31,8 @@ affirm_na <- function(data,
                       data_action = NULL,
                       error = getOption("affirm.error", default = FALSE)) {
   # check and process inputs ---------------------------------------------------
-  if (missing(data) || missing(column)) {
-    cli::cli_abort("Arguments {.code data} and {.code column} are required.")
+  if (missing(data) || missing(column) || missing(label)) {
+    cli::cli_abort("Arguments {.code data}, {.code label}, and {.code column} are required.")
   }
   column <- dplyr::select(data, {{ column }}) |> colnames()
   if (length(column) != 1L)
