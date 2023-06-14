@@ -46,8 +46,8 @@ affirm_range <- function(data,
                          data_action = NULL,
                          error = getOption("affirm.error", default = FALSE)) {
   # check and process inputs ---------------------------------------------------
-  if (missing(data) || missing(column) || missing(range)) {
-    cli::cli_abort("Arguments {.code data}, {.code column}, and {.code range} are required.")
+  if (missing(data) || missing(column) || missing(range) || missing(label)) {
+    cli::cli_abort("Arguments {.code data}, {.code label}, {.code column}, and {.code range} are required.")
   }
   if (!rlang::is_vector(range) || rlang::is_list(range) || length(range) != 2L) {
     cli::cli_abort("The {.code range} argument must be a vector of length 2.")

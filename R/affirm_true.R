@@ -60,6 +60,9 @@ affirm_true <- function(data,
                         data_action = NULL,
                         error = getOption("affirm.error", default = FALSE)) {
   # check inputs ---------------------------------------------------------------
+  if (missing(data) || missing(label) || missing(condition)) {
+    cli::cli_abort("Arguments {.code data}, {.code label}, and {.code condition} are required.")
+  }
   .check_affirm_initialized()
   .check_args_affirm_true(data = data, label = label, id = id, priority = priority, data_frames = data_frames, columns = columns)
 

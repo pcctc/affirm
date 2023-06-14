@@ -1,3 +1,7 @@
+# affirm (development version)
+
+* Added `affirm_clean_join()` function to check column names don't end in `".x"` or `".y"`.
+
 # affirm 0.2.0
 
 * Changed function name `affirm_export_excel()` to `affirm_report_excel()`.

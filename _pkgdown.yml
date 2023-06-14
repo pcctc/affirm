@@ -26,7 +26,7 @@ reference:
 - title: Initialize and Report Affirmations
 - contents:
   - affirm_init
-  - affirm_report_gt
+  - affirm_report
 
 - title: Make Affirmations
 - contents:
@@ -37,6 +37,7 @@ reference:
   - affirm_no_dupes
   - affirm_range
   - affirm_false
+  - affirm_clean_join
 
 - title: Affirmation Utilities
 - contents: prepend_df_name

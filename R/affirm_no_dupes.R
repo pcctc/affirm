@@ -35,6 +35,9 @@ affirm_no_dupes <- function(data,
                             data_action = NULL,
                             error = getOption("affirm.error", default = FALSE)) {
   # check and process inputs ---------------------------------------------------
+  if (missing(data) || missing(columns) || missing(label)) {
+    cli::cli_abort("Arguments {.code data}, {.code label}, and {.code columns} are required.")
+  }
   columns <- dplyr::select(data, {{ columns }}) |> colnames()
   if (rlang::is_empty(columns)) {
     cli::cli_abort("The {.code columm} argument must select at least one column from {.code data}.")

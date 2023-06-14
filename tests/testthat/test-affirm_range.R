@@ -95,6 +95,7 @@ test_that("affirm_range() throws errors", {
     affirm_init(replace = TRUE)
     affirm_range(
       mtcars |> dplyr::mutate(mpg = as.character(mpg)),
+      label = "checking class errors",
       column = "mpg",
       range = c(20, 30)
     )},
@@ -107,6 +108,7 @@ test_that("affirm_range() throws errors", {
     affirm_range(
       mtcars,
       column = "mpg",
+      label = "checking boundaries errors",
       range = c(20, 30),
       boundaries = letters
     )},

@@ -30,6 +30,11 @@ affirm_false <- function(data,
                          report_listing = NULL,
                          data_action = NULL,
                          error = getOption("affirm.error", default = FALSE)) {
+  # check inputs ---------------------------------------------------------------
+  if (missing(data) || missing(label) || missing(condition)) {
+    cli::cli_abort("Arguments {.code data}, {.code label}, and {.code condition} are required.")
+  }
+
   # construct condition to pass to `affirm_true()` -----------------------------
   condition <- rlang::enquo(condition)
   rlang::f_rhs(condition) <- rlang::expr(! (!!rlang::f_rhs(condition)))

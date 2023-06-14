@@ -176,4 +176,23 @@ test_that("affirm_true() error messaging", {
     )},
     "First run"
   )
+
+  # ! Arguments `data`, `label`, and `condition` are required.
+  expect_error({
+    affirm_init(replace = TRUE);
+    affirm_true()},
+    "are required"
+  )
+
+  # ! Arguments `id=`, `priority=` must be a integers of length one.
+  expect_error({
+    affirm_init(replace = TRUE);
+    affirm_true(
+      mtcars,
+      label = "leave it all, no actions",
+      condition = mpg > 33,
+      id = 45.5
+    )},
+    "must be a integers of length one"
+  )
 })
