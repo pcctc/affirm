@@ -2,7 +2,7 @@
 
 * Changed function name `affirm_export_excel()` to `affirm_report_excel()`.
 
-* Added a `variable_labels=` argument to `affirm_report_raw_data()`, `affirm_report_gt()` and `affirm_report_excel()`, which adds a row on top with variable labels to the output. (#5)
+* Added a `variable_labels=` argument to `affirm_report_raw_data()`, `affirm_report_gt()` and `affirm_report_excel()`, which adds a row on top with variable labels to the output. (#4)
 
 * Added `affirm_class()` function to check column classes.
 
