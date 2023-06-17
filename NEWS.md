@@ -1,6 +1,6 @@
 # affirm (development version)
 
-* No longer re-exporting `filter()`, `select()`, and `mutate()` from {dplyr}.
+* No longer re-exporting `tibble()`, `as_tibble()`, `filter()`, `select()`, and `mutate()` from {dplyr}.
 
 * Added `affirm_clean_join()` function to check column names don't end in `".x"` or `".y"`.
 
