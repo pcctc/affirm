@@ -14,7 +14,7 @@ affirm_true(condition = column &amp;gt;= range[1] &amp;amp; column &amp;lt;= ran
     
     <a class="navbar-brand me-2" href="../index.html">affirm</a>
 
-    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9000</small>
+    <small class="nav-text text-default me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.2.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,12 +121,12 @@ which are the rows that do <em>not</em> met in <code>condition=</code>
 and columns included in the <code>condition=</code> expression along with any columns
 set in <code>option('affirm.id_cols')</code>. The <code>'affirm.id_cols'</code> option must be a
 character vector of column names, where columns will be selected with
-<code>select(any_of(getOption('affirm.id_cols')))</code>.</p></dd>
+<code>dplyr::select(any_of(getOption('affirm.id_cols')))</code>.</p></dd>
 
 
 <dt>data_action</dt>
 <dd><p>this expression is executed at the end of the function call when supplied.</p><ul><li><p>Default is NULL, and the passed data frame in <code>data=</code> is returned unaltered.</p></li>
-<li><p>Perhaps you'll need to remove problematic rows: <code>data_action = filter(., !(!!condition))</code></p></li>
+<li><p>Perhaps you'll need to remove problematic rows: <code>data_action = dplyr::filter(., !(!!condition))</code></p></li>
 </ul></dd>
 
 
@@ -155,7 +155,7 @@ character vector of column names, where columns will be selected with
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="affirm_init.html">affirm_init</a></span><span class="op">(</span>replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> We're ready to make data affirmations...</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span> <span class="fu">affirm_range</span><span class="op">(</span></span></span>
 <span class="r-in"><span>   label <span class="op">=</span> <span class="st">"MPG is &gt;0 and &lt;=30"</span>,</span></span>
 <span class="r-in"><span>   column <span class="op">=</span> <span class="va">mpg</span>,</span></span>
