@@ -35,7 +35,7 @@ construct_report_listing(columns = c(am, cyl), label = TRUE)
 # example how to use this function with an affirmation function
 affirm_init(replace = TRUE)
 
-as_tibble(mtcars) |>
+dplyr::as_tibble(mtcars) |>
  affirm_true(
    label = "No. cylinders must be 4 or 6",
    condition = cyl \%in\% c(4, 6),

@@ -3,7 +3,7 @@
 #' @importFrom dplyr mutate
 "_PACKAGE"
 
-utils::globalVariables(c(".", "where", "lgl_condition"))
+utils::globalVariables(c(".", "where", "lgl_condition", "condition"))
 
 ## usethis namespace: start
 ## usethis namespace: end
