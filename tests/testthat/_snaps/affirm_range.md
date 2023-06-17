@@ -6,8 +6,8 @@
       v We're ready to make data affirmations...
     Code
       affirm_range(mtcars, label = "MPG is >=21 and <=30.4", column = mpg, range = c(
-        21, 30.4), boundaries = c(TRUE, TRUE), report_listing = mutate(select(filter(
-        ., !lgl_condition), mpg), ..label.. = label))
+        21, 30.4), boundaries = c(TRUE, TRUE), report_listing = dplyr::mutate(dplyr::select(
+        dplyr::filter(., !lgl_condition), mpg), ..label.. = label))
     Message
       * MPG is >=21 and <=30.4
         20 issues identified.
@@ -47,8 +47,8 @@
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
     Code
       affirm_range(mtcars, label = "MPG is >21 and <=30.4", column = mpg, range = c(
-        21, 30.4), boundaries = c(FALSE, TRUE), report_listing = mutate(select(filter(
-        ., !lgl_condition), mpg), ..label.. = label))
+        21, 30.4), boundaries = c(FALSE, TRUE), report_listing = dplyr::mutate(dplyr::select(
+        dplyr::filter(., !lgl_condition), mpg), ..label.. = label))
     Message
       * MPG is >21 and <=30.4
         22 issues identified.
@@ -88,8 +88,8 @@
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
     Code
       affirm_range(mtcars, label = "MPG is >=21 and <30.4", column = mpg, range = c(
-        21, 30.4), boundaries = c(TRUE, FALSE), report_listing = mutate(select(filter(
-        ., !lgl_condition), mpg), ..label.. = label))
+        21, 30.4), boundaries = c(TRUE, FALSE), report_listing = dplyr::mutate(dplyr::select(
+        dplyr::filter(., !lgl_condition), mpg), ..label.. = label))
     Message
       * MPG is >=21 and <30.4
         22 issues identified.
@@ -129,8 +129,8 @@
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
     Code
       affirm_range(mtcars, label = "MPG is >21 and <30.4", column = mpg, range = c(21,
-        30.4), boundaries = c(FALSE, FALSE), report_listing = mutate(select(filter(.,
-        !lgl_condition), mpg), ..label.. = label))
+        30.4), boundaries = c(FALSE, FALSE), report_listing = dplyr::mutate(dplyr::select(
+        dplyr::filter(., !lgl_condition), mpg), ..label.. = label))
     Message
       * MPG is >21 and <30.4
         24 issues identified.

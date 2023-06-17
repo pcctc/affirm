@@ -5,8 +5,8 @@
     Message
       v We're ready to make data affirmations...
     Code
-      as_tibble(affirm_true(mtcars, label = "leave it all, no actions", condition = mpg >
-        33))
+      dplyr::as_tibble(affirm_true(mtcars, label = "leave it all, no actions",
+        condition = mpg > 33))
     Message
       * leave it all, no actions
         31 issues identified.
@@ -34,8 +34,8 @@
     Message
       v We're ready to make data affirmations...
     Code
-      as_tibble(affirm_true(mtcars, label = "externally defined object", condition = cyl %in%
-        acceptable_levels))
+      dplyr::as_tibble(affirm_true(mtcars, label = "externally defined object",
+        condition = cyl %in% acceptable_levels))
     Message
       * externally defined object
         0 issues identified.
@@ -117,7 +117,7 @@
       v We're ready to make data affirmations...
     Code
       affirm_true(mtcars, label = "export the full mtcars in the report", condition = mpg >
-        33, data_action = filter(., FALSE))
+        33, data_action = dplyr::filter(., FALSE))
     Message
       * export the full mtcars in the report
         31 issues identified.
