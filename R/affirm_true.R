@@ -81,7 +81,7 @@ affirm_true <- function(data,
 
   # issues export --------------------------------------------------------------
   df_report_listing <-
-    rlang::eval_tidy(report_listing, data = list('.' = data, lgl_condition = lgl_condition, label = label))
+    rlang::eval_tidy(report_listing, data = list('.' = data, lgl_condition = lgl_condition, label = label, condition = condition))
 
   if (!is.data.frame(df_report_listing)) {
     cli::cli_abort(c("x" = "The result of evaluated expression of {.code report_listing=} must be a data frame."))

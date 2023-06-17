@@ -40,7 +40,9 @@ reference:
   - affirm_clean_join
 
 - title: Affirmation Utilities
-- contents: prepend_df_name
+- contents:
+  - prepend_df_name
+  - construct_report_listing
 
 - title: Data
 - contents:
