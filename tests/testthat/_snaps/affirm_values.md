@@ -5,7 +5,7 @@
     Message
       v We're ready to make data affirmations...
     Code
-      as_tibble(affirm_values(mtcars, label = "No. cylinders must be 4, 6, or 8",
+      dplyr::as_tibble(affirm_values(mtcars, label = "No. cylinders must be 4, 6, or 8",
         column = cyl, values = c(4, 6, 8)))
     Message
       * No. cylinders must be 4, 6, or 8
@@ -34,8 +34,8 @@
     Message
       v We're ready to make data affirmations...
     Code
-      as_tibble(affirm_values(mtcars, label = "externally defined object", column = "cyl",
-        values = acceptable_levels))
+      dplyr::as_tibble(affirm_values(mtcars, label = "externally defined object",
+        column = "cyl", values = acceptable_levels))
     Message
       * externally defined object
         0 issues identified.

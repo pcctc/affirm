@@ -2,7 +2,7 @@
 #'
 #' A wrapper for `affirm_true()`.
 #' Reports `columns` that do not inherit `class`, e.g.
-#' `select(data, all_of(columns) && where(\(x) !inherits(x, class)))`
+#' `dplyr::select(data, all_of(columns) && where(\(x) !inherits(x, class)))`
 #'
 #' @inheritParams affirm_true
 #' @param columns columns to check class
@@ -21,7 +21,7 @@
 #' affirm_init(replace = TRUE)
 #'
 #' affirm_class(
-#'   as_tibble(iris),
+#'   dplyr::as_tibble(iris),
 #'   label = "all cols are numeric (but Species really isn't)",
 #'   columns = everything(),
 #'   class = "numeric"
@@ -49,13 +49,13 @@ affirm_class <- function(data,
   report_listing <- rlang::enquo(report_listing)
   if (.is_quo_null(report_listing)) {
     report_listing <-
-      rlang::quo(select(., all_of(!!columns) & where(\(x) !inherits(x, !!class)))) |>
+      rlang::quo(dplyr::select(., all_of(!!columns) & where(\(x) !inherits(x, !!class)))) |>
       structure(.Environment = rlang::caller_env()) # add the calling env as the quo env attribute
   }
 
   # identify mis-matched columns -----------------------------------------------
   bad_class_cols <-
-    select(data, all_of(columns) & where(\(x) !inherits(x, class))) |>
+    dplyr::select(data, all_of(columns) & where(\(x) !inherits(x, class))) |>
     colnames()
 
   # construct condition quo ----------------------------------------------------

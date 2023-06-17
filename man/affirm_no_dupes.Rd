@@ -36,12 +36,12 @@ which are the rows that do \emph{not} met in \verb{condition=}
 and columns included in the \verb{condition=} expression along with any columns
 set in \code{option('affirm.id_cols')}. The \code{'affirm.id_cols'} option must be a
 character vector of column names, where columns will be selected with
-\code{select(any_of(getOption('affirm.id_cols')))}.}
+\code{dplyr::select(any_of(getOption('affirm.id_cols')))}.}
 
 \item{data_action}{this expression is executed at the end of the function call when supplied.
 \itemize{
 \item Default is NULL, and the passed data frame in \verb{data=} is returned unaltered.
-\item Perhaps you'll need to remove problematic rows: \code{data_action = filter(., !(!!condition))}
+\item Perhaps you'll need to remove problematic rows: \code{data_action = dplyr::filter(., !(!!condition))}
 }}
 
 \item{error}{Logical indicating whether to throw an error when condition is not met. Default is \code{FALSE}.}
@@ -52,12 +52,12 @@ data frame
 \description{
 A wrapper for \code{affirm_true()}.
 The columns argument is used to construct the
-\code{affirm_true(condition = select(., all_of(columns)) |> duplicated())} argument.
+\code{affirm_true(condition = dplyr::select(., all_of(columns)) |> duplicated())} argument.
 }
 \examples{
 affirm_init(replace = TRUE)
 
-as_tibble(mtcars) |>
+dplyr::as_tibble(mtcars) |>
  affirm_no_dupes(
    label = "No duplicates in the number of cylinders",
    columns = cyl

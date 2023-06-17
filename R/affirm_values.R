@@ -19,7 +19,7 @@
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
-#' as_tibble(mtcars) |>
+#' dplyr::as_tibble(mtcars) |>
 #'  affirm_values(
 #'    label = "No. cylinders must be 4, 6, or 8",
 #'    column = cyl,

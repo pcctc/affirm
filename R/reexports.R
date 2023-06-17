@@ -16,26 +16,6 @@ rlang::.env
 #' @export
 dplyr::`%>%`
 
-#' @importFrom dplyr tibble
-#' @export
-dplyr::tibble
-
-#' @importFrom dplyr as_tibble
-#' @export
-dplyr::as_tibble
-
-#' @importFrom dplyr filter
-#' @export
-dplyr::filter
-
-#' @importFrom dplyr select
-#' @export
-dplyr::select
-
-#' @importFrom dplyr mutate
-#' @export
-dplyr::mutate
-
 #' @importFrom dplyr starts_with
 #' @export
 dplyr::starts_with

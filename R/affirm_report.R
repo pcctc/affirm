@@ -15,7 +15,7 @@
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
-#' as_tibble(mtcars) |>
+#' dplyr::as_tibble(mtcars) |>
 #'  affirm_true(
 #'    label = "No. cylinders must be 4, 6, or 8",
 #'    condition = cyl %in% c(4, 6, 8)

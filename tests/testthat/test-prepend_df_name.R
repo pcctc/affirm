@@ -6,7 +6,7 @@ test_that("prepend_df_name()  works", {
 
   # ✖ Could not determine the name of the passed data frame. Specify the `prepend_df_name(df_name)` argument.
   expect_error(
-    DM %>% select(SUBJECT, AGE) %>% prepend_df_name(),
+    DM %>% dplyr::select(SUBJECT, AGE) %>% prepend_df_name(),
     "Could not determine the name of the passed data frame"
   )
 })

@@ -7,7 +7,7 @@ test_that("affirm_true() works", {
       label = "leave it all, no actions",
       condition = mpg > 33
     ) |>
-      as_tibble()}
+      dplyr::as_tibble()}
   )
 
   # works with an externally defined object
@@ -19,7 +19,7 @@ test_that("affirm_true() works", {
       label = "externally defined object",
       condition = cyl %in% acceptable_levels
     ) |>
-      as_tibble()}
+      dplyr::as_tibble()}
   )
 
   # works with an externally defined object using the .data and .env pronoun
@@ -62,7 +62,7 @@ test_that("affirm_true() works", {
       label = "export the full mtcars in the report",
       condition = mpg > 33,
       # return data frame with zero rows
-      data_action = filter(., FALSE)
+      data_action = dplyr::filter(., FALSE)
     )}
   )
 })

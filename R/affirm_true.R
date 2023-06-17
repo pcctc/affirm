@@ -13,10 +13,10 @@
 #' and columns included in the `condition=` expression along with any columns
 #' set in `option('affirm.id_cols')`. The `'affirm.id_cols'` option must be a
 #' character vector of column names, where columns will be selected with
-#' `select(any_of(getOption('affirm.id_cols')))`.
+#' `dplyr::select(any_of(getOption('affirm.id_cols')))`.
 #' @param data_action this expression is executed at the end of the function call when supplied.
 #' - Default is NULL, and the passed data frame in `data=` is returned unaltered.
-#' - Perhaps you'll need to remove problematic rows: `data_action = filter(., !(!!condition))`
+#' - Perhaps you'll need to remove problematic rows: `data_action = dplyr::filter(., !(!!condition))`
 #' @param error Logical indicating whether to throw an error when condition is not met. Default is `FALSE`.
 #' @param id,priority,data_frames,columns Optional additional information that will be passed to affirmation report.
 #' - `id` must be an integer, e.g. `id = 1L`
@@ -42,7 +42,7 @@
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
-#' as_tibble(mtcars) |>
+#' dplyr::as_tibble(mtcars) |>
 #'  affirm_true(
 #'    label = "No. cylinders must be 4, 6, or 8",
 #'    condition = cyl %in% c(4, 6, 8)
@@ -73,7 +73,7 @@ affirm_true <- function(data,
   columns <- dplyr::coalesce(columns, all.vars(condition) |> setdiff(c(".data", ".env")) |> paste(collapse = ", "))
   if (.is_quo_null(report_listing))
     report_listing <-
-    rlang::quo(filter(., !.env$lgl_condition) |> select(any_of(getOption("affirm.id_cols")), any_of(!!all.vars(condition)))) |>
+    rlang::quo(dplyr::filter(., !.env$lgl_condition) |> dplyr::select(any_of(getOption("affirm.id_cols")), any_of(!!all.vars(condition)))) |>
     structure(.Environment = rlang::caller_env()) # add the calling env as the quo env attribute
 
   # make affirmation -----------------------------------------------------------

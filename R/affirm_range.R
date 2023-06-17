@@ -24,7 +24,7 @@
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
-#' as_tibble(mtcars) |>
+#' dplyr::as_tibble(mtcars) |>
 #'  affirm_range(
 #'    label = "MPG is >0 and <=30",
 #'    column = mpg,

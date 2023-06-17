@@ -40,12 +40,12 @@ which are the rows that do \emph{not} met in \verb{condition=}
 and columns included in the \verb{condition=} expression along with any columns
 set in \code{option('affirm.id_cols')}. The \code{'affirm.id_cols'} option must be a
 character vector of column names, where columns will be selected with
-\code{select(any_of(getOption('affirm.id_cols')))}.}
+\code{dplyr::select(any_of(getOption('affirm.id_cols')))}.}
 
 \item{data_action}{this expression is executed at the end of the function call when supplied.
 \itemize{
 \item Default is NULL, and the passed data frame in \verb{data=} is returned unaltered.
-\item Perhaps you'll need to remove problematic rows: \code{data_action = filter(., !(!!condition))}
+\item Perhaps you'll need to remove problematic rows: \code{data_action = dplyr::filter(., !(!!condition))}
 }}
 
 \item{error}{Logical indicating whether to throw an error when condition is not met. Default is \code{FALSE}.}
@@ -61,7 +61,7 @@ The \code{condition} argument is process and passed to
 \examples{
 affirm_init(replace = TRUE)
 
-as_tibble(mtcars) |>
+dplyr::as_tibble(mtcars) |>
  affirm_false(
    label = "No. cylinders must be 4, 6, or 8",
    condition = !cyl \%in\% c(4, 6, 8)

@@ -2,7 +2,7 @@
 #'
 #'A wrapper for `affirm_true()`.
 #' The columns argument is used to construct the
-#' `affirm_true(condition = select(., all_of(columns)) |> duplicated())` argument.
+#' `affirm_true(condition = dplyr::select(., all_of(columns)) |> duplicated())` argument.
 #'
 #' @inheritParams affirm_true
 #' @param columns columns to check duplicates among
@@ -18,7 +18,7 @@
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
-#' as_tibble(mtcars) |>
+#' dplyr::as_tibble(mtcars) |>
 #'  affirm_no_dupes(
 #'    label = "No duplicates in the number of cylinders",
 #'    columns = cyl
@@ -46,12 +46,12 @@ affirm_no_dupes <- function(data,
   report_listing <- rlang::enquo(report_listing)
   if (.is_quo_null(report_listing))
     report_listing <-
-    rlang::quo(filter(., lgl_condition) |> select(all_of(!!columns)) |> dplyr::distinct()) |>
+    rlang::quo(dplyr::filter(., lgl_condition) |> dplyr::select(all_of(!!columns)) |> dplyr::distinct()) |>
     structure(.Environment = rlang::caller_env())
 
   # construct `condition=` argument --------------------------------------------
   quo_condition <-
-    rlang::quo(select(., all_of(!!columns)) |> Negate(f = duplicated)()) |>
+    rlang::quo(dplyr::select(., all_of(!!columns)) |> Negate(f = duplicated)()) |>
     structure(.Environment = rlang::caller_env())
 
   # pass arguments to affirm_true() --------------------------------------------

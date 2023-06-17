@@ -44,13 +44,13 @@ affirm_clean_join <- function(data,
   report_listing <- rlang::enquo(report_listing)
   if (.is_quo_null(report_listing)) {
     report_listing <-
-      rlang::quo(select(., ends_with(".x") | ends_with(".y"))) |>
+      rlang::quo(dplyr::select(., ends_with(".x") | ends_with(".y"))) |>
       structure(.Environment = rlang::caller_env()) # add the calling env as the quo env attribute
   }
 
   # identify bad column names --------------------------------------------------
   bad_class_cols <-
-    select(data, ends_with(".x") | ends_with(".y")) |>
+    dplyr::select(data, ends_with(".x") | ends_with(".y")) |>
     colnames()
 
   # construct condition quo ----------------------------------------------------
