@@ -8,7 +8,7 @@ test_that("affirm_values() works", {
         column = cyl,
         values = c(4, 6, 8)
       ) |>
-      as_tibble()}
+      dplyr::as_tibble()}
   )
 
   # works with an externally defined object
@@ -21,7 +21,7 @@ test_that("affirm_values() works", {
       column = "cyl",
       values = acceptable_levels
     ) |>
-      as_tibble()}
+      dplyr::as_tibble()}
   )
 
 

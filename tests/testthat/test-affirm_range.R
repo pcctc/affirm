@@ -8,7 +8,7 @@ test_that("affirm_range() works", {
       column = mpg,
       range = c(21, 30.4),
       boundaries = c(TRUE, TRUE),
-      report_listing = filter(., !lgl_condition) |> select(mpg) |>  mutate(..label.. = label)
+      report_listing = dplyr::filter(., !lgl_condition) |> dplyr::select(mpg) |>  dplyr::mutate(..label.. = label)
     )
     affirm_range(
       mtcars,
@@ -16,7 +16,7 @@ test_that("affirm_range() works", {
       column = mpg,
       range = c(21, 30.4),
       boundaries = c(FALSE, TRUE),
-      report_listing = filter(., !lgl_condition) |> select(mpg) |>  mutate(..label.. = label)
+      report_listing = dplyr::filter(., !lgl_condition) |> dplyr::select(mpg) |>  dplyr::mutate(..label.. = label)
     )
     affirm_range(
       mtcars,
@@ -24,7 +24,7 @@ test_that("affirm_range() works", {
       column = mpg,
       range = c(21, 30.4),
       boundaries = c(TRUE, FALSE),
-      report_listing = filter(., !lgl_condition) |> select(mpg) |>  mutate(..label.. = label)
+      report_listing = dplyr::filter(., !lgl_condition) |> dplyr::select(mpg) |>  dplyr::mutate(..label.. = label)
     )
     affirm_range(
       mtcars,
@@ -32,7 +32,7 @@ test_that("affirm_range() works", {
       column = mpg,
       range = c(21, 30.4),
       boundaries = c(FALSE, FALSE),
-      report_listing = filter(., !lgl_condition) |> select(mpg) |>  mutate(..label.. = label)
+      report_listing = dplyr::filter(., !lgl_condition) |> dplyr::select(mpg) |>  dplyr::mutate(..label.. = label)
     )
     affirm_report_raw_data()$data}
   )

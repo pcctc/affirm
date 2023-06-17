@@ -78,12 +78,12 @@ which are the rows that do \emph{not} met in \verb{condition=}
 and columns included in the \verb{condition=} expression along with any columns
 set in \code{option('affirm.id_cols')}. The \code{'affirm.id_cols'} option must be a
 character vector of column names, where columns will be selected with
-\code{select(any_of(getOption('affirm.id_cols')))}.}
+\code{dplyr::select(any_of(getOption('affirm.id_cols')))}.}
 
 \item{data_action}{this expression is executed at the end of the function call when supplied.
 \itemize{
 \item Default is NULL, and the passed data frame in \verb{data=} is returned unaltered.
-\item Perhaps you'll need to remove problematic rows: \code{data_action = filter(., !(!!condition))}
+\item Perhaps you'll need to remove problematic rows: \code{data_action = dplyr::filter(., !(!!condition))}
 }}
 
 \item{error}{Logical indicating whether to throw an error when condition is not met. Default is \code{FALSE}.}
@@ -100,7 +100,7 @@ data frame
 \description{
 A wrapper for \code{affirm_true()}.
 Reports \code{columns} that do not inherit \code{class}, e.g.
-\verb{select(data, all_of(columns) && where(\\(x) !inherits(x, class)))}
+\verb{dplyr::select(data, all_of(columns) && where(\\(x) !inherits(x, class)))}
 
 A wrapper for \code{affirm_true()}.
 Reports \code{columns} whose names end with \code{".x"} or \code{".y"}, indicating
@@ -114,7 +114,7 @@ The columns argument is used to construct the
 affirm_init(replace = TRUE)
 
 affirm_class(
-  as_tibble(iris),
+  dplyr::as_tibble(iris),
   label = "all cols are numeric (but Species really isn't)",
   columns = everything(),
   class = "numeric"
