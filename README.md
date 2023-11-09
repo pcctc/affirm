@@ -30,7 +30,7 @@ variables continue to be accurate as data is updated.
     when our underlying assumptions are not true and will require us to
     address the issue before continuing.
 
-The [{pointblank}](https://rich-iannone.github.io/pointblank/) is
+The [{pointblank}](https://rstudio.github.io/pointblank/) is
 another package that performs data validations. {pointblank} is far more
 comprehensive than {affirm}, and {affirm} utilizes many of the ideas and
 reporting introduced in {pointblank} with defaults and reports tailored
