@@ -1,5 +1,7 @@
 # affirm (development version)
 
+* When no errors are found, return a data frame of zero rows instead of `NULL`.
+
 * No longer re-exporting `tibble()`, `as_tibble()`, `filter()`, `select()`, and `mutate()` from {dplyr}.
 
 * Added `affirm_clean_join()` function to check column names don't end in `".x"` or `".y"`.
