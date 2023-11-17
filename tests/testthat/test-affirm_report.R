@@ -113,7 +113,9 @@ test_that("affirm_report_excel() details", {
       condition = mpg < 33,
       data_frames = "mtcars"
     );
-    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data_frames} {id} {total_n}")},
+    tmp_xlsx <- tempfile(fileext = ".xlsx")
+    affirm_report_excel(file = tmp_xlsx, sheet_name = "{data_frames} {id} {total_n}")
+    openxlsx::read.xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
     NA
   )
 
