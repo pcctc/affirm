@@ -65,7 +65,6 @@ test_that("affirm_report() works, but skip in CI", {
 })
 
 
-
 test_that("affirm_report_excel() details", {
 
   mtcars_modified <- mtcars |>
@@ -145,4 +144,35 @@ test_that("affirm_report_excel() details", {
   },
   "`sheet_name` glue syntax expects one of"
   )
+
+  
+test_that("affirmations with zero errors carried forward", {
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4, 6, or 8",
+      condition = cyl %in% c(4, 6, 8),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_report_raw_data()},
+    NA
+  )
+
+  expect_s3_class({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4, 6, or 8",
+      condition = cyl %in% c(4, 6, 8),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_report_raw_data()[["data"]][[1]]
+    },
+    "data.frame"
+  )
+
 })
