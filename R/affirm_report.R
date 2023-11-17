@@ -8,6 +8,9 @@
 #' @param variable_labels logical indicating whether to add a row to exported
 #' data with the variable labels. If label does not exist, the variable name
 #' is printed. Default is `FALSE`
+#' @param sheet_name A string for sheet names in the excel report; the item name
+#' in curly brackets is replaced with the item value (see glue::glue). Item names
+#' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #'
 #' @return gt table
 #' @name affirm_report
@@ -59,11 +62,16 @@ affirm_report_gt <- function(variable_labels = FALSE) {
 affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", variable_labels = FALSE, overwrite = TRUE) {
 
   # checking to make sure sheet name glue syntax has acceptable column names
-  sheet_name_cols <- unlist(strsplit(sheet_name, "[{}]"))
-  sheet_name_cols <- sheet_name_cols[sheet_name_cols != ""]
+  sheet_name_cols <- regmatches(sheet_name, gregexpr("\\{([^\\}]+)\\}", sheet_name))[[1]] |>
+    gsub("\\{|\\}", "", x = _)
+
+  # acceptable variables to pass through glue syntax for sheet names
   glue_accept <- c("id", "label", "priority", "data_frames", "columns", "error_n", "total_n")
+
+  # readable version for error messaging
+  glue_accept_str <- paste0("`", glue_accept, "`", collapse = ", ")
   if (any(!sheet_name_cols %in% glue_accept)){
-    stop(paste0("`sheet_name` glue syntax expects one of ", paste(glue_accept, collapse = ", ")))
+    stop(paste0("`sheet_name` glue syntax expects one of ", glue_accept_str))
   }
 
   df_report <-

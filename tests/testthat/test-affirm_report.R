@@ -76,26 +76,47 @@ test_that("affirm_report_excel() details", {
   attr(mtcars_modified$cyl, 'label') <- "Number of cylinders"
   attr(mtcars_modified$disp, 'label') <- "Displacement (cu.in.)"
 
-expect_error({
-  affirm_init(replace = TRUE)
-  options('affirm.id_cols' = "car")
-  affirm_true(
-    mtcars_modified,
-    label = "No. cylinders must be 4 or 6",
-    condition = cyl %in% c(4, 6),
-    id = 1,
-    data_frames = "mtcars"
+  expect_error({
+    affirm_init(replace = TRUE)
+    options('affirm.id_cols' = "car")
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_true(
+      mtcars_modified,
+      label = "mpg lt 33",
+      id = 2,
+      condition = mpg < 33,
+      data_frames = "mtcars"
+    );
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
+    NA
   )
-  affirm_true(
-    mtcars_modified,
-    label = "mpg lt 33",
-    id = 2,
-    condition = mpg < 33,
-    data_frames = "mtcars"
-  );
-  affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
-  NA
-)
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    options('affirm.id_cols' = "car")
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_true(
+      mtcars_modified,
+      label = "mpg lt 33",
+      id = 2,
+      condition = mpg < 33,
+      data_frames = "mtcars"
+    );
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data_frames} {id} {total_n}")},
+    NA
+  )
 
   expect_error({
     affirm_init(replace = TRUE)
