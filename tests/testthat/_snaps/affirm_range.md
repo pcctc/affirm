@@ -305,6 +305,7 @@
       1 2000-01-01
       
       [[2]]
-      NULL
+      [1] x
+      <0 rows> (or 0-length row.names)
       
 
