@@ -144,8 +144,8 @@ test_that("affirm_report_excel() details", {
   },
   "`sheet_name` glue syntax expects one of"
   )
+})
 
-  
 test_that("affirmations with zero errors carried forward", {
 
   expect_error({
@@ -176,3 +176,4 @@ test_that("affirmations with zero errors carried forward", {
   )
 
 })
+
