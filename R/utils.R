@@ -22,7 +22,7 @@
     dplyr::bind_rows(
       dplyr::tibble(
         ...,
-        data = switch(nrow(data) > 0L, data) |>  list()
+        data = list(data)
       )
     )
 
