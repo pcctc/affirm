@@ -27,15 +27,22 @@ test_that("affirm_report() works", {
     NA
   )
 
-  # labels are added to report when requested
+  # names are added according to glue syntax
   expect_snapshot({
-    mtcars2 <- dplyr::as_tibble(mtcars)
-    attr(mtcars2$mpg, 'label') <- "MPG LABEL"
     affirm_init(replace = TRUE)
     affirm_true(
-      mtcars2,
+      mtcars,
       label = "leave it all, no actions",
-      condition = mpg > 33
+      condition = mpg > 33,
+      data_frames = "mtcars",
+      id = 1
+    )
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      data_frames = "mtcars",
+      id = 2
     )
     affirm_report_raw_data()$data
   })
@@ -65,7 +72,7 @@ test_that("affirm_report() works, but skip in CI", {
 })
 
 
-test_that("affirm_report_excel() details", {
+test_that("affirmation name details", {
 
   mtcars_modified <- mtcars |>
     tibble::rownames_to_column(var = "car")
@@ -114,7 +121,7 @@ test_that("affirm_report_excel() details", {
       data_frames = "mtcars"
     );
     tmp_xlsx <- tempfile(fileext = ".xlsx")
-    affirm_report_excel(file = tmp_xlsx, sheet_name = "{data_frames} {id} {total_n}")
+    affirm_report_excel(file = tmp_xlsx, affirmation_name = "{data_frames} {id} {total_n}")
     openxlsx::read.xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
     NA
   )
@@ -128,9 +135,9 @@ test_that("affirm_report_excel() details", {
       id = 1,
       data_frames = "mtcars"
     )
-    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data_frames}{id}{label}moooooooorreeeeecharacters")
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data_frames}{id}{label}moooooooorreeeeecharacters")
     },
-    "At least one sheet name exceeds the allowed 31 characters."
+    "At least one affirmation name exceeds the allowed 31 characters for sheet names."
   )
 
   expect_error({
@@ -142,10 +149,28 @@ test_that("affirm_report_excel() details", {
       id = 1,
       data_frames = "mtcars"
     )
-    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data.frames}{id}")
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data.frames}{id}")
   },
   "`sheet_name` glue syntax expects one of"
   )
+
+  expect_warning({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6)
+    )
+    affirm_true(
+      mtcars,
+      label = "mpg lt 33",
+      condition = mpg < 33
+    )
+    affirm_report_raw_data()
+  },
+  "At least one `affirmation_name` field is missing, using row number instead."
+  )
+
 })
 
 test_that("affirmations with zero errors carried forward", {
