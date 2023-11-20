@@ -37,7 +37,7 @@ test_that("affirm_report() works", {
       label = "leave it all, no actions",
       condition = mpg > 33
     )
-    affirm_report_raw_data(variable_labels = TRUE)$data
+    affirm_report_raw_data()$data
   })
 })
 
