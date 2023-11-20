@@ -74,17 +74,18 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     affirm_report_raw_data() |>
     dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
-      label_final = glue::glue(affirmation_name) |>
+      affirmation_name = glue::glue(affirmation_name) |>
         gsub(pattern = "[[:punct:]]", replacement = "", x = _)
-    )
+    ) |>
+    dplyr::select(affirmation_name, dplyr::everything())
 
   # checking to make sure sheet names are not too long
-  if (any(nchar(df_report$label_final) > 31)){
+  if (any(nchar(df_report$affirmation_name) > 31)){
     stop("At least one sheet name exceeds the allowed 31 characters.")
   }
 
   df_report$data |>
-    stats::setNames(df_report$label_final) |>
+    stats::setNames(df_report$affirmation_name) |>
     openxlsx::write.xlsx(file = file, overwrite = overwrite)
 }
 
