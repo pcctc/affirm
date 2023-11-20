@@ -15,10 +15,10 @@
 }
 
 # append results to the affirmation results tibble
-.add_to_affirm_results <- function(..., data) {
+.add_to_affirm_results <- function(..., data, affirmation_name = affirmation_name) {
   # add new issues to existing issues log tibble
   df <-
-    affirm_report_raw_data() |>
+    affirm_report_raw_data(affirmation_name) |>
     dplyr::bind_rows(
       dplyr::tibble(
         ...,

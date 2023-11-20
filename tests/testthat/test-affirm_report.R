@@ -12,7 +12,7 @@ test_that("affirm_report() works", {
       label = "leave it all, no actions",
       condition = mpg > 33
     )
-    affirm_report_gt()},
+    affirm_report_gt(affirmation_name = "{label}")},
     NA
   )
 
@@ -151,7 +151,7 @@ test_that("affirmation name details", {
     )
     affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data.frames}{id}")
   },
-  "`sheet_name` glue syntax expects one of"
+  "`affirmation_name` glue syntax expects one of"
   )
 
   expect_warning({

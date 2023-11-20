@@ -32,8 +32,8 @@ NULL
 
 #' @rdname affirm_report
 #' @export
-affirm_report_gt <- function() {
-  affirm_report_raw_data() |>
+affirm_report_gt <- function(affirmation_name = affirmation_name) {
+  affirm_report_raw_data(affirmation_name) |>
     dplyr::mutate(status_color = NA_character_, .before = 1L) |>
     dplyr::mutate(
       csv_download_link =
@@ -47,7 +47,7 @@ affirm_report_gt <- function() {
           USE.NAMES = FALSE
         )
     ) |>
-    dplyr::select(-"data") |>
+    dplyr::select(-c("name", "data")) |>
     gt::gt() |>
     .affirm_report_gt_stylings()
 }
@@ -58,7 +58,7 @@ affirm_report_gt <- function() {
 affirm_report_excel <- function(file, affirmation_name = affirmation_name, overwrite = TRUE) {
 
   df_report <-
-    affirm_report_raw_data()
+    affirm_report_raw_data(affirmation_name)
 
   # checking to make sure sheet names are not too long
   if (any(nchar(df_report$name) > 31)){
@@ -76,7 +76,9 @@ affirm_report_raw_data <- function(affirmation_name = "{data_frames}{id}") {
   .check_affirm_initialized()
 
   # checking to make sure sheet name glue syntax has acceptable column names
-  affirmation_name_cols <- regmatches(affirmation_name, gregexpr("\\{([^\\}]+)\\}", affirmation_name))[[1]] |>
+  affirmation_name_cols <- gregexpr("\\{([^\\}]+)\\}", affirmation_name) |>
+    regmatches(affirmation_name, m = _) |>
+    _[[1]] |>
     gsub("\\{|\\}", "", x = _)
 
   # acceptable variables to pass through glue syntax for sheet names
@@ -110,7 +112,7 @@ affirm_report_raw_data <- function(affirmation_name = "{data_frames}{id}") {
   }
 
 
-  # remove name glue column
+  # remove name glue intermediate column
   df_report <- df_report |>
     dplyr::select(-name_glue)
 
