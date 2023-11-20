@@ -63,14 +63,13 @@
 
 # converts a data frame to a clickable CSV download link
 .as_csv_encoded_html_download_link <- function(data,
-                                               output_file_name = "extract.csv",
-                                               variable_labels = FALSE) {
+                                               output_file_name = "extract.csv") {
   if (is.null(data)) return("&mdash;")
 
   temp_file <-
     tempfile(pattern = paste0("csv_file"), fileext = ".csv")
 
-  readr::write_csv(data, file = temp_file, col_names = !variable_labels)
+  readr::write_csv(data, file = temp_file)
   on.exit(unlink(temp_file))
 
   file_encoded <- base64enc::base64encode(temp_file)

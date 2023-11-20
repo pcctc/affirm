@@ -5,9 +5,6 @@
 #' - `affirm_report_raw_data()` returns raw data used to generate summary in `affirm_report_gt()`
 #'
 #' @inheritParams openxlsx::write.xlsx
-#' @param variable_labels logical indicating whether to add a row to exported
-#' data with the variable labels. If label does not exist, the variable name
-#' is printed. Default is `FALSE`
 #' @param sheet_name A string for sheet names in the excel report; the item name
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
@@ -35,8 +32,8 @@ NULL
 
 #' @rdname affirm_report
 #' @export
-affirm_report_gt <- function(variable_labels = FALSE) {
-  affirm_report_raw_data(variable_labels = variable_labels) |>
+affirm_report_gt <- function() {
+  affirm_report_raw_data() |>
     dplyr::mutate(status_color = NA_character_, .before = 1L) |>
     dplyr::mutate(
       csv_download_link =
@@ -45,7 +42,6 @@ affirm_report_gt <- function(variable_labels = FALSE) {
           # these two args are the ones being passed to FUN
           .data$data,
           paste0("extract_", dplyr::row_number(), ".csv"),
-          variable_labels,
           # additional mapply args
           SIMPLIFY = TRUE,
           USE.NAMES = FALSE
@@ -59,7 +55,7 @@ affirm_report_gt <- function(variable_labels = FALSE) {
 
 #' @rdname affirm_report
 #' @export
-affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", variable_labels = FALSE, overwrite = TRUE) {
+affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", overwrite = TRUE) {
 
   # checking to make sure sheet name glue syntax has acceptable column names
   sheet_name_cols <- regmatches(sheet_name, gregexpr("\\{([^\\}]+)\\}", sheet_name))[[1]] |>
@@ -75,7 +71,7 @@ affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", variable
   }
 
   df_report <-
-    affirm_report_raw_data(variable_labels = variable_labels) |>
+    affirm_report_raw_data() |>
     dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
       label_final = glue::glue(sheet_name) |>
@@ -89,12 +85,12 @@ affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", variable
 
   df_report$data |>
     stats::setNames(df_report$label_final) |>
-    openxlsx::write.xlsx(file = file, overwrite = overwrite, colNames = !variable_labels)
+    openxlsx::write.xlsx(file = file, overwrite = overwrite)
 }
 
 #' @rdname affirm_report
 #' @export
-affirm_report_raw_data <- function(variable_labels = FALSE) {
+affirm_report_raw_data <- function() {
   .check_affirm_initialized()
   df_report <-
     get(x = "df_affirmations", envir = env_affirm_logs) |>
@@ -103,11 +99,6 @@ affirm_report_raw_data <- function(variable_labels = FALSE) {
       .after = "total_n"
     ) |>
     dplyr::arrange(.data$error_n == 0L, .data$priority, dplyr::desc(.data$error_rate))
-
-  # add the variable labels to the top row if requested
-  if (isTRUE(variable_labels)) {
-    df_report$data <- lapply(df_report$data, .add_row_of_column_labels)
-  }
 
   df_report
 }
