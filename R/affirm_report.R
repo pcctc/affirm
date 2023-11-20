@@ -84,9 +84,10 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     stop("At least one sheet name exceeds the allowed 31 characters.")
   }
 
-  df_report$data |>
-    stats::setNames(df_report$affirmation_name) |>
-    openxlsx::write.xlsx(file = file, overwrite = overwrite)
+  df_report$data <- df_report$data |>
+    stats::setNames(df_report$affirmation_name)
+
+  openxlsx::write.xlsx(df_report$data, file = file, overwrite = overwrite)
 }
 
 #' @rdname affirm_report
