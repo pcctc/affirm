@@ -5,7 +5,7 @@
 #' - `affirm_report_raw_data()` returns raw data used to generate summary in `affirm_report_gt()`
 #'
 #' @inheritParams openxlsx::write.xlsx
-#' @param affirmation_name A string for affirmation name; the item name
+#' @param sheet_name A string for sheet names in the excel report; the item name
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #'
@@ -55,10 +55,10 @@ affirm_report_gt <- function() {
 
 #' @rdname affirm_report
 #' @export
-affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", overwrite = TRUE) {
+affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", overwrite = TRUE) {
 
   # checking to make sure sheet name glue syntax has acceptable column names
-  affirmation_name_cols <- regmatches(affirmation_name, gregexpr("\\{([^\\}]+)\\}", affirmation_name))[[1]] |>
+  sheet_name_cols <- regmatches(sheet_name, gregexpr("\\{([^\\}]+)\\}", sheet_name))[[1]] |>
     gsub("\\{|\\}", "", x = _)
 
   # acceptable variables to pass through glue syntax for sheet names
@@ -66,25 +66,25 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
 
   # readable version for error messaging
   glue_accept_str <- paste0("`", glue_accept, "`", collapse = ", ")
-  if (any(!affirmation_name_cols %in% glue_accept)){
-    stop(paste0("`affirmation_name` glue syntax expects one of ", glue_accept_str))
+  if (any(!sheet_name_cols %in% glue_accept)){
+    stop(paste0("`sheet_name` glue syntax expects one of ", glue_accept_str))
   }
 
   df_report <-
     affirm_report_raw_data() |>
     dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
-      name = glue::glue(affirmation_name) |>
+      label_final = glue::glue(sheet_name) |>
         gsub(pattern = "[[:punct:]]", replacement = "", x = _)
     )
 
   # checking to make sure sheet names are not too long
-  if (any(nchar(df_report$name) > 31)){
+  if (any(nchar(df_report$label_final) > 31)){
     stop("At least one sheet name exceeds the allowed 31 characters.")
   }
 
   df_report$data |>
-    stats::setNames(df_report$name) |>
+    stats::setNames(df_report$label_final) |>
     openxlsx::write.xlsx(file = file, overwrite = overwrite)
 }
 
@@ -102,7 +102,5 @@ affirm_report_raw_data <- function() {
 
   df_report
 }
-
-
 
 

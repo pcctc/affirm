@@ -7,22 +7,13 @@
 \alias{affirm_report_raw_data}
 \title{Affirmation Report}
 \usage{
-affirm_report_gt(variable_labels = FALSE)
+affirm_report_gt()
 
-affirm_report_excel(
-  file,
-  sheet_name = "{data_frames}{id}",
-  variable_labels = FALSE,
-  overwrite = TRUE
-)
+affirm_report_excel(file, sheet_name = "{data_frames}{id}", overwrite = TRUE)
 
-affirm_report_raw_data(variable_labels = FALSE)
+affirm_report_raw_data()
 }
 \arguments{
-\item{variable_labels}{logical indicating whether to add a row to exported
-data with the variable labels. If label does not exist, the variable name
-is printed. Default is \code{FALSE}}
-
 \item{file}{A file path to save the xlsx file}
 
 \item{sheet_name}{A string for sheet names in the excel report; the item name
