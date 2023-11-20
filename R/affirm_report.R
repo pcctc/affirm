@@ -5,7 +5,7 @@
 #' - `affirm_report_raw_data()` returns raw data used to generate summary in `affirm_report_gt()`
 #'
 #' @inheritParams openxlsx::write.xlsx
-#' @param sheet_name A string for sheet names in the excel report; the item name
+#' @param affirmation_name A string for names of the affirmation (corresponds to sheet names in the excel report); the item name
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #'
@@ -55,10 +55,28 @@ affirm_report_gt <- function() {
 
 #' @rdname affirm_report
 #' @export
-affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", overwrite = TRUE) {
+affirm_report_excel <- function(file, affirmation_name = affirmation_name, overwrite = TRUE) {
+
+  df_report <-
+    affirm_report_raw_data()
+
+  # checking to make sure sheet names are not too long
+  if (any(nchar(df_report$name) > 31)){
+    stop("At least one affirmation name exceeds the allowed 31 characters for sheet names.")
+  }
+
+  df_report$data |>
+    stats::setNames(df_report$name) |>
+    openxlsx::write.xlsx(file = file, overwrite = overwrite)
+}
+
+#' @rdname affirm_report
+#' @export
+affirm_report_raw_data <- function(affirmation_name = "{data_frames}{id}") {
+  .check_affirm_initialized()
 
   # checking to make sure sheet name glue syntax has acceptable column names
-  sheet_name_cols <- regmatches(sheet_name, gregexpr("\\{([^\\}]+)\\}", sheet_name))[[1]] |>
+  affirmation_name_cols <- regmatches(affirmation_name, gregexpr("\\{([^\\}]+)\\}", affirmation_name))[[1]] |>
     gsub("\\{|\\}", "", x = _)
 
   # acceptable variables to pass through glue syntax for sheet names
@@ -66,41 +84,37 @@ affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", overwrit
 
   # readable version for error messaging
   glue_accept_str <- paste0("`", glue_accept, "`", collapse = ", ")
-  if (any(!sheet_name_cols %in% glue_accept)){
-    stop(paste0("`sheet_name` glue syntax expects one of ", glue_accept_str))
+  if (any(!affirmation_name_cols %in% glue_accept)){
+    stop(paste0("`affirmation_name` glue syntax expects one of ", glue_accept_str))
   }
 
-  df_report <-
-    affirm_report_raw_data() |>
-    dplyr::filter(.data$error_n > 0L) |>
-    dplyr::mutate(
-      label_final = glue::glue(sheet_name) |>
-        gsub(pattern = "[[:punct:]]", replacement = "", x = _)
-    )
-
-  # checking to make sure sheet names are not too long
-  if (any(nchar(df_report$label_final) > 31)){
-    stop("At least one sheet name exceeds the allowed 31 characters.")
-  }
-
-  df_report$data |>
-    stats::setNames(df_report$label_final) |>
-    openxlsx::write.xlsx(file = file, overwrite = overwrite)
-}
-
-#' @rdname affirm_report
-#' @export
-affirm_report_raw_data <- function() {
-  .check_affirm_initialized()
   df_report <-
     get(x = "df_affirmations", envir = env_affirm_logs) |>
     dplyr::mutate(
       error_rate = .data$error_n / .data$total_n,
       .after = "total_n"
     ) |>
+    dplyr::mutate(
+      name_glue = glue::glue(affirmation_name),
+      name =  dplyr::case_when(
+        grepl("NA", name_glue) ~ glue::glue("{dplyr::row_number()}"),
+        .default = gsub(pattern = "[[:punct:]]", replacement = "", x = name_glue)
+        )
+    ) |>
+    dplyr::select(name, dplyr::everything()) |>
     dplyr::arrange(.data$error_n == 0L, .data$priority, dplyr::desc(.data$error_rate))
 
-  df_report
+  # warning for if user does not supply expected arguments in glue syntax
+  if (any(grepl("NA", df_report$name_glue))){
+    warning("At least one `affirmation_name` field is missing, using row number instead.")
+  }
+
+
+  # remove name glue column
+  df_report <- df_report |>
+    dplyr::select(-name_glue)
+
+  return(df_report)
 }
 
 
