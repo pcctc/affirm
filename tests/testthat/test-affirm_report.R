@@ -44,7 +44,7 @@ test_that("affirm_report() works", {
       data_frames = "mtcars",
       id = 2
     )
-    affirm_report_raw_data()$data
+    affirm_report_raw_data(variable_labels = TRUE)$data
   })
 })
 

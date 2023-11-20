@@ -27,22 +27,22 @@
       10  19.2     6  168.   123  3.92  3.44  18.3     1     0     4     4
       # i 22 more rows
     Code
-      affirm_report_raw_data()$data
+      affirm_report_raw_data(variable_labels = TRUE)$data
     Output
       [[1]]
-      # A tibble: 31 x 1
-           mpg
-         <dbl>
-       1  21  
-       2  21  
-       3  22.8
-       4  21.4
-       5  18.7
-       6  18.1
-       7  14.3
-       8  24.4
-       9  22.8
-      10  19.2
-      # i 21 more rows
+      # A tibble: 33 x 1
+         mpg      
+         <chr>    
+       1 MPG LABEL
+       2 mpg      
+       3 21       
+       4 21       
+       5 22.8     
+       6 21.4     
+       7 18.7     
+       8 18.1     
+       9 14.3     
+      10 24.4     
+      # i 23 more rows
       
 
