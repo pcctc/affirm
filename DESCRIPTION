@@ -16,11 +16,12 @@ URL: https://github.com/pages/pcctc/affirm/,
     https://pcctc.github.io/affirm/
 BugReports: https://github.com/pcctc/affirm/issues
 Depends: 
-    R (>= 4.1)
+    R (>= 4.2)
 Imports: 
     base64enc (>= 0.1-3),
     cli (>= 3.6.1),
     dplyr (>= 1.1.2),
+    glue (>= 1.6.2),
     gt (>= 0.9.0),
     htmltools (>= 0.5.5),
     openxlsx (>= 4.2.5.2),

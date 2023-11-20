@@ -1,5 +1,7 @@
 # affirm (development version)
 
+* Allow for glue syntax in excel report sheet names.
+
 * When no errors are found, return a data frame of zero rows instead of `NULL`.
 
 * No longer re-exporting `tibble()`, `as_tibble()`, `filter()`, `select()`, and `mutate()` from {dplyr}.

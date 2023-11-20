@@ -1,4 +1,5 @@
 test_that("affirm_report() works", {
+
   expect_error({
     affirm_init(replace = TRUE)
     affirm_not_na(
@@ -36,8 +37,8 @@ test_that("affirm_report() works", {
       label = "leave it all, no actions",
       condition = mpg > 33
     )
-    affirm_report_raw_data(variable_labels = TRUE)$data}
-  )
+    affirm_report_raw_data(variable_labels = TRUE)$data
+  })
 })
 
 
@@ -63,6 +64,89 @@ test_that("affirm_report() works, but skip in CI", {
   )
 })
 
+
+test_that("affirm_report_excel() details", {
+
+  mtcars_modified <- mtcars |>
+    tibble::rownames_to_column(var = "car")
+
+  attr(mtcars_modified$car, 'label') <- "Car model"
+  attr(mtcars_modified$mpg, 'label') <- "Miles/(US) gallon"
+  attr(mtcars_modified$cyl, 'label') <- "Number of cylinders"
+  attr(mtcars_modified$disp, 'label') <- "Displacement (cu.in.)"
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    options('affirm.id_cols' = "car")
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_true(
+      mtcars_modified,
+      label = "mpg lt 33",
+      id = 2,
+      condition = mpg < 33,
+      data_frames = "mtcars"
+    );
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
+    NA
+  )
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    options('affirm.id_cols' = "car")
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_true(
+      mtcars_modified,
+      label = "mpg lt 33",
+      id = 2,
+      condition = mpg < 33,
+      data_frames = "mtcars"
+    );
+    tmp_xlsx <- tempfile(fileext = ".xlsx")
+    affirm_report_excel(file = tmp_xlsx, sheet_name = "{data_frames} {id} {total_n}")
+    openxlsx::read.xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
+    NA
+  )
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data_frames}{id}{label}moooooooorreeeeecharacters")
+    },
+    "At least one sheet name exceeds the allowed 31 characters."
+  )
+
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars_modified,
+      label = "No. cylinders must be 4 or 6",
+      condition = cyl %in% c(4, 6),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data.frames}{id}")
+  },
+  "`sheet_name` glue syntax expects one of"
+  )
+})
 
 test_that("affirmations with zero errors carried forward", {
 
@@ -94,3 +178,4 @@ test_that("affirmations with zero errors carried forward", {
   )
 
 })
+

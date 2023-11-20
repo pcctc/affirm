@@ -8,6 +8,9 @@
 #' @param variable_labels logical indicating whether to add a row to exported
 #' data with the variable labels. If label does not exist, the variable name
 #' is printed. Default is `FALSE`
+#' @param sheet_name A string for sheet names in the excel report; the item name
+#' in curly brackets is replaced with the item value (see glue::glue). Item names
+#' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #'
 #' @return gt table
 #' @name affirm_report
@@ -56,22 +59,36 @@ affirm_report_gt <- function(variable_labels = FALSE) {
 
 #' @rdname affirm_report
 #' @export
-affirm_report_excel <- function(file, variable_labels = FALSE, overwrite = TRUE) {
+affirm_report_excel <- function(file, sheet_name = "{data_frames}{id}", variable_labels = FALSE, overwrite = TRUE) {
+
+  # checking to make sure sheet name glue syntax has acceptable column names
+  sheet_name_cols <- regmatches(sheet_name, gregexpr("\\{([^\\}]+)\\}", sheet_name))[[1]] |>
+    gsub("\\{|\\}", "", x = _)
+
+  # acceptable variables to pass through glue syntax for sheet names
+  glue_accept <- c("id", "label", "priority", "data_frames", "columns", "error_n", "total_n")
+
+  # readable version for error messaging
+  glue_accept_str <- paste0("`", glue_accept, "`", collapse = ", ")
+  if (any(!sheet_name_cols %in% glue_accept)){
+    stop(paste0("`sheet_name` glue syntax expects one of ", glue_accept_str))
+  }
+
   df_report <-
     affirm_report_raw_data(variable_labels = variable_labels) |>
     dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
-      label_no_specials = gsub(pattern = "[[:punct:]]", replacement = "", x = .data$label),
-      label_final =
-        ifelse(
-          is.na(.data$id),
-          .data$label_no_specials,
-          paste(.data$id, .data$label_no_specials)
-        )
+      label_final = glue::glue(sheet_name) |>
+        gsub(pattern = "[[:punct:]]", replacement = "", x = _)
     )
 
+  # checking to make sure sheet names are not too long
+  if (any(nchar(df_report$label_final) > 31)){
+    stop("At least one sheet name exceeds the allowed 31 characters.")
+  }
+
   df_report$data |>
-    stats::setNames(df_report$label_no_specials) |>
+    stats::setNames(df_report$label_final) |>
     openxlsx::write.xlsx(file = file, overwrite = overwrite, colNames = !variable_labels)
 }
 
