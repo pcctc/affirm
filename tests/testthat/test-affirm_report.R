@@ -121,7 +121,7 @@ test_that("affirmation name details", {
       data_frames = "mtcars"
     );
     tmp_xlsx <- tempfile(fileext = ".xlsx")
-    affirm_report_excel(file = tmp_xlsx, sheet_name = "{data_frames} {id} {total_n}")
+    affirm_report_excel(file = tmp_xlsx, affirmation_name = "{data_frames} {id} {total_n}")
     openxlsx::read.xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
     NA
   )
@@ -135,7 +135,7 @@ test_that("affirmation name details", {
       id = 1,
       data_frames = "mtcars"
     )
-    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data_frames}{id}{label}moooooooorreeeeecharacters")
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data_frames}{id}{label}moooooooorreeeeecharacters")
   },
   "At least one sheet name exceeds the allowed 31 characters"
   )
@@ -149,9 +149,9 @@ test_that("affirmation name details", {
       id = 1,
       data_frames = "mtcars"
     )
-    affirm_report_excel(file = tempfile(fileext = ".xlsx"), sheet_name = "{data.frames}{id}")
+    affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data.frames}{id}")
   },
-  "`sheet_name` glue syntax expects one of"
+  "`affirmation_name` glue syntax expects one of"
   )
 
 })
