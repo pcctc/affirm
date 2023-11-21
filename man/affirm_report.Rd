@@ -9,14 +9,18 @@
 \usage{
 affirm_report_gt()
 
-affirm_report_excel(file, sheet_name = "{data_frames}{id}", overwrite = TRUE)
+affirm_report_excel(
+  file,
+  affirmation_name = "{data_frames}{id}",
+  overwrite = TRUE
+)
 
 affirm_report_raw_data()
 }
 \arguments{
 \item{file}{A file path to save the xlsx file}
 
-\item{sheet_name}{A string for sheet names in the excel report; the item name
+\item{affirmation_name}{A string for affirmation names; the item name
 in curly brackets is replaced with the item value (see glue::glue). Item names
 accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, \code{columns}, \code{error_n}, \code{total_n}.}
 
