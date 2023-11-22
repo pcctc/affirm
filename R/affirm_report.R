@@ -70,24 +70,44 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     stop(paste0("`affirmation_name` glue syntax expects one of ", glue_accept_str))
   }
 
-  df_report <-
+  df_summary <-
     affirm_report_raw_data() |>
     dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
       affirmation_name = glue::glue(affirmation_name) |>
         gsub(pattern = "[[:punct:]]", replacement = "", x = _)
     ) |>
-    dplyr::select(affirmation_name, dplyr::everything())
+    # change order of excel report
+    dplyr::select(
+      affirmation_name, data_frames, id, priority, columns, error_n,
+      total_n, error_rate, label, data
+      )
 
   # checking to make sure sheet names are not too long
-  if (any(nchar(df_report$affirmation_name) > 31)){
+  if (any(nchar(df_summary$affirmation_name) > 31)){
     stop("At least one sheet name exceeds the allowed 31 characters.")
   }
 
-  df_report$data <- df_report$data |>
-    stats::setNames(df_report$affirmation_name)
+  # this is the affirmation data that gets exported to each sheets
+  # drops data column and columns with all NAs
+  df_export <- .identify_keep_data(df_summary) |>
+    # add empty Notes column to end
+    mutate(Notes = NA)
 
-  openxlsx::write.xlsx(df_report$data, file = file, overwrite = overwrite)
+  # create excel workbook with all affirmations
+  wb <- openxlsx2::wb_workbook() |>
+    .add_summary_sheet(df_export) |>
+    # currently written to iterate over rows of a data frame
+    # this works
+    .add_affirmation_sheet(df_summary[1, ])
+    # can't get iteration to work over all rows of df_summary
+    # purrr::walk(
+    #   .x = split(df_summary, seq(nrow(df_summary))),
+    #   .f = .add_affirmation_sheet,
+    #   wb = wb
+    # )
+
+  openxlsx2::wb_save(wb, file = file, overwrite = TRUE)
 }
 
 #' @rdname affirm_report

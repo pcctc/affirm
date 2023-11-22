@@ -1,3 +1,12 @@
+mtcars_modified <- mtcars |>
+  tibble::rownames_to_column(var = "car")
+
+attr(mtcars_modified$car, 'label') <- "Car model"
+attr(mtcars_modified$mpg, 'label') <- "Miles/(US) gallon"
+attr(mtcars_modified$cyl, 'label') <- "Number of cylinders"
+attr(mtcars_modified$disp, 'label') <- "Displacement (cu.in.)"
+
+
 test_that("affirm_report() works", {
 
   expect_error({
@@ -74,13 +83,6 @@ test_that("affirm_report() works, but skip in CI", {
 
 test_that("affirmation name details", {
 
-  mtcars_modified <- mtcars |>
-    tibble::rownames_to_column(var = "car")
-
-  attr(mtcars_modified$car, 'label') <- "Car model"
-  attr(mtcars_modified$mpg, 'label') <- "Miles/(US) gallon"
-  attr(mtcars_modified$cyl, 'label') <- "Number of cylinders"
-  attr(mtcars_modified$disp, 'label') <- "Displacement (cu.in.)"
 
   expect_error({
     affirm_init(replace = TRUE)
@@ -184,5 +186,47 @@ test_that("affirmations with zero errors carried forward", {
   },
   "data.frame"
   )
+
+})
+
+
+test_that("excel report helpers", {
+
+  expect_equal(
+    .compute_col_width(mtcars_modified[, 1:4]),
+    c("car" = 22, "mpg" = 8, "cyl" = 8, "disp" = 8)
+  )
+
+  expect_equal(
+    .retrieve_labels(mtcars_modified[, 1:5]),
+    data.frame(
+      "car" = "Car model",
+      "mpg" = "Miles/(US) gallon",
+      "cyl" = "Number of cylinders",
+      "disp" = "Displacement (cu.in.)",
+      "hp" = NA_character_
+      )
+  )
+
+expect_error({
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+  affirm_true(
+    mtcars_modified,
+    label = "No. cylinders must be 4 or 6",
+    condition = cyl %in% c(4, 6),
+    id = 1,
+    data_frames = "mtcars"
+  )
+  affirm_true(
+    mtcars_modified,
+    label = "mpg lt 33",
+    id = 2,
+    condition = mpg < 33,
+    data_frames = "mtcars"
+  )
+  affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
+  NA
+)
 
 })

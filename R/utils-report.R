@@ -122,3 +122,135 @@
 
   data
 }
+
+# utils for excel report -------------------------------------------------------
+#' @param data a data frame of individual affirmation results
+#' @param min_width Minimum column width
+#' @param pad the number of characters to pad the width; so if there are two
+#' @return a named vector
+#' characters you would pad by an additional set amount for some breathing room
+.compute_col_width <- function(data, min_width = 8, pad = 3){
+  # create dummy data frame with column names and variable values
+  # in order to compute max length for setting column widths
+  vec_lengths <- data.frame(t(names(data))) |>
+    setNames(names(data)) |>
+    # add data as character values
+    dplyr::bind_rows(data |> lapply(as.character)) |>
+    # find character length of all entries in each column
+    lapply(nchar) |>
+    # pad the character length for extra space
+    lapply(\(x) {x + pad}) |>
+    # find max character length with a set minimum value
+    lapply(max, min_width, na.rm = TRUE) |>
+    unlist()
+
+  return(vec_lengths)
+}
+
+#' extract variable labels from a data frame
+#' @param data a data frame of individual affirmation results
+#' @return a data frame with one row of variable labels
+.retrieve_labels <- function(data){
+  lapply(data, attr, "label") |>
+    lapply(\(x) {ifelse(is.null(x), NA_character_, x)}) |>
+    data.frame()
+}
+
+
+#' find data to keep in excel report. if argument not supplied to affirm
+#' and all values of column are NA, then remove that columns from the export
+#' @param df_summary a data frame of the overall affirmation report
+#' @return a data frame for the excel export
+.identify_keep_data <- function(df_summary){
+  # identify which columns have affirmation fields entered
+  vec_present <- lapply(df_summary, \(x) {!all(is.na(x))})
+  # identify which columns to keep
+  vec_keep_cols <- names(unlist(vec_present[unlist(vec_present)]))
+  # create a data frame with columns to keep
+  df_keep <- df_summary |>
+    dplyr::select(dplyr::all_of(vec_keep_cols)) |>
+    dplyr::select(-data)
+
+  return(df_keep)
+}
+
+#' and first sheet with summary of affirmations
+#' @param wb a workbook object
+#' @param df_export a data frame of summarizing the affirmations to export
+#' @return a workbook object
+
+.add_summary_sheet <- function(wb, df_export){
+  wb |>
+  # add front page with summary information ----
+  openxlsx2::wb_add_worksheet("Summary") |>
+    openxlsx2::wb_add_data_table(
+      x = df_export,
+      na.strings = "",
+      table_style = "TableStyleLight8"
+    ) |>
+    openxlsx2::wb_set_col_widths(
+      cols = 1:ncol(df_export),
+      widths = .compute_col_width(df_export)
+    )
+}
+
+#' and first sheet with summary of affirmations
+#' @param wb a workbook object
+#' @param df_summary_row a data frame with a single row from the affirmation
+#' summary table
+#' @return a workbook object
+
+.add_affirmation_sheet <- function(wb, df_summary_row){
+
+  # data frame of single affirmation results
+  df_affirmation <- df_summary_row[["data"]][[1]]
+
+  # labels of the data frame of single affirmation results
+
+  df_labels <- .retrieve_labels(df_affirmation)
+  vec_widths <- .compute_col_width(df_affirmation)
+
+  wb |>
+    openxlsx2::wb_add_worksheet(df_summary_row[["affirmation_name"]]) |>
+    # add data on lower row
+    openxlsx2::wb_add_data_table(
+      x = df_affirmation,
+      na.strings = "",
+      table_style = "TableStyleLight8",
+      start_row = 4
+    ) |>
+    openxlsx2::wb_set_col_widths(
+      cols = 1:ncol(df_affirmation),
+      widths = .compute_col_width(df_affirmation)
+    ) |>
+    # add affirmation label on first row
+    openxlsx2::wb_add_data(
+      x = df_summary_row[["label"]][[1]],
+      na.strings = "",
+      start_row = 1
+    ) |>
+    # style affirmation label
+    openxlsx2::wb_add_font(
+      dims = "A1:A1",
+      bold = "double"
+    ) |>
+    # add variable labels above variable names
+    openxlsx2::wb_add_data(
+      x = df_labels,
+      na.strings = "",
+      start_row = 3,
+      col_names = FALSE
+    ) |>
+    # style variable labels
+    openxlsx2::wb_add_font(
+      dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
+      italic = "italic",
+      color = openxlsx2::wb_color(hex = "#7F7F7F")
+    ) |>
+    # wrap text on variable labels
+    openxlsx2::wb_add_cell_style(
+      dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
+      wrap_text = TRUE
+    )
+
+}
