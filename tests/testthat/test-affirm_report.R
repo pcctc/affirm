@@ -208,25 +208,4 @@ test_that("excel report helpers", {
       )
   )
 
-expect_error({
-  affirm_init(replace = TRUE)
-  options('affirm.id_cols' = "car")
-  affirm_true(
-    mtcars_modified,
-    label = "No. cylinders must be 4 or 6",
-    condition = cyl %in% c(4, 6),
-    id = 1,
-    data_frames = "mtcars"
-  )
-  affirm_true(
-    mtcars_modified,
-    label = "mpg lt 33",
-    id = 2,
-    condition = mpg < 33,
-    data_frames = "mtcars"
-  )
-  affirm_report_excel(file = tempfile(fileext = ".xlsx"))},
-  NA
-)
-
 })

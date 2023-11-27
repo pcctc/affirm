@@ -128,10 +128,11 @@
 #
 # @param data a data frame of individual affirmation results
 # @param min_width Minimum column width
+# @param max_width maximum column width
 # @param pad the number of characters to pad the width; so if there are two
 # @return a named vector
 # characters you would pad by an additional set amount for some breathing room
-.compute_col_width <- function(data, min_width = 8, pad = 3){
+.compute_col_width <- function(data, min_width = 8, max_width = 50, pad = 3){
   # create dummy data frame with column names and variable values
   # in order to compute max length for setting column widths
   vec_lengths <- data.frame(t(names(data))) |>
@@ -144,7 +145,12 @@
     lapply(\(x) {x + pad}) |>
     # find max character length with a set minimum value
     lapply(max, min_width, na.rm = TRUE) |>
+    # now set maximum width
+    lapply(min, max_width, na.rm = TRUE) |>
     unlist()
+
+  # set a width for notes columns
+  vec_lengths[["Notes"]] <- 30
 
   return(vec_lengths)
 }
@@ -203,7 +209,8 @@
 .add_affirmation_sheet <- function(wb, df_summary_row){
 
   # data frame of single affirmation results
-  df_affirmation <- df_summary_row[["data"]][[1]]
+  df_affirmation <- df_summary_row[["data"]][[1]] |>
+    dplyr::mutate(Notes = NA)
 
   # labels of the data frame of single affirmation results
 
@@ -212,17 +219,6 @@
 
   wb <- wb |>
     openxlsx2::wb_add_worksheet(df_summary_row[["affirmation_name"]]) |>
-    # add data on lower row
-    openxlsx2::wb_add_data_table(
-      x = df_affirmation,
-      na.strings = "",
-      table_style = "TableStyleLight8",
-      start_row = 4
-    ) |>
-    openxlsx2::wb_set_col_widths(
-      cols = 1:ncol(df_affirmation),
-      widths = .compute_col_width(df_affirmation)
-    ) |>
     # add affirmation label on first row
     openxlsx2::wb_add_data(
       x = df_summary_row[["label"]][[1]],
@@ -233,6 +229,15 @@
     openxlsx2::wb_add_font(
       dims = "A1:A1",
       bold = "double"
+    ) |>
+    # merge cells on affirmation label
+    openxlsx2::wb_merge_cells(
+      dims = "A1:P1"
+    ) |>
+    # wrap text on affirmation label
+    openxlsx2::wb_add_cell_style(
+      dims = "A1:A1",
+      wrap_text = TRUE
     ) |>
     # add variable labels above variable names
     openxlsx2::wb_add_data(
@@ -251,7 +256,20 @@
     openxlsx2::wb_add_cell_style(
       dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
       wrap_text = TRUE
+    ) |>
+    # add data on lower row
+    openxlsx2::wb_add_data_table(
+      x = df_affirmation,
+      na.strings = "",
+      table_style = "TableStyleLight8",
+      start_row = 4
+    ) |>
+    openxlsx2::wb_set_col_widths(
+      cols = seq_len(ncol(df_affirmation)),
+      widths = .compute_col_width(df_affirmation)
     )
+
+
 
   return(wb)
 }
