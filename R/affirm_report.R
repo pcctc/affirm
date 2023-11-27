@@ -79,8 +79,8 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     ) |>
     # change order of excel report
     dplyr::select(
-      affirmation_name, data_frames, id, priority, columns, error_n,
-      total_n, error_rate, label, data
+      "affirmation_name", "data_frames", "id", "priority", "columns", "error_n",
+      "total_n", "error_rate", "label", "data"
       )
 
   # checking to make sure sheet names are not too long
@@ -96,22 +96,11 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
 
   # create excel workbook with all affirmations
   wb <- openxlsx2::wb_workbook() |>
-    .add_summary_sheet(df_export) |>
-    # currently written to iterate over rows of a data frame
-    # this works
-     .add_affirmation_sheet(df_summary[1, ])
-    # can't get iteration to work over all rows of df_summary
-    # purrr::walk(
-    #   .x = split(df_summary, seq(nrow(df_summary))),
-    #   .f = .add_affirmation_sheet,
-    #   wb = wb
-    # )
+    .add_summary_sheet(df_export)
 
-  .add_affirmation_sheet(wb, df_summary[2, ])
-
-  #for (i in 1:nrow(df_summary)){
-  #  .add_affirmation_sheet(wb, df_summary[i, ])
-  #}
+  for (i in seq_len(nrow(df_summary))){
+    wb <- .add_affirmation_sheet(wb, df_summary[i, ])
+  }
 
   openxlsx2::wb_save(wb, file = file, overwrite = TRUE)
 }

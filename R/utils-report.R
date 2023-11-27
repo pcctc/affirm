@@ -124,6 +124,8 @@
 }
 
 # utils for excel report -------------------------------------------------------
+#' Compute column width
+#'
 #' @param data a data frame of individual affirmation results
 #' @param min_width Minimum column width
 #' @param pad the number of characters to pad the width; so if there are two
@@ -133,7 +135,7 @@
   # create dummy data frame with column names and variable values
   # in order to compute max length for setting column widths
   vec_lengths <- data.frame(t(names(data))) |>
-    setNames(names(data)) |>
+    stats::setNames(names(data)) |>
     # add data as character values
     dplyr::bind_rows(data |> lapply(as.character)) |>
     # find character length of all entries in each column
@@ -169,7 +171,7 @@
   # create a data frame with columns to keep
   df_keep <- df_summary |>
     dplyr::select(dplyr::all_of(vec_keep_cols)) |>
-    dplyr::select(-data)
+    dplyr::select(-"data")
 
   return(df_keep)
 }
@@ -210,7 +212,7 @@
   df_labels <- .retrieve_labels(df_affirmation)
   vec_widths <- .compute_col_width(df_affirmation)
 
-  wb |>
+  wb <- wb |>
     openxlsx2::wb_add_worksheet(df_summary_row[["affirmation_name"]]) |>
     # add data on lower row
     openxlsx2::wb_add_data_table(
@@ -253,4 +255,5 @@
       wrap_text = TRUE
     )
 
+  return(wb)
 }

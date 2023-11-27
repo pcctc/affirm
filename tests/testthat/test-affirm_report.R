@@ -124,7 +124,7 @@ test_that("affirmation name details", {
     );
     tmp_xlsx <- tempfile(fileext = ".xlsx")
     affirm_report_excel(file = tmp_xlsx, affirmation_name = "{data_frames} {id} {total_n}")
-    openxlsx::read.xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
+    openxlsx2::read_xlsx(tmp_xlsx, sheet = "mtcars 1 32")},
     NA
   )
 
