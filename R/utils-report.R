@@ -149,6 +149,7 @@
     lapply(min, max_width, na.rm = TRUE) |>
     unlist()
 
+
   # set a width for notes columns
   vec_lengths[["Notes"]] <- 30
 
