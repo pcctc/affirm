@@ -99,13 +99,19 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     .add_summary_sheet(df_export) |>
     # currently written to iterate over rows of a data frame
     # this works
-    .add_affirmation_sheet(df_summary[1, ])
+     .add_affirmation_sheet(df_summary[1, ])
     # can't get iteration to work over all rows of df_summary
     # purrr::walk(
     #   .x = split(df_summary, seq(nrow(df_summary))),
     #   .f = .add_affirmation_sheet,
     #   wb = wb
     # )
+
+  .add_affirmation_sheet(wb, df_summary[2, ])
+
+  #for (i in 1:nrow(df_summary)){
+  #  .add_affirmation_sheet(wb, df_summary[i, ])
+  #}
 
   openxlsx2::wb_save(wb, file = file, overwrite = TRUE)
 }
