@@ -123,15 +123,15 @@
   data
 }
 
-# utils for excel report -------------------------------------------------------
-# Compute column width
-#
-# @param data a data frame of individual affirmation results
-# @param min_width Minimum column width
-# @param max_width maximum column width
-# @param pad the number of characters to pad the width; so if there are two
-# @return a named vector
-# characters you would pad by an additional set amount for some breathing room
+#' Utils-report: compute column widths for excel exports
+#'
+#' @param data a data frame of individual affirmation results
+#' @param min_width minimum column width for excel export
+#' @param max_width maximum column width for excel export
+#' @param pad the number of characters to pad the width; so if there are two
+#' characters you would pad by an additional set amount for some breathing room
+#' @return a named numeric vector
+#'
 .compute_col_width <- function(data, min_width = 8, max_width = 50, pad = 3){
   # create dummy data frame with column names and variable values
   # in order to compute max length for setting column widths
@@ -149,16 +149,15 @@
     lapply(min, max_width, na.rm = TRUE) |>
     unlist()
 
-
   # set a width for notes columns
   vec_lengths[["Notes"]] <- 30
 
   return(vec_lengths)
 }
 
-# extract variable labels from a data frame
-# @param data a data frame of individual affirmation results
-# @return a data frame with one row of variable labels
+#' Utils-report: extract variable labels from a data frame
+#' @param data a data frame of individual affirmation results
+#' @return a data frame with one row of variable labels
 .retrieve_labels <- function(data){
   lapply(data, attr, "label") |>
     lapply(\(x) {ifelse(is.null(x), NA_character_, x)}) |>
@@ -166,10 +165,13 @@
 }
 
 
-# find data to keep in excel report. if argument not supplied to affirm
-# and all values of column are NA, then remove that columns from the export
-# @param df_summary a data frame of the overall affirmation report
-# @return a data frame for the excel export
+#' Utils-report: identify non-NA data to output in excel report.
+#'
+#' If an argument is not supplied to affirm_ # and all values of column are NA,
+#' then remove that column from the excel export.
+#'
+#' @param df_summary a data frame of the overall affirmation report
+#' @return a data frame for the excel export
 .identify_keep_data <- function(df_summary){
   # identify which columns have affirmation fields entered
   vec_present <- lapply(df_summary, \(x) {!all(is.na(x))})
@@ -183,10 +185,12 @@
   return(df_keep)
 }
 
-# and first sheet with summary of affirmations
-# @param wb a workbook object
-# @param df_export a data frame of summarizing the affirmations to export
-# @return a workbook object
+#' Utils-report:  add first sheet with summary of affirmations to excel workbook
+#'
+#' @param wb a workbook object
+#' @param df_export a data frame summarizing the affirmations to export
+#' @return a workbook object
+#'
 .add_summary_sheet <- function(wb, df_export){
   wb |>
   # add front page with summary information ----
@@ -202,11 +206,12 @@
     )
 }
 
-# and first sheet with summary of affirmations
-# @param wb a workbook object
-# @param df_summary_row a data frame with a single row from the affirmation
-# summary table
-# @return a workbook object
+#' Utils-report:  add sheet for an individual affirmation
+#' @param wb a workbook object
+#' @param df_summary_row a data frame with a single row from the affirmation
+#' summary table
+#' @return a workbook object
+#'
 .add_affirmation_sheet <- function(wb, df_summary_row){
 
   # data frame of single affirmation results
@@ -269,8 +274,6 @@
       cols = seq_len(ncol(df_affirmation)),
       widths = .compute_col_width(df_affirmation)
     )
-
-
 
   return(wb)
 }

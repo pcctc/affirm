@@ -194,7 +194,7 @@ test_that("excel report helpers", {
 
   expect_equal(
     .compute_col_width(mtcars_modified[, 1:4]),
-    c("car" = 22, "mpg" = 8, "cyl" = 8, "disp" = 8)
+    c("car" = 22, "mpg" = 8, "cyl" = 8, "disp" = 8, "Notes" = 30)
   )
 
   expect_equal(
