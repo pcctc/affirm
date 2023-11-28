@@ -98,30 +98,6 @@
 }
 
 
-# this function adds two new rows to the data frame: column names and column labels
-.add_row_of_column_labels <- function(data) {
-  # extract labels as list -----------------------------------------------------
-  lst_labels <-
-    mapply(
-      FUN = function(x, y) attr(x, 'label') %||% y,
-      data |> as.list(),
-      names(data),
-      SIMPLIFY = FALSE,
-      USE.NAMES = FALSE
-    ) |>
-    stats::setNames(names(data))
-
-  # make all columns character -------------------------------------------------
-  data <- data |> dplyr::mutate(dplyr::across(everything(), as.character))
-
-  # add a row with just the column names ---------------------------------------
-  data <- tibble::add_row(data, !!!stats::setNames(as.list(names(data)), names(data)), .before = 0L)
-
-  # add a row with the column labels -------------------------------------------
-  data <- tibble::add_row(data, !!!lst_labels, .before = 0L)
-
-  data
-}
 
 #' Utils-report: compute column widths for excel exports
 #'
