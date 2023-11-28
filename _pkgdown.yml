@@ -27,6 +27,11 @@ reference:
 - contents:
   - affirm_init
   - affirm_report
+  - .add_affirmation_sheet
+  - .add_summary_sheet
+  - .compute_col_width
+  - .identify_keep_data
+  - .retrieve_labels
 
 - title: Make Affirmations
 - contents:
