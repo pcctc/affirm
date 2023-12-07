@@ -57,19 +57,6 @@ affirm_report_gt <- function() {
 #' @export
 affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", overwrite = TRUE) {
 
-  # checking to make sure sheet name glue syntax has acceptable column names
-  affirmation_name_cols <- regmatches(affirmation_name, gregexpr("\\{([^\\}]+)\\}", affirmation_name))[[1]] |>
-    gsub("\\{|\\}", "", x = _)
-
-  # acceptable variables to pass through glue syntax for sheet names
-  glue_accept <- c("id", "label", "priority", "data_frames", "columns", "error_n", "total_n")
-
-  # readable version for error messaging
-  glue_accept_str <- paste0("`", glue_accept, "`", collapse = ", ")
-  if (any(!affirmation_name_cols %in% glue_accept)){
-    stop(paste0("`affirmation_name` glue syntax expects one of ", glue_accept_str))
-  }
-
   df_summary <-
     affirm_report_raw_data() |>
     dplyr::filter(.data$error_n > 0L) |>

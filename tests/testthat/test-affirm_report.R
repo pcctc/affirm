@@ -153,7 +153,6 @@ test_that("affirmation name details", {
     )
     affirm_report_excel(file = tempfile(fileext = ".xlsx"), affirmation_name = "{data.frames}{id}")
   },
-  "`affirmation_name` glue syntax expects one of"
   )
 
 })
