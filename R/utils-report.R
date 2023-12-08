@@ -100,14 +100,13 @@
 
 
 #' Utils-report: compute column widths for excel exports
-#'
+#' @noRd
 #' @param data a data frame of individual affirmation results
 #' @param min_width minimum column width for excel export
 #' @param max_width maximum column width for excel export
 #' @param pad the number of characters to pad the width; so if there are two
 #' characters you would pad by an additional set amount for some breathing room
 #' @return a named numeric vector
-#' @export
 #'
 .compute_col_width <- function(data, min_width = 8, max_width = 50, pad = 3){
   # create dummy data frame with column names and variable values
@@ -133,10 +132,9 @@
 }
 
 #' Utils-report: extract variable labels from a data frame
-#'
+#' @noRd
 #' @param data a data frame of individual affirmation results
 #' @return a data frame with one row of variable labels
-#' @export
 #'
 .retrieve_labels <- function(data){
   lapply(data, attr, "label") |>
@@ -149,10 +147,9 @@
 #'
 #' If an argument is not supplied to affirm_ # and all values of column are NA,
 #' then remove that column from the excel export.
-#'
+#' @noRd
 #' @param df_summary a data frame of the overall affirmation report
 #' @return a data frame for the excel export
-#' @export
 #'
 .identify_keep_data <- function(df_summary){
   # identify which columns have affirmation fields entered
@@ -168,11 +165,10 @@
 }
 
 #' Utils-report:  add first sheet with summary of affirmations to excel workbook
-#'
+#' @noRd
 #' @param wb a workbook object
 #' @param df_export a data frame summarizing the affirmations to export
 #' @return a workbook object
-#' @export
 #'
 .add_summary_sheet <- function(wb, df_export){
   wb |>
@@ -190,12 +186,11 @@
 }
 
 #' Utils-report:  add sheet for an individual affirmation
-#'
+#' @noRd
 #' @param wb a workbook object
 #' @param df_summary_row a data frame with a single row from the affirmation
 #' summary table
 #' @return a workbook object
-#' @export
 #'
 .add_affirmation_sheet <- function(wb, df_summary_row){
 
