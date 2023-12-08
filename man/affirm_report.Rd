@@ -22,7 +22,8 @@ affirm_report_raw_data()
 
 \item{affirmation_name}{A string for affirmation names; the item name
 in curly brackets is replaced with the item value (see glue::glue). Item names
-accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, \code{columns}, \code{error_n}, \code{total_n}.}
+accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, \code{columns}, \code{error_n}, \code{total_n}.
+Defaults to \code{"{data_frames}{id}"}.}
 
 \item{overwrite}{Overwrite existing file (Defaults to \code{TRUE} as with \code{write.table})}
 }

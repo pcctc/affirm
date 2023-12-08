@@ -8,6 +8,7 @@
 #' @param affirmation_name A string for affirmation names; the item name
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
+#' Defaults to `"{data_frames}{id}"`.
 #'
 #' @return gt table
 #' @name affirm_report
