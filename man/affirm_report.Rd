@@ -7,27 +7,23 @@
 \alias{affirm_report_raw_data}
 \title{Affirmation Report}
 \usage{
-affirm_report_gt(variable_labels = FALSE)
+affirm_report_gt()
 
 affirm_report_excel(
   file,
-  sheet_name = "{data_frames}{id}",
-  variable_labels = FALSE,
+  affirmation_name = "{data_frames}{id}",
   overwrite = TRUE
 )
 
-affirm_report_raw_data(variable_labels = FALSE)
+affirm_report_raw_data()
 }
 \arguments{
-\item{variable_labels}{logical indicating whether to add a row to exported
-data with the variable labels. If label does not exist, the variable name
-is printed. Default is \code{FALSE}}
-
 \item{file}{A file path to save the xlsx file}
 
-\item{sheet_name}{A string for sheet names in the excel report; the item name
+\item{affirmation_name}{A string for affirmation names; the item name
 in curly brackets is replaced with the item value (see glue::glue). Item names
-accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, \code{columns}, \code{error_n}, \code{total_n}.}
+accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, \code{columns}, \code{error_n}, \code{total_n}.
+Defaults to \code{"{data_frames}{id}"}.}
 
 \item{overwrite}{Overwrite existing file (Defaults to \code{TRUE} as with \code{write.table})}
 }

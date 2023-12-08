@@ -1,5 +1,12 @@
 # affirm (development version)
 
+* Export utility functions for `affirm_excel_report()`.
+
+* Update `affirm_excel_report()` to depend on `openxlsx2`; now contains front
+summary sheet and specific formatting for individual affirmation sheets.
+
+* Remove variable labels arguments and corresponding helper functions.
+
 * Allow for glue syntax in excel report sheet names.
 
 * When no errors are found, return a data frame of zero rows instead of `NULL`.
