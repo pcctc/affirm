@@ -1,5 +1,7 @@
 # affirm (development version)
 
+* Update `affirm_excel_report()` to allow for affrimations with an `error_rate` of 0 to print in the summary tab of the Excel report output.
+
 * Export utility functions for `affirm_excel_report()`.
 
 * Update `affirm_excel_report()` to depend on `openxlsx2`; now contains front
