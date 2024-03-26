@@ -203,56 +203,59 @@
   df_labels <- .retrieve_labels(df_affirmation)
   vec_widths <- .compute_col_width(df_affirmation)
 
-  wb <- wb |>
-    openxlsx2::wb_add_worksheet(df_summary_row[["affirmation_name"]]) |>
-    # add affirmation label on first row
-    openxlsx2::wb_add_data(
-      x = df_summary_row[["label"]][[1]],
-      na.strings = "",
-      start_row = 1
-    ) |>
-    # style affirmation label
-    openxlsx2::wb_add_font(
-      dims = "A1:A1",
-      bold = "double"
-    ) |>
-    # merge cells on affirmation label
-    openxlsx2::wb_merge_cells(
-      dims = "A1:P1"
-    ) |>
-    # wrap text on affirmation label
-    openxlsx2::wb_add_cell_style(
-      dims = "A1:A1",
-      wrap_text = TRUE
-    ) |>
-    # add variable labels above variable names
-    openxlsx2::wb_add_data(
-      x = df_labels,
-      na.strings = "",
-      start_row = 3,
-      col_names = FALSE
-    ) |>
-    # style variable labels
-    openxlsx2::wb_add_font(
-      dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
-      italic = "italic",
-      color = openxlsx2::wb_color(hex = "#7F7F7F")
-    ) |>
-    # wrap text on variable labels
-    openxlsx2::wb_add_cell_style(
-      dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
-      wrap_text = TRUE
-    ) |>
-    # add data on lower row
-    openxlsx2::wb_add_data_table(
-      x = df_affirmation,
-      na.strings = "",
-      table_style = "TableStyleLight8",
-      start_row = 4
-    ) |>
-    openxlsx2::wb_set_col_widths(
-      cols = seq_len(ncol(df_affirmation)),
-      widths = .compute_col_width(df_affirmation)
+  wb <-
+    suppressWarnings(
+      wb |>
+        openxlsx2::wb_add_worksheet(df_summary_row[["affirmation_name"]]) |>
+        # add affirmation label on first row
+        openxlsx2::wb_add_data(
+          x = df_summary_row[["label"]][[1]],
+          na.strings = "",
+          start_row = 1
+        ) |>
+        # style affirmation label
+        openxlsx2::wb_add_font(
+          dims = "A1:A1",
+          bold = "double"
+        ) |>
+        # merge cells on affirmation label
+        openxlsx2::wb_merge_cells(
+          dims = "A1:P1"
+        ) |>
+        # wrap text on affirmation label
+        openxlsx2::wb_add_cell_style(
+          dims = "A1:A1",
+          wrap_text = TRUE
+        ) |>
+        # add variable labels above variable names
+        openxlsx2::wb_add_data(
+          x = df_labels,
+          na.strings = "",
+          start_row = 3,
+          col_names = FALSE
+        ) |>
+        # style variable labels
+        openxlsx2::wb_add_font(
+          dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
+          italic = "italic",
+          color = openxlsx2::wb_color(hex = "#7F7F7F")
+        ) |>
+        # wrap text on variable labels
+        openxlsx2::wb_add_cell_style(
+          dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
+          wrap_text = TRUE
+        ) |>
+        # add data on lower row
+        openxlsx2::wb_add_data_table(
+          x = df_affirmation,
+          na.strings = "",
+          table_style = "TableStyleLight8",
+          start_row = 4
+        ) |>
+        openxlsx2::wb_set_col_widths(
+          cols = seq_len(ncol(df_affirmation)),
+          widths = .compute_col_width(df_affirmation)
+        )
     )
 
   return(wb)
