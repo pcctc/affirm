@@ -172,6 +172,49 @@ test_that("affirmations with zero errors carried forward", {
     NA
   )
 
+  # Zero error rates remain#
+  expect_true({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4, 6, or 8",
+      condition = cyl %in% c(4, 6, 8),
+      id = 1,
+      data_frames = "mtcars"
+    )
+    tempxlsx <- tempfile(fileext = ".xlsx")
+    affirm_report_excel(file = tempxlsx)
+    df_summary <- openxlsx2::read_xlsx(tempxlsx)
+    df_summary$error_rate == 0
+    }
+  )
+
+  # All relevant variables/columns present in blank worksheets
+  expect_true({
+    affirm_init(replace = TRUE)
+
+    options(
+      'affirm.id_cols' =  c(
+        "mpg", "cyl", "disp", "hp",
+        "drat", "wt", "qsec", "vs",
+        "am", "gear", "carb"
+      )
+    )
+
+    affirm_true(
+      mtcars,
+      label = "No. cylinders must be 4, 6, or 8",
+      condition = cyl %in% c(4, 6, 8),
+      id = 2,
+      data_frames = "mtcars"
+    )
+    tempxlsx <- tempfile(fileext = ".xlsx")
+    affirm_report_excel(file = tempxlsx)
+    df_empty_sheet <- openxlsx2::read_xlsx(tempxlsx, sheet = "mtcars2", start_row = 4)
+    all(names(mtcars) %in% names(df_empty_sheet))
+  }
+  )
+
   expect_s3_class({
     affirm_init(replace = TRUE)
     affirm_true(

@@ -60,7 +60,6 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
 
   df_summary <-
     affirm_report_raw_data() |>
-    dplyr::filter(.data$error_n > 0L) |>
     dplyr::mutate(
       affirmation_name = glue::glue(affirmation_name) |>
         gsub(pattern = "[[:punct:]]", replacement = "", x = _)
