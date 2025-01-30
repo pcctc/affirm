@@ -401,7 +401,7 @@
       );
 
     # Grab the affirmations names to be used throughout
-    names(lst_join_key_dupes) <- vec_affirmation_names
+    names(lst_join_key_dupes)[[i]] <- vec_affirmation_names[[i]]
 
     # Remove the join keys#
     lst_updated_affirmation_dfs[[i]] <-
