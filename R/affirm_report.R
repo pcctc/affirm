@@ -148,7 +148,7 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
   wb <- openxlsx2::wb_workbook() |>
     .add_summary_sheet(df_export)
 
-  for (i in seq_len(nrow(df_summary))){
+  for (i in seq_len(nrow(df_export))){
     wb <- .add_affirmation_sheet(wb, df_summary[i, ], prev_exists)
   }
 

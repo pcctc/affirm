@@ -651,3 +651,111 @@ cli::test_that_cli(
   }
 )
 
+test_that("Test that reports can run and be updated when newly created affirmations are present", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+  affirm_false(
+    mtcars_modified,
+    label = "mpg lt 15",
+    id = 1,
+    condition = mpg < 15,
+    data_frames = "mtcars"
+  );
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_close()
+
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg < 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}", previous_file = tempxlsx)
+
+  # We expect no error because mtcars2 should be a valid sheet if added correctly
+  openxlsx2::wb_to_df(
+      file = updated_tempxlsx,
+      sheet = "mtcars2",
+      start_row = 4
+    ) |>
+    expect_no_error()
+
+}
+)
+
+test_that("Test that reports can run and be updated when old affirmations are removed", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}", previous_file = tempxlsx)
+
+
+  affirm_close()
+
+old_wb_sheets <- openxlsx2::wb_load(tempxlsx)$sheet_names
+new_wb_sheets <- openxlsx2::wb_load(updated_tempxlsx)$sheet_names
+
+# Check mtcars2 was removed from the new report, so
+# old_wb_sheets should have 3 sheets
+# new_wb_sheets should have 2 sheets
+# And the new wb sheets names should be the first two of the old wb sheets
+
+wb_sheet_check <-
+  (
+    (length(old_wb_sheets) == 3 & length(new_wb_sheets) == 2) &
+     new_wb_sheets == old_wb_sheets[1:2]
+   ) |> all()
+
+expect_true(wb_sheet_check)
+
+}
+)

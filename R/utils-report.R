@@ -194,10 +194,34 @@
 #'
 .add_affirmation_sheet <- function(wb, df_summary_row, prev_exists){
 
-  # data frame of single affirmation results
+
+  df_affirmation <-
+    df_summary_row[["data"]][[1]]
+
+  empty_df <- nrow(df_affirmation) == 0
+
+  if(empty_df){
+    df_affirmation[1,] <- NA
+  }
+
   if(prev_exists){
-    df_affirmation <-
-      df_summary_row[["data"]][[1]]
+
+    # labels of the data frame of single affirmation results
+    # data frame of single affirmation results
+    vec_widths <- .compute_col_width(df_affirmation)
+    df_labels <- .retrieve_labels(df_affirmation)
+    col_count_check <- length(vec_widths) != length(df_affirmation)
+
+    if (col_count_check){
+      df_affirmation <-
+      df_affirmation |>
+        dplyr::mutate(
+          Status = NA,
+          Comment = NA
+        )
+    }
+
+
   } else{
     df_affirmation <-
       df_summary_row[["data"]][[1]] |>
@@ -205,12 +229,13 @@
         Status = NA,
         Comment = NA
       )
+
+    # data frame of single affirmation results
+    vec_widths <- .compute_col_width(df_affirmation)
+    df_labels <- .retrieve_labels(df_affirmation)
+
   }
 
-  # labels of the data frame of single affirmation results
-
-  df_labels <- .retrieve_labels(df_affirmation)
-  vec_widths <- .compute_col_width(df_affirmation)
 
   wb <-
     suppressWarnings(
@@ -281,7 +306,14 @@
 
   # Pull previous wb into the environment
   prev_wb <- openxlsx2::wb_load(prev_wb)
+  # Pull all sheets except for the summary one (first one)
   prev_affirmation_sheets <- prev_wb$sheet_names[-1]
+
+  # Assess current new affirmation sheets
+  new_affirmation_sheets <- df_summary_current$affirmation_name
+
+  # Remove any old sheets that are getting dropped if applicable
+  prev_affirmation_sheets <- prev_affirmation_sheets[prev_affirmation_sheets %in% new_affirmation_sheets]
 
   # Pull out the old summary's affirmation names, assigned to, status, and comments
   df_summary_prev <-
@@ -295,7 +327,9 @@
       "affirmation_name",
       "Status",
       "Comment"
-    )
+    ) |>
+    # Only keep previous affirmations that match the current affirmations
+    dplyr::filter(.data$affirmation_name %in% prev_affirmation_sheets)
 
   # Join old info into new summary sheet
   df_summary_updated_init <-
@@ -326,12 +360,11 @@
         )
       )
   }
-
+# Pull out affirmation names, and apply to the list
   vec_affirmation_names <- df_summary_current |> dplyr::pull("affirmation_name")
-
   names(lst_new_affirmation_dfs) <- vec_affirmation_names
 
-  # Pull out old affirmation dfs
+  # Initialize a list to Ppull out old affirmation dfs
   lst_prev_affirmation_dfs <- list()
 
   for (i in seq_len(length(prev_affirmation_sheets))){
@@ -374,9 +407,46 @@
       }
   }
 
+  # Pull out affirmation names, and apply to the list
+  old_vec_affirmation_names <- df_summary_prev |> dplyr::pull("affirmation_name")
+  names(lst_prev_affirmation_dfs) <- old_vec_affirmation_names
+
   # Create an empty list to store updated affirmations#
   lst_updated_affirmation_dfs <- list()
   lst_join_key_dupes <- list()
+
+  # Fill in blank dataframes where needed
+  # Get the total affirmations present in current and previous reports
+  new_length <- lst_new_affirmation_dfs |> length()
+  prev_length <- lst_prev_affirmation_dfs |> length()
+  total_dfs_missing <- abs(new_length - prev_length)
+
+  # If a difference in length is found between the 2 reports...
+  if(total_dfs_missing > 0){
+
+    # Determine which one is "smaller" (missing dfs)
+    smaller_list <- which.min(c("new" = new_length, "prev" = prev_length)) |> names()
+
+    if(smaller_list == "prev"){
+      for (i in seq_len(total_dfs_missing)){
+        # This adds placeholder DFs from the new report into the previous report, if applicable.
+        # This allows for previous affirmations that "don't exist" to bind to new affirmations
+        # So the old and new affirmations can be properly joined
+        lst_prev_affirmation_dfs[[i + total_dfs_missing]] <-
+          lst_new_affirmation_dfs[[new_length - total_dfs_missing + i]] |>
+          dplyr::select("join_key")
+      }
+    } else{
+      # Find which dfs to keep if affirmations from the previous report are getting dropped
+      # This allows for the new and old affirmations to join properly if..
+      # If the new report has less affrimations than the previous
+      # Presumably, because an affirmation was intentionally removed.
+        dfs_to_keep <- old_vec_affirmation_names %in% vec_affirmation_names
+        lst_new_affirmation_dfs <- lst_new_affirmation_dfs[dfs_to_keep]
+    }
+
+  }
+
 
   # Join old and new affirmations#
   for (i in seq_len(nrow(df_summary_updated_init))){
@@ -421,7 +491,6 @@
 
     # Pull out the total unique duplicates found for cli pluralization#
     lst_n_dupes[[i]] <- length(lst_join_key_check[[i]])
-
   }
 
   # Pull out the names of the affirmations to keep it organized
