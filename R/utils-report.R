@@ -239,7 +239,7 @@
         # style affirmation label
         openxlsx2::wb_add_font(
           dims = "A1:A1",
-          bold = "double"
+          bold = TRUE
         ) |>
         # merge cells on affirmation label
         openxlsx2::wb_merge_cells(
@@ -260,8 +260,8 @@
         # style variable labels
         openxlsx2::wb_add_font(
           dims = openxlsx2::wb_dims(x = df_labels, from_row = 3, col_names = FALSE),
-          italic = "italic",
-          bold = "bold",
+          italic = TRUE,
+          bold = TRUE,
           color = openxlsx2::wb_color(hex = "#000000")
         ) |>
         # wrap text on variable labels

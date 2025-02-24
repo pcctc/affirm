@@ -597,7 +597,7 @@ test_that("Test that previous comments and status info is carried forward in aff
     dplyr::filter(!is.na(Comment)) |>
     dplyr::pull("Comment")
 
-  expect_true(updated_affirm_sheet_status == "OK" & updated_affirm_sheet_comment == "Queried" )
+  expect_true(updated_affirm_sheet_status == "OK" & updated_affirm_sheet_comment == "Queried")
 
 }
 )
