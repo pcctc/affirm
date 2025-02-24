@@ -374,7 +374,9 @@ cli::test_that_cli(
   }
 )
 
-
+#==============================================================================#
+# Updating/Previous Affirmation Test Suite--------------------------------------
+#==============================================================================#
 test_that("Test that previous assigned_to info is carried forward in summary sheet", {
 
   affirm_init(replace = TRUE)
@@ -605,8 +607,8 @@ cli::test_that_cli(
       wb = wb_prev_init,
       sheet = "mtcars1",
       x = "OK",
-      start_row = 3,
-      start_col = 8
+      start_row = 6,
+      start_col = 3
     );
 
     wb_prev <-
@@ -614,8 +616,8 @@ cli::test_that_cli(
       wb = wb_prev_init2,
       sheet = "mtcars1",
       x = "Queried",
-      start_row = 4,
-      start_col = 8
+      start_row = 5,
+      start_col = 4
     );
 
     openxlsx2::wb_save(
@@ -759,3 +761,121 @@ expect_true(wb_sheet_check)
 
 }
 )
+
+test_that("Test that when columns are removed from old to new affirmations, that the correct error is thrown", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+  mtcars_modified |>
+    dplyr::select(-all_of(c("am", "gear", "carb"))) |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+  affirm_false(
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  testthat::expect_snapshot({
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+      previous_file = tempxlsx
+    )
+  },
+  error = TRUE
+  )
+  affirm_close()
+
+}
+)
+
+test_that("Test that when columns are mismatched from old to new affirmations, that the correct error is thrown", {
+
+  affirm_init(replace = TRUE)
+
+  options(
+    'affirm.id_cols' =  c("car", "mpg", "cyl", "disp", "hp", "drat", "wt")
+    )
+
+  mtcars_modified |>
+  affirm_false(
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  ) |>
+  affirm_false(
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_init(replace = TRUE)
+
+  options(
+    'affirm.id_cols' =  c("car", "mpg", "cyl", "disp",  "am", "gear", "carb")
+  )
+
+    mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    )
+
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  testthat::expect_snapshot({
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+     previous_file = tempxlsx
+    )
+  },
+  error = TRUE
+  )
+  affirm_close()
+
+}
+)
+

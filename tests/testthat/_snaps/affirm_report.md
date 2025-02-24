@@ -181,3 +181,41 @@
       
       [36mi[39m Please review and remove duplicate data before updated a previous Affirm Excel Report.
 
+# Test that when columns are removed from old to new affirmations, that the correct error is thrown
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Message
+      x The current affirm report could not be updated due to missing columns in the following current affirmations:
+      
+      1. Affirmation: `mtcars1`
+        * `am`, `gear`, and `carb`
+      2. Affirmation: `mtcars2`
+        * `am`, `gear`, and `carb`
+      
+      i Please add the missing columns to the current affirm session before attempting to update the current report.
+      
+    Condition
+      Error in `affirm_report_excel()`:
+      i affirm Excel Report was not updated.
+
+# Test that when columns are mismatched from old to new affirmations, that the correct error is thrown
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Message
+      x The current affirm report could not be updated due to missing columns in the following current affirmations:
+      
+      1. Affirmation: `mtcars1`
+        * `hp`, `drat`, and `wt`
+      2. Affirmation: `mtcars2`
+        * `hp`, `drat`, and `wt`
+      
+      i Please add the missing columns to the current affirm session before attempting to update the current report.
+      
+    Condition
+      Error in `affirm_report_excel()`:
+      i affirm Excel Report was not updated.
+

@@ -108,7 +108,7 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
       dplyr::select(-"assigned_to")
 
     # Start the process to update the report#
-    df_summary <- .update_summary_sheet(df_summary_current, previous_file)
+    df_summary <- .update_sheets(df_summary_current, previous_file)
 
   } else{
     # Otherwise, proceed without updating#
