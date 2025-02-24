@@ -210,17 +210,6 @@
     # data frame of single affirmation results
     vec_widths <- .compute_col_width(df_affirmation)
     df_labels <- .retrieve_labels(df_affirmation)
-    col_count_check <- length(vec_widths) != length(df_affirmation)
-
-    if (col_count_check){
-      df_affirmation <-
-      df_affirmation |>
-        dplyr::mutate(
-          Status = NA,
-          Comment = NA
-        )
-    }
-
 
   } else{
     df_affirmation <-

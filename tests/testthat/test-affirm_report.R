@@ -377,6 +377,15 @@ cli::test_that_cli(
 #==============================================================================#
 # Updating/Previous Affirmation Test Suite--------------------------------------
 #==============================================================================#
+attr(mtcars_modified$hp, 'label') <- "Gross horsepower"
+attr(mtcars_modified$drat, 'label') <- "Rear axle ratio"
+attr(mtcars_modified$wt, 'label') <- "Weight (1000 lbs)"
+attr(mtcars_modified$qsec, 'label') <- "1/4 mile time"
+attr(mtcars_modified$vs, 'label') <- "Engine"
+attr(mtcars_modified$am, 'label') <- "Transmission"
+attr(mtcars_modified$gear, 'label') <- "Number of forward gears"
+attr(mtcars_modified$carb, 'label') <- "Number of carburetors"
+
 test_that("Test that previous assigned_to info is carried forward in summary sheet", {
 
   affirm_init(replace = TRUE)
@@ -398,15 +407,14 @@ test_that("Test that previous assigned_to info is carried forward in summary she
   wb_prev_init <- openxlsx2::wb_load(tempxlsx)
 
   # Adding a value to "assigned to" to be carried over in new wb
-
   wb_prev <-
     openxlsx2::wb_add_data(
-    wb = wb_prev_init,
-    sheet = "Summary",
-    x = "Meghan",
-    start_row = 2,
-    start_col = 1
-  )
+      wb = wb_prev_init,
+      sheet = "Summary",
+      x = "Meghan",
+      start_row = 2,
+      start_col = 1
+    )
 
   openxlsx2::wb_save(
     wb_prev,
@@ -439,6 +447,83 @@ test_that("Test that previous assigned_to info is carried forward in summary she
 }
 )
 
+test_that("Test that previous comments and status info is carried forward in summary sheet", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+
+  affirm_false(
+    mtcars_modified[1:16,],
+    label = "mpg gt 20",
+    id = 1,
+    condition = mpg > 20,
+    data_frames = "mtcars"
+  );
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_close()
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx)
+
+  # Adding a value to "Status" and "Comment" to be carried over in new wb
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_data(
+      sheet = "Summary",
+      x = "Not OK",
+      start_row = 2,
+      start_col = 10
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Summary",
+      x = "This is a comment",
+      start_row = 2,
+      start_col = 11
+    )
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  )
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = "car")
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 20",
+    id = 1,
+    condition = mpg > 20,
+    data_frames = "mtcars"
+  )
+
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}", previous_file = tempxlsx)
+
+  updated_summary_sheet_status_value <-
+    openxlsx2::wb_to_df(
+      file = updated_tempxlsx,
+      sheet = "Summary"
+    ) |>
+    dplyr::pull("Status")
+
+  updated_summary_sheet_comment_value <-
+    openxlsx2::wb_to_df(
+      file = updated_tempxlsx,
+      sheet = "Summary"
+    ) |>
+    dplyr::pull("Comment")
+
+  expect_true(
+    updated_summary_sheet_status_value == "Not OK" &
+      updated_summary_sheet_comment_value == "This is a comment"
+  )
+
+}
+)
+
 test_that("Test that previous comments and status info is carried forward in affirmation sheet", {
 
   affirm_init(replace = TRUE)
@@ -456,29 +541,26 @@ test_that("Test that previous comments and status info is carried forward in aff
 
   affirm_close()
 
-  wb_prev_init <- openxlsx2::wb_load(tempxlsx)
+  wb_prev <- openxlsx2::wb_load(tempxlsx)
 
   # Adding a value to "status and comment" to be carried over in new wb
-  wb_prev_init2 <-
-  openxlsx2::wb_add_data(
-    wb = wb_prev_init,
-    sheet = "mtcars1",
-    x = "OK",
-    start_row = 8,
-    start_col = 3
-  )
-
-  wb_prev <-
-  openxlsx2::wb_add_data(
-    wb = wb_prev_init2,
-    sheet = "mtcars1",
-    x = "Queried",
-    start_row = 8,
-    start_col = 4
-  )
+  wb_prev2 <-
+    wb_prev |>
+    openxlsx2::wb_add_data(
+      sheet = "mtcars1",
+      x = "OK",
+      start_row = 8,
+      start_col = 3
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "mtcars1",
+      x = "Queried",
+      start_row = 8,
+      start_col = 4
+    )
 
   openxlsx2::wb_save(
-    wb_prev,
+    wb_prev2,
     file = tempxlsx,
     overwrite = TRUE
   )
@@ -603,22 +685,22 @@ cli::test_that_cli(
 
     # Adding a value to "status and comment" to be carried over in new wb
     wb_prev_init2 <-
-    openxlsx2::wb_add_data(
-      wb = wb_prev_init,
-      sheet = "mtcars1",
-      x = "OK",
-      start_row = 6,
-      start_col = 3
-    );
+      openxlsx2::wb_add_data(
+        wb = wb_prev_init,
+        sheet = "mtcars1",
+        x = "OK",
+        start_row = 6,
+        start_col = 3
+      );
 
     wb_prev <-
-    openxlsx2::wb_add_data(
-      wb = wb_prev_init2,
-      sheet = "mtcars1",
-      x = "Queried",
-      start_row = 5,
-      start_col = 4
-    );
+      openxlsx2::wb_add_data(
+        wb = wb_prev_init2,
+        sheet = "mtcars1",
+        x = "Queried",
+        start_row = 5,
+        start_col = 4
+      );
 
     openxlsx2::wb_save(
       wb_prev,
@@ -695,10 +777,10 @@ test_that("Test that reports can run and be updated when newly created affirmati
 
   # We expect no error because mtcars2 should be a valid sheet if added correctly
   openxlsx2::wb_to_df(
-      file = updated_tempxlsx,
-      sheet = "mtcars2",
-      start_row = 4
-    ) |>
+    file = updated_tempxlsx,
+    sheet = "mtcars2",
+    start_row = 4
+  ) |>
     expect_no_error()
 
 }
@@ -743,21 +825,21 @@ test_that("Test that reports can run and be updated when old affirmations are re
 
   affirm_close()
 
-old_wb_sheets <- openxlsx2::wb_load(tempxlsx)$sheet_names
-new_wb_sheets <- openxlsx2::wb_load(updated_tempxlsx)$sheet_names
+  old_wb_sheets <- openxlsx2::wb_load(tempxlsx)$sheet_names
+  new_wb_sheets <- openxlsx2::wb_load(updated_tempxlsx)$sheet_names
 
-# Check mtcars2 was removed from the new report, so
-# old_wb_sheets should have 3 sheets
-# new_wb_sheets should have 2 sheets
-# And the new wb sheets names should be the first two of the old wb sheets
+  # Check mtcars2 was removed from the new report, so
+  # old_wb_sheets should have 3 sheets
+  # new_wb_sheets should have 2 sheets
+  # And the new wb sheets names should be the first two of the old wb sheets
 
-wb_sheet_check <-
-  (
-    (length(old_wb_sheets) == 3 & length(new_wb_sheets) == 2) &
-     new_wb_sheets == old_wb_sheets[1:2]
-   ) |> all()
+  wb_sheet_check <-
+    (
+      (length(old_wb_sheets) == 3 & length(new_wb_sheets) == 2) &
+        new_wb_sheets == old_wb_sheets[1:2]
+    ) |> all()
 
-expect_true(wb_sheet_check)
+  expect_true(wb_sheet_check)
 
 }
 )
@@ -767,16 +849,14 @@ test_that("Test that when columns are removed from old to new affirmations, that
   affirm_init(replace = TRUE)
   options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
 
+  mtcars_modified |>
   affirm_false(
-    mtcars_modified,
     label = "mpg gt 15",
     id = 1,
     condition = mpg > 15,
     data_frames = "mtcars"
-  )
-
+  ) |>
   affirm_false(
-    mtcars_modified,
     label = "mpg gt 10",
     id = 2,
     condition = mpg > 10,
@@ -789,19 +869,18 @@ test_that("Test that when columns are removed from old to new affirmations, that
   affirm_init(replace = TRUE)
   options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
   mtcars_modified |>
-    dplyr::select(-all_of(c("am", "gear", "carb"))) |>
     affirm_false(
       label = "mpg gt 15",
       id = 1,
       condition = mpg > 15,
       data_frames = "mtcars"
     ) |>
-  affirm_false(
-    label = "mpg gt 10",
-    id = 2,
-    condition = mpg > 10,
-    data_frames = "mtcars"
-  );
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
   updated_tempxlsx <- tempfile(fileext = ".xlsx")
 
   testthat::expect_snapshot({
@@ -824,21 +903,21 @@ test_that("Test that when columns are mismatched from old to new affirmations, t
 
   options(
     'affirm.id_cols' =  c("car", "mpg", "cyl", "disp", "hp", "drat", "wt")
-    )
+  )
 
   mtcars_modified |>
-  affirm_false(
-    label = "mpg gt 15",
-    id = 1,
-    condition = mpg > 15,
-    data_frames = "mtcars"
-  ) |>
-  affirm_false(
-    label = "mpg gt 10",
-    id = 2,
-    condition = mpg > 10,
-    data_frames = "mtcars"
-  )
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    )
 
   tempxlsx <- tempfile(fileext = ".xlsx")
   affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
@@ -849,7 +928,7 @@ test_that("Test that when columns are mismatched from old to new affirmations, t
     'affirm.id_cols' =  c("car", "mpg", "cyl", "disp",  "am", "gear", "carb")
   )
 
-    mtcars_modified |>
+  mtcars_modified |>
     affirm_false(
       label = "mpg gt 15",
       id = 1,
@@ -869,13 +948,161 @@ test_that("Test that when columns are mismatched from old to new affirmations, t
     affirm_report_excel(
       file = updated_tempxlsx,
       affirmation_name = "{data_frames}{id}",
-     previous_file = tempxlsx
+      previous_file = tempxlsx
     )
   },
   error = TRUE
   )
   affirm_close()
 
+}
+)
+
+test_that("Test that when columns are added to new affirmations, that the report still renders", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+      previous_file = tempxlsx
+    ) |>
+      expect_no_error()
+
+    affirm_close()
+}
+)
+
+test_that("Test that when columns are added to new affirmations, that the report still carries previous status and comment values over", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx);
+
+  # Adding a value to "status and comment" to be carried over in new wb
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_data(
+      sheet = "mtcars1",
+      x = "OK",
+      start_row = 6,
+      start_col = 10
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "mtcars1",
+      x = "Queried",
+      start_row = 5,
+      start_col = 11
+    );
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  );
+
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  affirm_report_excel(
+    file = updated_tempxlsx,
+    affirmation_name = "{data_frames}{id}",
+    previous_file = tempxlsx
+  )
+
+  updated_affirm_sheet_status <-
+    openxlsx2::wb_to_df(
+      file = updated_tempxlsx,
+      sheet = "mtcars1",
+      start_row = 4
+    ) |>
+    dplyr::filter(!is.na(Status)) |>
+    dplyr::pull("Status")
+
+  updated_affirm_sheet_comment <-
+    openxlsx2::wb_to_df(
+      file = updated_tempxlsx,
+      sheet = "mtcars1",
+      start_row = 4
+    ) |>
+    dplyr::filter(!is.na(Comment)) |>
+    dplyr::pull("Comment")
+
+  expect_true(updated_affirm_sheet_status == "OK" & updated_affirm_sheet_comment == "Queried" )
+
+  affirm_close()
 }
 )
 
