@@ -308,41 +308,20 @@
   # Find where the "Summary" sheet is
   prev_summary_sheet <- which(prev_wb[["sheet_names"]] == "Summary")
 
-  # Check if sheet type metadata is in the previous report
-  prev_metadata <- !prev_wb[["sheet_types"]] |> is.null()
+  # Determine if there are any "other" sheets present before the summary sheet
+  other_present <- prev_summary_sheet - 1 != 0
 
-  # If sheet type metadata was found...
-  if(prev_metadata){
-    # Find the matching sheet indices
-    vec_affirmation_indices <- which(prev_wb[["sheet_types"]] == "affirmation")
-    # And pull out the names that way
-    vec_prev_affirmation_names <- prev_wb[["sheet_names"]][vec_affirmation_indices]
-    # pull out names of any "Other" sheets too
-    prev_other_sheets <- prev_wb[["sheet_names"]][-c(prev_summary_sheet, vec_affirmation_indices)]
-
-  } else{
-
-  # Send a warning to the console that sheet type couldn't be determined
-    c(
-      "i" = "Sheet type metadata was not found in the previous report file.",
-      "!" = "Assuming every sheet after the 'Summary' sheet in the previous report file is an affirmation."
-    ) |>
-    cli::cli_warn()
-
-    # Determine if there are any "other" sheets present before the summary sheet
-    other_present <- prev_summary_sheet - 1 != 0
-
-    # If "other sheets were found, save that info
-    if(other_present){
-      prev_other_sheets <- prev_wb[["sheet_names"]][c(1:(prev_summary_sheet-1))]
-      prev_other_indices <- which(prev_wb[["sheet_names"]] %in% prev_other_sheets)
-      # Pull all sheets except for any "other" and summary ones (first one - usually)
-      vec_prev_affirmation_names <- prev_wb[["sheet_names"]][-c(prev_other_indices, prev_summary_sheet)]
-    }
-
+  # If "other sheets were found, save that info
+  if(other_present){
+    prev_other_sheets <- prev_wb[["sheet_names"]][c(1:(prev_summary_sheet-1))]
+    prev_other_indices <- which(prev_wb[["sheet_names"]] %in% prev_other_sheets)
+    # Pull all sheets except for any "other" and summary ones (first one - usually)
+    vec_prev_affirmation_names <- prev_wb[["sheet_names"]][-c(prev_other_indices, prev_summary_sheet)]
   }
 
+
   # Remove any old sheets that are getting dropped if applicable
+  vec_prev_affirmation_names <- prev_wb[["sheet_names"]]
   vec_prev_affirmation_names <- vec_prev_affirmation_names[vec_prev_affirmation_names %in% vec_new_affirmation_names]
 
   if(other_present){

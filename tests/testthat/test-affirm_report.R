@@ -1004,7 +1004,7 @@ test_that("Test that when columns are added to new affirmations, that the report
       affirmation_name = "{data_frames}{id}",
       previous_file = tempxlsx
     ) |>
-      expect_no_error()
+      expect_no_warning()
 
     affirm_close()
 }
@@ -1168,13 +1168,11 @@ test_that("Test that when sheets are added to the beginning of a previous report
     );
   updated_tempxlsx <- tempfile(fileext = ".xlsx")
 
-  # If this works, we'll expect a warning
   affirm_report_excel(
     file = updated_tempxlsx,
     affirmation_name = "{data_frames}{id}",
     previous_file = tempxlsx
-  ) |>
-    expect_warning();
+  );
 
   # And for this file to exist
   file.exists(updated_tempxlsx) |> expect_true()
@@ -1334,13 +1332,11 @@ test_that("Test that when extra sheets are added to the beginning of a previous 
     );
   updated_tempxlsx <- tempfile(fileext = ".xlsx")
 
-  # If this works, we'll expect a warning
     affirm_report_excel(
       file = updated_tempxlsx,
       affirmation_name = "{data_frames}{id}",
       previous_file = tempxlsx
-    ) |>
-      expect_warning();
+    )
 
     affirm_close();
 

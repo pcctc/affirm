@@ -219,3 +219,9 @@
       Error in `affirm_report_excel()`:
       i affirm Excel Report was not updated.
 
+# Test that when sheets are added to the beginning of a previous report, that the correct warning is given.
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+
