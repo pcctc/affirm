@@ -317,11 +317,11 @@
     prev_other_indices <- which(prev_wb[["sheet_names"]] %in% prev_other_sheets)
     # Pull all sheets except for any "other" and summary ones (first one - usually)
     vec_prev_affirmation_names <- prev_wb[["sheet_names"]][-c(prev_other_indices, prev_summary_sheet)]
-  }
-
-
+  } else{
   # Remove any old sheets that are getting dropped if applicable
   vec_prev_affirmation_names <- prev_wb[["sheet_names"]]
+  }
+
   vec_prev_affirmation_names <- vec_prev_affirmation_names[vec_prev_affirmation_names %in% vec_new_affirmation_names]
 
   if(other_present){
