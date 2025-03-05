@@ -108,7 +108,13 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
       dplyr::select(-"assigned_to")
 
     # Start the process to update the report#
-    df_summary <- .update_sheets(df_summary_current, previous_file)
+    lst_output <- .update_sheets(df_summary_current, previous_file)
+
+    if(lst_output |> length() > 1){
+    prev_wb_other <- lst_output[["prev_wb_other"]]
+    }
+
+    df_summary <- lst_output[["df_summary"]]
 
   } else{
     # Otherwise, proceed without updating#
@@ -150,6 +156,68 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
 
   for (i in seq_len(nrow(df_export))){
     wb <- .add_affirmation_sheet(wb, df_summary[i, ], prev_exists)
+  }
+
+  # If a previous report was submitted, check if there were any "other" sheets in the workbook
+  # By checking to see if the prev_wb_other exists
+
+  # First, Grab how many sheets are in the current report
+  n_current <- wb[["sheet_names"]] |> length()
+
+  # Then check if previous report and other sheets exist
+  if(prev_exists){
+    other_env_exists <- exists("prev_wb_other")
+    if(other_env_exists){
+      # Grab the "other" sheets names
+      vec_other_sheets <- prev_wb_other[["sheet_names"]]
+
+      n_other <- vec_other_sheets |> length()
+
+      # Copy the "other" sheets into the new wb
+      for (i in seq_along(vec_other_sheets)){
+        wb <-
+          wb |>
+          openxlsx2::wb_clone_worksheet(
+            old = vec_other_sheets[i],
+            new = vec_other_sheets[i],
+            from = prev_wb_other
+          )
+      }
+        # Reorder the sheets with "others" coming first
+      # Pull indices for "Other" sheets
+      other_indices <- which(wb[["sheet_names"]] %in% vec_other_sheets)
+      # Pull indices for summary and affirmation sheets
+      regular_indices <- which(!wb[["sheet_names"]] %in% vec_other_sheets)
+
+      # Reorder the sheets
+        wb <-
+          wb |>
+          openxlsx2::wb_set_order(c(other_indices, regular_indices))
+
+        # unlock the wb environment
+        rlang::env_unlock(wb)
+
+        vec_sheet_types <- c(rep("other", n_other), "summary", rep("affirmation", (n_current - 1)))
+
+        sheet_types_n <- vec_sheet_types |> length()
+
+        # Add sheet_type metadata to the current report
+        wb[["sheet_types"]] <- vec_sheet_types
+
+        # re-lock the wb environment
+        rlang::env_lock(wb)
+
+    } else{
+      # Otherwise, just set sheet types for the current report
+      # unlock the wb environment
+      rlang::env_unlock(wb)
+
+      # Add sheet_type metadata to the current report
+      wb[["sheet_types"]] <- c("summary", rep("affirmation", n_current - 1))
+
+      # re-lock the wb environment
+      rlang::env_lock(wb)
+    }
   }
 
   openxlsx2::wb_save(wb, file = file, overwrite = TRUE)

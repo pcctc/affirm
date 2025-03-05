@@ -1106,3 +1106,250 @@ test_that("Test that when columns are added to new affirmations, that the report
 }
 )
 
+test_that("Test that when sheets are added to the beginning of a previous report, that the report ignores anything before the Summary sheet", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx);
+
+  # Adding a new sheet to the workbook
+  # and moving it to the front
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet",
+      x = "some data!"
+    ) |>
+    openxlsx2::wb_set_order(c(4,1,2,3))
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  );
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  # If this works, we'll expect a warning
+  affirm_report_excel(
+    file = updated_tempxlsx,
+    affirmation_name = "{data_frames}{id}",
+    previous_file = tempxlsx
+  ) |>
+    expect_warning();
+
+  # And for this file to exist
+  file.exists(updated_tempxlsx) |> expect_true()
+
+  affirm_close()
+}
+)
+
+test_that("Test that when sheets are added to the beginning of a previous report, that the correct warning is given.", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx);
+
+  # Adding a new sheet to the workbook
+  # and moving it to the front
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet",
+      x = "some data!"
+    ) |>
+    openxlsx2::wb_set_order(c(4,1,2,3))
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  );
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  # If this works, we'll expect a warning
+  testthat::expect_snapshot({
+  affirm_report_excel(
+    file = updated_tempxlsx,
+    affirmation_name = "{data_frames}{id}",
+    previous_file = tempxlsx
+  )
+  });
+
+  affirm_close()
+}
+)
+
+test_that("Test that when extra sheets are added to the beginning of a previous report, that these sheets are in the output", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx);
+
+  # Adding a new sheet to the workbook
+  # and moving it to the front
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet",
+      x = "some data!"
+    ) |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet 2",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet 2",
+      x = "some more data!"
+    ) |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet 3",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet 3",
+      x = "some MORE data!"
+    ) |>
+    openxlsx2::wb_set_order(c(4,5,6,1,2,3))
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  );
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  # If this works, we'll expect a warning
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+      previous_file = tempxlsx
+    ) |>
+      expect_warning();
+
+    affirm_close();
+
+    # And for these sheets to exist in the output
+    vec_expected_sheets <- c("Test Sheet", "Test Sheet 2", "Test Sheet 3")
+
+    wb_current_sheets <- openxlsx2::wb_load(updated_tempxlsx)$sheet_names
+
+    vec_expected_sheets %in% wb_current_sheets |> all() |> expect_true()
+}
+)
+
