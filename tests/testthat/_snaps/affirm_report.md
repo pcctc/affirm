@@ -219,9 +219,13 @@
       Error in `affirm_report_excel()`:
       i affirm Excel Report was not updated.
 
-# Test that when sheets are added to the beginning of a previous report, that the correct warning is given.
+# Test that when sheets are added to the beginning of a previous report, that the correct error is given.
 
     Code
       affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
         previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      x Extra sheets were found before the 'Summary' sheet in the previous Excel workbook we attempted to use for updating.
+      i Please remove any additional sheets and ensure the 'Summary' sheet is the first sheet in the workbook, followed by the affirmation sheets.
 

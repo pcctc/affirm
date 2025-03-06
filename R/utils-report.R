@@ -311,41 +311,20 @@
   # Determine if there are any "other" sheets present before the summary sheet
   other_present <- prev_summary_sheet - 1 != 0
 
-  # If "other sheets were found, save that info
+  # If "other sheets were found, throw an error that they need to be removed
   if(other_present){
-    prev_other_sheets <- prev_wb[["sheet_names"]][c(1:(prev_summary_sheet-1))]
-    prev_other_indices <- which(prev_wb[["sheet_names"]] %in% prev_other_sheets)
-    # Pull all sheets except for any "other" and summary ones (first one - usually)
-    vec_prev_affirmation_names <- prev_wb[["sheet_names"]][-c(prev_other_indices, prev_summary_sheet)]
-  } else{
-  # Remove any old sheets that are getting dropped if applicable
-  vec_prev_affirmation_names <- prev_wb[["sheet_names"]]
+    c(
+      "x" = "Extra sheets were found before the 'Summary' sheet in the previous Excel workbook we attempted to use for updating.",
+      "i" = "Please remove any additional sheets and ensure the 'Summary' sheet is the first sheet in the workbook, followed by the affirmation sheets."
+    ) |>
+      cli::cli_abort(call = sys.call(-1))
   }
 
+  # Pull the previous affirmation names
+  vec_prev_affirmation_names <- prev_wb[["sheet_names"]][-prev_summary_sheet]
+
+  # Update the prev affirmation to only include those that match in the new affirmations
   vec_prev_affirmation_names <- vec_prev_affirmation_names[vec_prev_affirmation_names %in% vec_new_affirmation_names]
-
-  if(other_present){
-    # Determine which sheets are summary and affirmations
-    prev_sheets_to_drop <- c("Summary", vec_prev_affirmation_names)
-
-    prev_wb_other <- prev_wb
-
-    for (i in seq_along(prev_sheets_to_drop)){
-      # Iteratively, drop each summary/affirmation sheet
-      # So we're left with the other sheets
-
-      prev_wb_other <-
-        prev_wb_other |>
-        openxlsx2::wb_remove_worksheet(prev_sheets_to_drop[i])
-    }
-
-    # Remove the "other" sheet from prev_wb to continue to update
-      for (i in seq_along(prev_other_sheets)){
-      prev_wb <-
-        prev_wb |>
-        openxlsx2::wb_remove_worksheet(prev_other_sheets[i])
-      }
-  }
 
   # Pull out the old summary's affirmation names, assigned to, status, and comments
   df_summary_prev <-
@@ -678,26 +657,7 @@
       dplyr::mutate(data = lst_updated_affirmation_dfs)
   }
 
-  # If other sheets were found, set it up to be referenced
-  # by outputting a list of objects...
-  if(other_present){
-    lst_output <-
-      list(
-        "prev_wb_other" = prev_wb_other,
-        "df_summary" = df_summary_updated
-      )
-
-    return(lst_output)
-
-  } else {
-    # Otherwise, Just return the updated data
-    lst_output <-
-      list(
-        "df_summary" = df_summary_updated
-      )
-
-    return(lst_output)
-  }
+    return(df_summary_updated)
 
 }
 

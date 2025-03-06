@@ -108,13 +108,7 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
       dplyr::select(-"assigned_to")
 
     # Start the process to update the report#
-    lst_output <- .update_sheets(df_summary_current, previous_file)
-
-    if(lst_output |> length() > 1){
-    prev_wb_other <- lst_output[["prev_wb_other"]]
-    }
-
-    df_summary <- lst_output[["df_summary"]]
+    df_summary <- .update_sheets(df_summary_current, previous_file)
 
   } else{
     # Otherwise, proceed without updating#
@@ -156,38 +150,6 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
 
     for (i in seq_len(nrow(df_export))){
       wb <- .add_affirmation_sheet(wb, df_summary[i, ], prev_exists)
-    }
-
-    # If a previous report was submitted, check if there were any "other" sheets in the workbook
-    # By checking to see if the prev_wb_other exists
-
-    if(prev_exists){
-      other_env_exists <- exists("prev_wb_other")
-      if(other_env_exists){
-        # Grab the "other" sheets names
-        vec_other_sheets <- prev_wb_other[["sheet_names"]]
-
-        # Copy the "other" sheets into the new wb
-        for (i in seq_along(vec_other_sheets)){
-          wb <-
-            wb |>
-            openxlsx2::wb_clone_worksheet(
-              old = vec_other_sheets[i],
-              new = vec_other_sheets[i],
-              from = prev_wb_other
-            )
-        }
-        # Reorder the sheets with "others" coming first
-        # Pull indices for "Other" sheets
-        other_indices <- which(wb[["sheet_names"]] %in% vec_other_sheets)
-        # Pull indices for summary and affirmation sheets
-        regular_indices <- which(!wb[["sheet_names"]] %in% vec_other_sheets)
-
-        # Reorder the sheets
-        wb <-
-          wb |>
-          openxlsx2::wb_set_order(c(other_indices, regular_indices))
-      }
     }
 
     openxlsx2::wb_save(wb, file = file, overwrite = TRUE)
