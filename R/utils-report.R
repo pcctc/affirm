@@ -519,12 +519,20 @@
       lst_affirmation_col_match_checks[[i]] <- FALSE
     } else {
       # For existing affirmations, check if previous columns are missing from new columns
-      prev_cols <- lst_prev_affirmation_cols[[i]]
-      new_cols <- lst_new_affirmation_cols[[i]]
+      # Find the corresponding index in the previous affirmation lists
+      prev_index <- which(names(lst_prev_affirmation_cols) == current_affirmation_name)
 
-      # Check if any previous columns (excluding Status/Comment) are missing from new columns
-      missing_cols <- setdiff(prev_cols, new_cols)
-      lst_affirmation_col_match_checks[[i]] <- length(missing_cols) > 0
+      if (length(prev_index) == 0) {
+        # This shouldn't happen, but if it does, treat as newly added
+        lst_affirmation_col_match_checks[[i]] <- FALSE
+      } else {
+        prev_cols <- lst_prev_affirmation_cols[[prev_index]]
+        new_cols <- lst_new_affirmation_cols[[i]]
+
+        # Check if any previous columns are missing from new columns
+        missing_cols <- setdiff(prev_cols, new_cols)
+        lst_affirmation_col_match_checks[[i]] <- length(missing_cols) > 0
+      }
     }
   }
 
@@ -539,9 +547,12 @@
     lst_match_missing_columns <- list()
 
     for (i in seq_along(vec_bad_match_affirmations)){
+      # Find the correct index for this affirmation name
+      affirmation_index <- which(vec_new_affirmation_names == vec_bad_match_affirmations[i])
+
       lst_match_missing_columns[[i]] <-
         # Pull out "prev" columns that are missing from the new columns#
-        dplyr::setdiff(lst_prev_affirmation_cols[[i]], lst_new_affirmation_cols[[i]])
+        dplyr::setdiff(lst_prev_affirmation_cols[[affirmation_index]], lst_new_affirmation_cols[[affirmation_index]])
     }
 
     # Abort and send the message to the console
