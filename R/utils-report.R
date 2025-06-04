@@ -568,17 +568,28 @@
 
   for (i in seq_len(nrow(df_summary_current))){
 
-    lst_new_affirmation_dfs[[i]] <-
-      lst_init_new_affirmation_dfs[[i]] |>
-      dplyr::select(lst_prev_affirmation_cols[[i]], dplyr::everything()) |>
-      mutate(
-        join_key = do.call(
-          paste,
-          c(dplyr::select(df_summary_current[[i, "data"]][[1]], lst_prev_affirmation_cols[[i]]),
-            list(sep = " ")
+    new_affirmation <- lst_init_new_affirmation_dfs[i] |> names() %in% vec_newly_added
+
+    if(new_affirmation){
+      lst_new_affirmation_dfs[[i]] <-
+        lst_init_new_affirmation_dfs[[i]] |>
+        dplyr::select(dplyr::everything()) |>
+        dplyr::mutate(
+          join_key = do.call(paste, c(dplyr::across(dplyr::everything()), sep = " "))
+          )
+    } else{
+      lst_new_affirmation_dfs[[i]] <-
+        lst_init_new_affirmation_dfs[[i]] |>
+        dplyr::select(lst_prev_affirmation_cols[[i]], dplyr::everything()) |>
+        dplyr::mutate(
+          join_key = do.call(
+            paste,
+            c(dplyr::select(df_summary_current[[i, "data"]][[1]], lst_prev_affirmation_cols[[i]]),
+              list(sep = " ")
+            )
           )
         )
-      )
+    }
   }
 
   #============================================================================#
