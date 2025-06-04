@@ -367,6 +367,8 @@
 
   names(lst_init_new_affirmation_dfs) <- vec_new_affirmation_names
 
+  lst_init_new_affirmation_dfs <- lst_init_new_affirmation_dfs[sort(names(lst_init_new_affirmation_dfs))]
+
   #============================================================================#
   # Previous Affirmation Dataframe Extractions----------------------------------
   #============================================================================#
@@ -411,6 +413,8 @@
   }
 
   names(lst_prev_affirmation_dfs) <- vec_prev_affirmation_names
+
+  lst_prev_affirmation_dfs <- lst_prev_affirmation_dfs[sort(names(lst_prev_affirmation_dfs))]
 
   #============================================================================#
   #Mismatched Affirmation Work--------------------------------------------------
@@ -460,6 +464,8 @@
       function(x) x |> names() |> dplyr::setdiff(c("Status", "Comment", "join_key"))
     )
 
+  lst_prev_affirmation_cols <- lst_prev_affirmation_cols[sort(names(lst_prev_affirmation_cols))]
+
   #Prev df col ammendment before joining
   for (i in seq_len(length(lst_prev_affirmation_dfs))){
     lst_prev_affirmation_dfs[[i]] <-
@@ -470,6 +476,8 @@
       )
   }
 
+  lst_prev_affirmation_dfs <- lst_prev_affirmation_dfs[sort(names(lst_prev_affirmation_dfs))]
+
   #============================================================================#
   # Mismatched Affirmation Columns Check----------------------------------------
   #============================================================================#
@@ -479,6 +487,8 @@
       lst_init_new_affirmation_dfs,
       function(x) x |> names()
     )
+
+  lst_new_affirmation_cols <- lst_new_affirmation_cols[sort(names(lst_new_affirmation_cols))]
 
   .missing_cols_message <- function(affirmations, missing_columns) {
     error_affirmation <- cli::combine_ansi_styles(cli::style_bold, cli::col_yellow)
