@@ -661,7 +661,7 @@ test_that("Test that blank comments and status info is present when a previous a
 
 cli::test_that_cli(
   configs = c("plain", "ansi"),
-  desc = "Test that duplicate data throws an error when updating a previous Affirm report.",
+  desc = "Test that duplicate data in a new affirmation throws an error when updating a previous Affirm report.",
   code = {
     affirm_init(replace = TRUE);
 
@@ -680,33 +680,6 @@ cli::test_that_cli(
     affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}");
 
     affirm_close();
-
-    wb_prev_init <- openxlsx2::wb_load(tempxlsx);
-
-    # Adding a value to "status and comment" to be carried over in new wb
-    wb_prev_init2 <-
-      openxlsx2::wb_add_data(
-        wb = wb_prev_init,
-        sheet = "mtcars1",
-        x = "OK",
-        start_row = 6,
-        start_col = 3
-      );
-
-    wb_prev <-
-      openxlsx2::wb_add_data(
-        wb = wb_prev_init2,
-        sheet = "mtcars1",
-        x = "Queried",
-        start_row = 5,
-        start_col = 4
-      );
-
-    openxlsx2::wb_save(
-      wb_prev,
-      file = tempxlsx,
-      overwrite = TRUE
-    );
 
     affirm_init(replace = TRUE);
 
@@ -735,7 +708,123 @@ cli::test_that_cli(
   }
 )
 
-test_that("Test that reports can run and be updated when newly created affirmations are present", {
+cli::test_that_cli(
+  configs = c("plain", "ansi"),
+  desc = "Test that duplicate data in a previous affirmation throws an error when updating a previous Affirm report.",
+  code = {
+    affirm_init(replace = TRUE);
+
+    options('affirm.id_cols' = "car");
+
+    affirm_true(
+      mtcars_modified |>
+        rbind(mtcars_modified[1,]),
+      label = "mpg gt 20",
+      id = 1,
+      condition = mpg < 20,
+      data_frames = "mtcars"
+    );
+
+    tempxlsx <- tempfile(fileext = ".xlsx");
+
+    affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}");
+
+    affirm_close();
+
+    affirm_init(replace = TRUE);
+
+    options('affirm.id_cols' = "car");
+
+    affirm_true(
+      mtcars_modified,
+      label = "mpg gt 20",
+      id = 1,
+      condition = mpg < 20,
+      data_frames = "mtcars"
+    );
+
+    updated_tempxlsx <- tempfile(fileext = ".xlsx");
+
+    testthat::expect_snapshot({
+      affirm_report_excel(
+        file = updated_tempxlsx,
+        affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx
+      )
+    },
+    error = TRUE
+    )
+  }
+)
+
+cli::test_that_cli(
+  configs = c("plain", "ansi"),
+  desc = "Test that duplicate data in a previous and new affirmation both throws an error when updating a previous Affirm report.",
+  code = {
+    affirm_init(replace = TRUE);
+
+    options('affirm.id_cols' = "car");
+
+    affirm_true(
+      mtcars_modified |>
+        rbind(mtcars_modified[1,]),
+      label = "mpg gt 20",
+      id = 1,
+      condition = mpg < 20,
+      data_frames = "mtcars"
+    );
+
+    affirm_true(
+      mtcars_modified |>
+        rbind(mtcars_modified[1,]),
+      label = "mpg equal 20",
+      id = 2,
+      condition = mpg == 20,
+      data_frames = "mtcars"
+    );
+
+    tempxlsx <- tempfile(fileext = ".xlsx");
+
+    affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}");
+
+    affirm_close();
+
+    affirm_init(replace = TRUE);
+
+    options('affirm.id_cols' = "car");
+
+    affirm_true(
+      mtcars_modified,
+      label = "mpg gt 20",
+      id = 1,
+      condition = mpg < 20,
+      data_frames = "mtcars"
+    );
+
+    affirm_true(
+      mtcars_modified |>
+        rbind(mtcars_modified[1:2,]),
+      label = "mpg equal 20",
+      id = 2,
+      condition = mpg == 20,
+      data_frames = "mtcars"
+    );
+
+    updated_tempxlsx <- tempfile(fileext = ".xlsx");
+
+    testthat::expect_snapshot({
+      affirm_report_excel(
+        file = updated_tempxlsx,
+        affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx
+      )
+    },
+    error = TRUE
+    )
+  }
+)
+
+test_that("Test that reports can run and updated when newly created affirmations are present", {
 
   affirm_init(replace = TRUE)
   options('affirm.id_cols' = "car")

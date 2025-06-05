@@ -159,27 +159,109 @@
       [1m[22m[33m![39m [33m`previous_file`[39m should be of class [34m<character>[39m
       [31mx[39m You've supplied a [33m`previous_file`[39m input of class [31m<data.frame>[39m
 
-# Test that duplicate data throws an error when updating a previous Affirm report. [plain]
+# Test that duplicate data in a new affirmation throws an error when updating a previous Affirm report. [plain]
 
     Code
       affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
         previous_file = tempxlsx)
     Condition
       Error in `affirm_report_excel()`:
-      ! Duplicate rows detected in affirmation mtcars1 at rows 1 and 19, 2 and 20, 3 and 21, 4 and 22, 5 and 23, 6 and 24, 7 and 25, 8 and 26, 9 and 27, 10 and 28, 11 and 29, 12 and 30, 13 and 31, 14 and 32, 15 and 33, 16 and 34, 17 and 35, and 18 and 36.
+      > Duplicate data detected in affirmation 'mtcars1' at rows 13, 31 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 9, 27 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 14, 32 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 11, 29 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 12, 30 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 3, 21 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 17, 35 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 16, 34 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 19 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 10, 28 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 18, 36 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 4, 22 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 5, 23 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 6, 24 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 7, 25 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 8, 26 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 15, 33 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 2, 20 (source: new data).
       
-      i Please review and remove duplicate data before updated a previous Affirm Excel Report.
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
 
-# Test that duplicate data throws an error when updating a previous Affirm report. [ansi]
+# Test that duplicate data in a new affirmation throws an error when updating a previous Affirm report. [ansi]
 
     Code
       affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
         previous_file = tempxlsx)
     Condition
       [1m[33mError[39m in `affirm_report_excel()`:[22m
-      [1m[22m[33m![39m Duplicate rows detected in affirmation [1m[3m[33mmtcars1[39m[23m[22m at rows [31m1 and 19[39m, [31m2 and 20[39m, [31m3 and 21[39m, [31m4 and 22[39m, [31m5 and 23[39m, [31m6 and 24[39m, [31m7 and 25[39m, [31m8 and 26[39m, [31m9 and 27[39m, [31m10 and 28[39m, [31m11 and 29[39m, [31m12 and 30[39m, [31m13 and 31[39m, [31m14 and 32[39m, [31m15 and 33[39m, [31m16 and 34[39m, [31m17 and 35[39m, and [31m18 and 36[39m.
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 13, 31 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 9, 27 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 14, 32 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 11, 29 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 12, 30 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 3, 21 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 17, 35 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 16, 34 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 19 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 10, 28 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 18, 36 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 4, 22 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 5, 23 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 6, 24 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 7, 25 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 8, 26 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 15, 33 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 2, 20 (source: new data).
       
-      [36mi[39m Please review and remove duplicate data before updated a previous Affirm Excel Report.
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous affirmation throws an error when updating a previous Affirm report. [plain]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous affirmation throws an error when updating a previous Affirm report. [ansi]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous and new affirmation both throws an error when updating a previous Affirm report. [plain]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 1, 2, 34, 35 (source: both new and previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 3, 36 (source: new data).
+      
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous and new affirmation both throws an error when updating a previous Affirm report. [ansi]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 1, 2, 34, 35 (source: both new and previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 3, 36 (source: new data).
+      
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
 
 # Test that when columns are removed from old to new affirmations, that the correct error is thrown
 
