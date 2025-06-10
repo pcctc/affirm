@@ -939,18 +939,18 @@ test_that("Test that when columns are removed from old to new affirmations, that
   options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
 
   mtcars_modified |>
-  affirm_false(
-    label = "mpg gt 15",
-    id = 1,
-    condition = mpg > 15,
-    data_frames = "mtcars"
-  ) |>
-  affirm_false(
-    label = "mpg gt 10",
-    id = 2,
-    condition = mpg > 10,
-    data_frames = "mtcars"
-  )
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    )
 
   tempxlsx <- tempfile(fileext = ".xlsx")
   affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
@@ -1088,14 +1088,14 @@ test_that("Test that when columns are added to new affirmations, that the report
     );
   updated_tempxlsx <- tempfile(fileext = ".xlsx")
 
-    affirm_report_excel(
-      file = updated_tempxlsx,
-      affirmation_name = "{data_frames}{id}",
-      previous_file = tempxlsx
-    ) |>
-      expect_no_warning()
+  affirm_report_excel(
+    file = updated_tempxlsx,
+    affirmation_name = "{data_frames}{id}",
+    previous_file = tempxlsx
+  ) |>
+    expect_no_warning()
 
-    affirm_close()
+  affirm_close()
 }
 )
 
@@ -1258,13 +1258,13 @@ test_that("Test that when sheets are added to the beginning of a previous report
     );
   updated_tempxlsx <- tempfile(fileext = ".xlsx")
 
-  # If this works, we'll expect a warning
+  # If this works, we'll expect an error
   testthat::expect_snapshot({
-  affirm_report_excel(
-    file = updated_tempxlsx,
-    affirmation_name = "{data_frames}{id}",
-    previous_file = tempxlsx
-  )
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+      previous_file = tempxlsx
+    )
   },
   error = TRUE
   );
@@ -1273,3 +1273,78 @@ test_that("Test that when sheets are added to the beginning of a previous report
 }
 )
 
+
+test_that("Test that when sheets are added to the beginning of a previous report, that the correct error is given.", {
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"))
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 15",
+    id = 1,
+    condition = mpg > 15,
+    data_frames = "mtcars"
+  )
+
+  affirm_false(
+    mtcars_modified,
+    label = "mpg gt 10",
+    id = 2,
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+
+  tempxlsx <- tempfile(fileext = ".xlsx")
+  affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}")
+
+  wb_prev_init <- openxlsx2::wb_load(tempxlsx);
+
+  # Adding a new sheet to the workbook
+  # and moving it to the front
+  wb_prev <-
+    wb_prev_init |>
+    openxlsx2::wb_add_worksheet(
+      sheet = "Test Sheet",
+    ) |>
+    openxlsx2::wb_add_data(
+      sheet = "Test Sheet",
+      x = "some data!"
+    )
+
+  openxlsx2::wb_save(
+    wb_prev,
+    file = tempxlsx,
+    overwrite = TRUE
+  );
+
+  affirm_init(replace = TRUE)
+  options('affirm.id_cols' = c("car", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
+  mtcars_modified |>
+    affirm_false(
+      label = "mpg gt 15",
+      id = 1,
+      condition = mpg > 15,
+      data_frames = "mtcars"
+    ) |>
+    affirm_false(
+      label = "mpg gt 10",
+      id = 2,
+      condition = mpg > 10,
+      data_frames = "mtcars"
+    );
+  updated_tempxlsx <- tempfile(fileext = ".xlsx")
+
+  # If this works, we'll expect an error
+  testthat::expect_no_error({
+    affirm_report_excel(
+      file = updated_tempxlsx,
+      affirmation_name = "{data_frames}{id}",
+      previous_file = tempxlsx
+    )
+  }
+  );
+
+  affirm_close()
+}
+)

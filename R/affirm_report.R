@@ -9,10 +9,36 @@
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #' Defaults to `"{data_frames}{id}"`.
-#' @param previous_file A string of the file path to the previous affirmation workbook that needs to be updated
+#' @param previous_file A string of the file path to the previous affirmation Excel workbook that needs to be updated
 #'
-#' @return gt table
+#' @return gt table, Excel file, or a df of raw data
 #' @name affirm_report
+#'
+#' @section Updating Previous Excel Affirm Reports with `affirm_report_excel()`:
+#' As of version 0.2.1, Excel affirm reports can now be updated with data from
+#' previous reports. This feature allows the `assigned_to`, `status`, and `comment`
+#' columns in newly created Excel affirm reports to be populated with values from
+#' a previous Excel affirm report.
+#'
+#' To successfully update a newly created Excel affirm report, three conditions
+#' **must** be met:
+#' \itemize{
+#'   \item **Previous Summary Sheet:** The previous affirm report used for updating
+#'   must contain a tab named `'summary'` as the first tab in the Excel workbook.
+#'   Any additional tabs in the previous report that are not affirmations will be
+#'   omitted from the updated affirm report.
+#'   \item **Matching Affirmation Columns:** When updating a previous affirmation,
+#'   columns cannot be dropped from the new affirmation. All columns from the
+#'   previous report are required for merging old values with new values in the
+#'   updated report. If an affirmation tab has missing columns compared to the
+#'   previous report, the update will fail. However, new affirmations can include
+#'   additional columns and still be updated successfully, as long as all columns
+#'   from the previous report are present.
+#'   \item **Unique Affirmation Rows:** Both the previous and newly created
+#'   affirmations must not contain any duplicate rows. This requirement ensures
+#'   that data from the previous affirmation can be accurately merged with the
+#'   new affirmations through join operations.
+#' }
 #'
 #' @examples
 #' affirm_init(replace = TRUE)
@@ -101,7 +127,7 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
   }
 
   # If a previous report is supplied, remove 'assigned_to'#
-  # as we'll carry it forward from the previous report#
+  # because we'll pull it in from the previous report#
   if(prev_exists){
     df_summary_current <-
       df_summary_init |>
@@ -115,11 +141,15 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
     df_summary <- df_summary_init
   }
 
-  # this is the affirmation data that gets exported to each sheets
-  # drops data column and columns with all NAs
+  # this is the affirmation data that gets exported to each sheet#
+  # drops data column and columns with all NAs in the summary sheet#
     df_export_init <- .identify_keep_data(df_summary)
     vec_summary_cols <- names(df_export_init)
     original_summary_cols <- vec_summary_cols[!vec_summary_cols %in% c("Status", "Comment")]
+
+    # Status and comment columns will be missing here..
+    # ...if a previous file wasn't used for updating
+    # Check to see if they're present
     add_status <- !"Status" %in% vec_summary_cols
     add_comment <- !"Comment" %in% vec_summary_cols
 
@@ -137,7 +167,7 @@ affirm_report_excel <- function(file, affirmation_name = "{data_frames}{id}", ov
         dplyr::mutate(Comment = NA)
     }
 
-    # Create a final export with all applicable columns#
+    # Create a final export with all applicable summary columns#
     df_export <-
       df_export_init |>
       dplyr::select(

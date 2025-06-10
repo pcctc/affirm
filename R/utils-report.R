@@ -311,7 +311,7 @@
   # Determine if there are any "other" sheets present before the summary sheet
   other_present <- prev_summary_sheet - 1 != 0
 
-  # If "other sheets were found, throw an error that they need to be removed
+  # If "other" sheets were found, throw an error that they need to be removed
   if(other_present){
     c(
       "x" = "Extra sheets were found before the 'Summary' sheet in the previous Excel workbook we attempted to use for updating.",
@@ -387,8 +387,8 @@
     # Find the corresponding row in df_summary_current for this affirmation
     current_row_index <- which(df_summary_current$affirmation_name == affirmation_name)
 
-    # If a current affirmation is empty
-    # Fill it with placeholders#
+    # If a current affirmation is empty (no issues found)
+    # Fill it with placeholders so it can be joined into the final workbook anyway
     if(length(current_row_index) > 0 && df_summary_current[[current_row_index, "data"]][[1]] |> nrow() == 0){
       lst_prev_affirmation_dfs[[affirmation_name]] <-
         dplyr::tibble(
@@ -429,7 +429,7 @@
   lst_prev_affirmation_dfs <- lst_prev_affirmation_dfs[sort(names(lst_prev_affirmation_dfs))]
 
   #============================================================================#
-  #Mismatched Affirmation Work--------------------------------------------------
+  # Mismatched Affirmation Work-------------------------------------------------
   #============================================================================#
 
   # Account for newly added affirmations
@@ -445,12 +445,14 @@
     # Determine which one is "smaller" (missing dfs)
     smaller_report <- which.min(c("new" = new_length, "prev" = prev_length)) |> names()
 
+    # Grab the names of the missing affirmatons
     missing_dfs <- setdiff(vec_new_affirmation_names, vec_prev_affirmation_names)
 
     if(smaller_report == "prev"){
       # If the previous report is missing dfs, that means affirmations were newly added
-      # This means theres nothing to compare to, so we create placeholders for the upcoming joins
-      # We don't have to worry about this if previous affirmations were dropped in the new affirmations
+      # This means there's nothing to compare to, so create placeholders for the upcoming joins
+      # We don't have to worry about this if previous affirmations were dropped in the new affirmations...
+      # ...as dropped affirmations should not appear in the updated report
       for (df_name in missing_dfs){
         lst_prev_affirmation_dfs[[df_name]] <-
           lst_init_new_affirmation_dfs[[df_name]] |>
@@ -477,7 +479,7 @@
   # Order the column names for the check
   lst_prev_affirmation_cols <- lst_prev_affirmation_cols[sort(names(lst_prev_affirmation_cols))]
 
-  #Prev df col amendment before joining
+  # Prev affirmation column amendment before joining...
   # This list will be joined with the "new" affirmation data.
   # We only need the join key, status, and comment fields for this
   for (affirmation_name in names(lst_prev_affirmation_dfs)){
@@ -612,7 +614,6 @@
   #============================================================================#
   # Affirmation Updating Work---------------------------------------------------
   #============================================================================#
-
   # Create an empty list to store updated affirmations and join key duplication#
   lst_updated_affirmation_dfs <- list()
   lst_join_key_dupes <- list()
@@ -625,7 +626,8 @@
         lst_prev_affirmation_dfs[[affirmation_name]] |>
           dplyr::select("join_key", "Status", "Comment"),
         by = "join_key",
-        relationship = "many-to-many" # silences left_join warnings if dupes are detected
+        # silences left_join warnings if dupes are detected (we'll throw an error later if dupes are present)
+        relationship = "many-to-many"
       )
 
     # Search for potential duplicates in the join keys#
@@ -653,6 +655,8 @@
   #============================================================================#
   ## Row Duplication Check------------------------------------------------------
   #============================================================================#
+  # If there were duplicates, we'll throw an error...
+  # ...as we can't uniquely identify what needs to be joined between the previous and new affirmations
   lst_dupe_check <- list()
 
   for (affirmation_name in vec_new_affirmation_names) {
@@ -680,6 +684,7 @@
         relationship = "many-to-many" # silences left_join warnings if dupes are detected
       )
 
+    # Store the dupe info to pull out for the error message
     df_final_dupes <-
       df_temp_joined |>
       dplyr::mutate(row_id = dplyr::row_number()) |>
@@ -691,7 +696,7 @@
         .groups = "drop"
       )
 
-    # Grab the source of the duplicates
+    # Grab the source of the duplicates if this df is populated
     if (nrow(df_final_dupes) > 0) {
       df_dupe_specs <-
         df_final_dupes |>
@@ -700,12 +705,14 @@
             join_key %in% vec_new_dupes & join_key %in% vec_prev_dupes ~ "both",
             join_key %in% vec_new_dupes ~ "new",
             join_key %in% vec_prev_dupes ~ "previous",
+            # This should NEVER trigger, but leaving here for dev purposes
             .default = "unknown"
           )
         )
 
       lst_dupe_check[[affirmation_name]] <- df_dupe_specs
     } else {
+      # Otherwise, no dupes were found, so set to NULL
       lst_dupe_check[[affirmation_name]] <- NULL
     }
   }
@@ -713,20 +720,22 @@
   # Check if any duplicates were found
   any_dupes <- any(sapply(lst_dupe_check, function(x) !is.null(x)))
 
-  # If any dupes are found, create enhanced error messaging
+  # If any dupes are found, throw an error
   if (any_dupes) {
 
-    # Create error messages that list duplicate row numbers and df sources
+    # Build out the error to show the duplicate row numbers and affirmation sources
     lst_dupe <- c()
 
     for (affirmation_name in names(lst_dupe_check)) {
       if (!is.null(lst_dupe_check[[affirmation_name]])) {
         df_dupe_info <- lst_dupe_check[[affirmation_name]]
 
+        # Go through each flagged affirmation and pull out it's name and flagged duplicated rows
         for (i in seq_len(nrow(df_dupe_info))) {
           rows <- unlist(df_dupe_info$rows[i])
           source <- df_dupe_info$source[i]
 
+          # Declare which affirmation has dupes
           source_text <-
             switch(
               source,
@@ -735,9 +744,10 @@
               "both" = "both new and previous data",
               "unknown" = "unknown source"
             )
-
+          # just formatting
           row_text <- paste0("rows ", paste(rows, collapse = ", "))
 
+          # This list will be passed through for the error
           lst_dupe <-
             append(
               lst_dupe, c(
@@ -748,13 +758,13 @@
       }
     }
 
-    # Print enhanced error message to console
+    # Throw it to the console
     lst_dupe |>
       append(c("\n", "i" = "Please review and remove duplicate data before updating a previous Affirm Excel Report.")) |>
       cli::cli_abort(call = sys.call(-1))
 
   } else {
-    # Otherwise continue on
+    # Otherwise, continue on..
     # Reorder the updated affirmation dfs to match the original order
     lst_ordered_updated_dfs <- lst_updated_affirmation_dfs[vec_new_affirmation_names]
 
