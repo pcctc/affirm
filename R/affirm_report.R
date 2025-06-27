@@ -9,7 +9,7 @@
 #' in curly brackets is replaced with the item value (see glue::glue). Item names
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #' Defaults to `"{data_frames}{id}"`.
-#' @param previous_file A string of the file path to the previous affirmation Excel workbook that needs to be updated
+#' @param previous_file A string of the file path to the previous affirmation Excel workbook containing `assigned_to`, `status`, and `comment` fields that need to be carried forward to this report
 #'
 #' @return gt table, Excel file, or a df of raw data
 #' @name affirm_report
