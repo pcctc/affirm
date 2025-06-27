@@ -501,7 +501,7 @@
   lst_new_affirmation_cols <-
     lapply(
       lst_init_new_affirmation_dfs,
-      function(x) x |> names()
+      names
     )
 
   # Sort the names of the affirmations for consistency
