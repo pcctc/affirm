@@ -12,7 +12,8 @@ affirm_report_gt()
 affirm_report_excel(
   file,
   affirmation_name = "{data_frames}{id}",
-  overwrite = TRUE
+  overwrite = TRUE,
+  previous_file = NULL
 )
 
 affirm_report_raw_data()
@@ -26,9 +27,11 @@ accepted include: \code{id}, \code{label}, \code{priority}, \code{data_frames}, 
 Defaults to \code{"{data_frames}{id}"}.}
 
 \item{overwrite}{Overwrite existing file (Defaults to \code{TRUE} as with \code{write.table})}
+
+\item{previous_file}{A string of the file path to the previous affirmation Excel workbook containing \code{assigned_to}, \code{status}, and \code{comment} fields that need to be carried forward to this report}
 }
 \value{
-gt table
+gt table, Excel file, or a df of raw data
 }
 \description{
 \itemize{
@@ -37,6 +40,34 @@ gt table
 \item \code{affirm_report_raw_data()} returns raw data used to generate summary in \code{affirm_report_gt()}
 }
 }
+\section{Updating Previous Excel Affirm Reports with \code{affirm_report_excel()}}{
+
+As of version 0.2.1, Excel affirm reports can now be updated with data from
+previous reports. This feature allows the \code{assigned_to}, \code{status}, and \code{comment}
+columns in newly created Excel affirm reports to be populated with values from
+a previous Excel affirm report.
+
+To successfully update a newly created Excel affirm report, three conditions
+\strong{must} be met:
+\itemize{
+\item \strong{Previous Summary Sheet:} The previous affirm report used for updating
+must contain a tab named \code{'summary'} as the first tab in the Excel workbook.
+Any additional tabs in the previous report that are not affirmations will be
+omitted from the updated affirm report.
+\item \strong{Matching Affirmation Columns:} When updating a previous affirmation,
+columns cannot be dropped from the new affirmation. All columns from the
+previous report are required for merging old values with new values in the
+updated report. If an affirmation tab has missing columns compared to the
+previous report, the update will fail. However, new affirmations can include
+additional columns and still be updated successfully, as long as all columns
+from the previous report are present.
+\item \strong{Unique Affirmation Rows:} Both the previous and newly created
+affirmations must not contain any duplicate rows. This requirement ensures
+that data from the previous affirmation can be accurately merged with the
+new affirmations through join operations.
+}
+}
+
 \examples{
 affirm_init(replace = TRUE)
 

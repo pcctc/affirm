@@ -1,19 +1,21 @@
-# affirm (development version)
+# affirm 0.2.1
 
-* Update `affirm_excel_report()` and applicable utility functions to now export affirmations alphabetically in the summary sheet and tabs of Excel report.
+* Added the `previous_file` argument to `affirm_report_excel()` to enable newly created Excel affirm reports to be updated with data from a previous report. This allows `assigned_to`, `status`, and `comment` columns to be preserved when regenerating reports.
 
-* Update applicable utility functions to introduce small formatting changes in the Excel report output. This includes removing the ‘Notes’ column from individual sheets and replacing it with the ‘Status’ and ‘Comment’ columns. The formatting of variable labels is changed to a bold black font in the Excel report output.
+* Updated `affirm_report_excel()` and applicable utility functions to now export affirmations alphabetically in the summary sheet and tabs of Excel report.
 
-* Update `affirm_excel_report()` to allow for affirmations with an `error_rate` of 0 to print in the summary tab of the Excel report output. The corresponding affirmation tab is also produced and displays the standard header with zero rows of data.
+* Updated applicable utility functions to introduce small formatting changes in the Excel report output. This includes removing the ‘Notes’ column from individual sheets and replacing it with the ‘Status’ and ‘Comment’ columns. The formatting of variable labels is changed to a bold black font in the Excel report output.
 
-* Export utility functions for `affirm_excel_report()`.
+* Updated `affirm_report_excel()` to allow for affirmations with an `error_rate` of 0 to print in the summary tab of the Excel report output. The corresponding affirmation tab is also produced and displays the standard header with zero rows of data.
 
-* Update `affirm_excel_report()` to depend on `openxlsx2`; now contains front
+* Exported utility functions for `affirm_report_excel()`.
+
+* Updated `affirm_report_excel()` to depend on `openxlsx2`; now contains front
 summary sheet and specific formatting for individual affirmation sheets.
 
-* Remove variable labels arguments and corresponding helper functions.
+* Removed variable labels arguments and corresponding helper functions.
 
-* Allow for glue syntax in excel report sheet names.
+* Allowed for glue syntax in excel report sheet names.
 
 * When no errors are found, return a data frame of zero rows instead of `NULL`.
 

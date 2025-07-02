@@ -139,3 +139,175 @@
       Maserati Bora         8
       
 
+# Test that cli output is as expected if `previous_file` class throws an error. [plain]
+
+    Code
+      affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = data.frame(path = "a valid path.xlsx"))
+    Condition
+      Error in `affirm_report_excel()`:
+      ! `previous_file` should be of class <character>
+      x You've supplied a `previous_file` input of class <data.frame>
+
+# Test that cli output is as expected if `previous_file` class throws an error. [ansi]
+
+    Code
+      affirm_report_excel(file = tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = data.frame(path = "a valid path.xlsx"))
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m[33m![39m [33m`previous_file`[39m should be of class [34m<character>[39m
+      [31mx[39m You've supplied a [33m`previous_file`[39m input of class [31m<data.frame>[39m
+
+# Test that duplicate data in a new affirmation throws an error when updating a previous Affirm report. [plain]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      > Duplicate data detected in affirmation 'mtcars1' at rows 13, 31 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 9, 27 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 14, 32 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 11, 29 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 12, 30 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 3, 21 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 17, 35 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 16, 34 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 19 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 10, 28 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 18, 36 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 4, 22 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 5, 23 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 6, 24 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 7, 25 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 8, 26 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 15, 33 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 2, 20 (source: new data).
+      
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a new affirmation throws an error when updating a previous Affirm report. [ansi]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 13, 31 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 9, 27 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 14, 32 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 11, 29 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 12, 30 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 3, 21 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 17, 35 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 16, 34 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 19 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 10, 28 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 18, 36 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 4, 22 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 5, 23 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 6, 24 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 7, 25 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 8, 26 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 15, 33 (source: new data).
+      > Duplicate data detected in affirmation 'mtcars1' at rows 2, 20 (source: new data).
+      
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous affirmation throws an error when updating a previous Affirm report. [plain]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous affirmation throws an error when updating a previous Affirm report. [ansi]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous and new affirmation both throws an error when updating a previous Affirm report. [plain]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      > Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 1, 2, 34, 35 (source: both new and previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 3, 36 (source: new data).
+      
+      i Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that duplicate data in a previous and new affirmation both throws an error when updating a previous Affirm report. [ansi]
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      [1m[33mError[39m in `affirm_report_excel()`:[22m
+      [1m[22m> Duplicate data detected in affirmation 'mtcars1' at rows 1, 2 (source: previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 1, 2, 34, 35 (source: both new and previous data).
+      > Duplicate data detected in affirmation 'mtcars2' at rows 3, 36 (source: new data).
+      
+      [36mi[39m Please review and remove duplicate data before updating a previous Affirm Excel Report.
+
+# Test that when columns are removed from old to new affirmations, that the correct error is thrown
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Message
+      x The current affirm report could not be updated due to missing columns in the following current affirmations:
+      
+      1. Affirmation: `mtcars1`
+        * `am`, `gear`, and `carb`
+      2. Affirmation: `mtcars2`
+        * `am`, `gear`, and `carb`
+      
+      i Please add the missing columns to the current affirm session before attempting to update the current report.
+      
+    Condition
+      Error in `affirm_report_excel()`:
+      i affirm Excel Report was not updated.
+
+# Test that when columns are mismatched from old to new affirmations, that the correct error is thrown
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Message
+      x The current affirm report could not be updated due to missing columns in the following current affirmations:
+      
+      1. Affirmation: `mtcars1`
+        * `hp`, `drat`, and `wt`
+      2. Affirmation: `mtcars2`
+        * `hp`, `drat`, and `wt`
+      
+      i Please add the missing columns to the current affirm session before attempting to update the current report.
+      
+    Condition
+      Error in `affirm_report_excel()`:
+      i affirm Excel Report was not updated.
+
+# Test that when sheets are added to the beginning of a previous report, that the correct error is given.
+
+    Code
+      affirm_report_excel(file = updated_tempxlsx, affirmation_name = "{data_frames}{id}",
+        previous_file = tempxlsx)
+    Condition
+      Error in `affirm_report_excel()`:
+      x Extra sheets were found before the 'Summary' sheet in the previous Excel workbook we attempted to use for updating.
+      i Please remove any additional sheets and ensure the 'Summary' sheet is the first sheet in the workbook, followed by the affirmation sheets.
+
