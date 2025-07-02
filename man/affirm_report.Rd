@@ -28,7 +28,7 @@ Defaults to \code{"{data_frames}{id}"}.}
 
 \item{overwrite}{Overwrite existing file (Defaults to \code{TRUE} as with \code{write.table})}
 
-\item{previous_file}{A string of the file path to the previous affirmation Excel workbook that needs to be updated}
+\item{previous_file}{A string of the file path to the previous affirmation Excel workbook containing \code{assigned_to}, \code{status}, and \code{comment} fields that need to be carried forward to this report}
 }
 \value{
 gt table, Excel file, or a df of raw data
