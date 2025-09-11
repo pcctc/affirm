@@ -8,7 +8,7 @@
       affirm_no_dupes(mtcars, label = "duplicates in all vars", columns = everything())
     Message
       * duplicates in all vars
-        32 issues identified.
+        0 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -43,46 +43,46 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          flag_duplicate record_id
-      Mazda RX4                    FALSE         1
-      Mazda RX4 Wag                FALSE         2
-      Datsun 710                   FALSE         3
-      Hornet 4 Drive               FALSE         4
-      Hornet Sportabout            FALSE         5
-      Valiant                      FALSE         6
-      Duster 360                   FALSE         7
-      Merc 240D                    FALSE         8
-      Merc 230                     FALSE         9
-      Merc 280                     FALSE        10
-      Merc 280C                    FALSE        11
-      Merc 450SE                   FALSE        12
-      Merc 450SL                   FALSE        13
-      Merc 450SLC                  FALSE        14
-      Cadillac Fleetwood           FALSE        15
-      Lincoln Continental          FALSE        16
-      Chrysler Imperial            FALSE        17
-      Fiat 128                     FALSE        18
-      Honda Civic                  FALSE        19
-      Toyota Corolla               FALSE        20
-      Toyota Corona                FALSE        21
-      Dodge Challenger             FALSE        22
-      AMC Javelin                  FALSE        23
-      Camaro Z28                   FALSE        24
-      Pontiac Firebird             FALSE        25
-      Fiat X1-9                    FALSE        26
-      Porsche 914-2                FALSE        27
-      Lotus Europa                 FALSE        28
-      Ford Pantera L               FALSE        29
-      Ferrari Dino                 FALSE        30
-      Maserati Bora                FALSE        31
-      Volvo 142E                   FALSE        32
+                          record_id flag_duplicate
+      Mazda RX4                   1          FALSE
+      Mazda RX4 Wag               2          FALSE
+      Datsun 710                  3          FALSE
+      Hornet 4 Drive              4          FALSE
+      Hornet Sportabout           5          FALSE
+      Valiant                     6          FALSE
+      Duster 360                  7          FALSE
+      Merc 240D                   8          FALSE
+      Merc 230                    9          FALSE
+      Merc 280                   10          FALSE
+      Merc 280C                  11          FALSE
+      Merc 450SE                 12          FALSE
+      Merc 450SL                 13          FALSE
+      Merc 450SLC                14          FALSE
+      Cadillac Fleetwood         15          FALSE
+      Lincoln Continental        16          FALSE
+      Chrysler Imperial          17          FALSE
+      Fiat 128                   18          FALSE
+      Honda Civic                19          FALSE
+      Toyota Corolla             20          FALSE
+      Toyota Corona              21          FALSE
+      Dodge Challenger           22          FALSE
+      AMC Javelin                23          FALSE
+      Camaro Z28                 24          FALSE
+      Pontiac Firebird           25          FALSE
+      Fiat X1-9                  26          FALSE
+      Porsche 914-2              27          FALSE
+      Lotus Europa               28          FALSE
+      Ford Pantera L             29          FALSE
+      Ferrari Dino               30          FALSE
+      Maserati Bora              31          FALSE
+      Volvo 142E                 32          FALSE
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        mpg, c~      32      32          1 <df> 
+      1    NA duplicate~       NA <NA>        mpg, c~       0      32          0 <df> 
 
 ---
 
@@ -94,7 +94,7 @@
       affirm_no_dupes(mtcars, label = "duplicates in one var", columns = disp)
     Message
       * duplicates in one var
-        23 issues identified.
+        5 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -129,46 +129,46 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          flag_duplicate record_id
-      Mazda RX4                     TRUE         1
-      Mazda RX4 Wag                 TRUE         2
-      Datsun 710                   FALSE         3
-      Hornet 4 Drive               FALSE         4
-      Hornet Sportabout             TRUE         5
-      Valiant                      FALSE         6
-      Duster 360                    TRUE         7
-      Merc 240D                    FALSE         8
-      Merc 230                     FALSE         9
-      Merc 280                      TRUE        10
-      Merc 280C                     TRUE        11
-      Merc 450SE                    TRUE        12
-      Merc 450SL                    TRUE        13
-      Merc 450SLC                   TRUE        14
-      Cadillac Fleetwood           FALSE        15
-      Lincoln Continental          FALSE        16
-      Chrysler Imperial            FALSE        17
-      Fiat 128                     FALSE        18
-      Honda Civic                  FALSE        19
-      Toyota Corolla               FALSE        20
-      Toyota Corona                FALSE        21
-      Dodge Challenger             FALSE        22
-      AMC Javelin                  FALSE        23
-      Camaro Z28                   FALSE        24
-      Pontiac Firebird             FALSE        25
-      Fiat X1-9                    FALSE        26
-      Porsche 914-2                FALSE        27
-      Lotus Europa                 FALSE        28
-      Ford Pantera L               FALSE        29
-      Ferrari Dino                 FALSE        30
-      Maserati Bora                FALSE        31
-      Volvo 142E                   FALSE        32
+                          record_id flag_duplicate
+      Mazda RX4                   1          FALSE
+      Mazda RX4 Wag               2           TRUE
+      Datsun 710                  3          FALSE
+      Hornet 4 Drive              4          FALSE
+      Hornet Sportabout           5          FALSE
+      Valiant                     6          FALSE
+      Duster 360                  7           TRUE
+      Merc 240D                   8          FALSE
+      Merc 230                    9          FALSE
+      Merc 280                   10          FALSE
+      Merc 280C                  11           TRUE
+      Merc 450SE                 12          FALSE
+      Merc 450SL                 13           TRUE
+      Merc 450SLC                14           TRUE
+      Cadillac Fleetwood         15          FALSE
+      Lincoln Continental        16          FALSE
+      Chrysler Imperial          17          FALSE
+      Fiat 128                   18          FALSE
+      Honda Civic                19          FALSE
+      Toyota Corolla             20          FALSE
+      Toyota Corona              21          FALSE
+      Dodge Challenger           22          FALSE
+      AMC Javelin                23          FALSE
+      Camaro Z28                 24          FALSE
+      Pontiac Firebird           25          FALSE
+      Fiat X1-9                  26          FALSE
+      Porsche 914-2              27          FALSE
+      Lotus Europa               28          FALSE
+      Ford Pantera L             29          FALSE
+      Ferrari Dino               30          FALSE
+      Maserati Bora              31          FALSE
+      Volvo 142E                 32          FALSE
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        disp         23      32      0.719 <df> 
+      1    NA duplicate~       NA <NA>        disp          5      32      0.156 <df> 
 
 ---
 
@@ -180,7 +180,7 @@
       affirm_no_dupes(mtcars, label = "duplicates in two vars", columns = c(disp, am))
     Message
       * duplicates in two vars
-        23 issues identified.
+        5 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -215,44 +215,44 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          flag_duplicate record_id
-      Mazda RX4                     TRUE         1
-      Mazda RX4 Wag                 TRUE         2
-      Datsun 710                   FALSE         3
-      Hornet 4 Drive               FALSE         4
-      Hornet Sportabout             TRUE         5
-      Valiant                      FALSE         6
-      Duster 360                    TRUE         7
-      Merc 240D                    FALSE         8
-      Merc 230                     FALSE         9
-      Merc 280                      TRUE        10
-      Merc 280C                     TRUE        11
-      Merc 450SE                    TRUE        12
-      Merc 450SL                    TRUE        13
-      Merc 450SLC                   TRUE        14
-      Cadillac Fleetwood           FALSE        15
-      Lincoln Continental          FALSE        16
-      Chrysler Imperial            FALSE        17
-      Fiat 128                     FALSE        18
-      Honda Civic                  FALSE        19
-      Toyota Corolla               FALSE        20
-      Toyota Corona                FALSE        21
-      Dodge Challenger             FALSE        22
-      AMC Javelin                  FALSE        23
-      Camaro Z28                   FALSE        24
-      Pontiac Firebird             FALSE        25
-      Fiat X1-9                    FALSE        26
-      Porsche 914-2                FALSE        27
-      Lotus Europa                 FALSE        28
-      Ford Pantera L               FALSE        29
-      Ferrari Dino                 FALSE        30
-      Maserati Bora                FALSE        31
-      Volvo 142E                   FALSE        32
+                          record_id flag_duplicate
+      Mazda RX4                   1          FALSE
+      Mazda RX4 Wag               2           TRUE
+      Datsun 710                  3          FALSE
+      Hornet 4 Drive              4          FALSE
+      Hornet Sportabout           5          FALSE
+      Valiant                     6          FALSE
+      Duster 360                  7           TRUE
+      Merc 240D                   8          FALSE
+      Merc 230                    9          FALSE
+      Merc 280                   10          FALSE
+      Merc 280C                  11           TRUE
+      Merc 450SE                 12          FALSE
+      Merc 450SL                 13           TRUE
+      Merc 450SLC                14           TRUE
+      Cadillac Fleetwood         15          FALSE
+      Lincoln Continental        16          FALSE
+      Chrysler Imperial          17          FALSE
+      Fiat 128                   18          FALSE
+      Honda Civic                19          FALSE
+      Toyota Corolla             20          FALSE
+      Toyota Corona              21          FALSE
+      Dodge Challenger           22          FALSE
+      AMC Javelin                23          FALSE
+      Camaro Z28                 24          FALSE
+      Pontiac Firebird           25          FALSE
+      Fiat X1-9                  26          FALSE
+      Porsche 914-2              27          FALSE
+      Lotus Europa               28          FALSE
+      Ford Pantera L             29          FALSE
+      Ferrari Dino               30          FALSE
+      Maserati Bora              31          FALSE
+      Volvo 142E                 32          FALSE
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        disp, ~      23      32      0.719 <df> 
+      1    NA duplicate~       NA <NA>        disp, ~       5      32      0.156 <df> 
 
