@@ -46,16 +46,41 @@ affirm_no_dupes <- function(data,
   report_listing <- rlang::enquo(report_listing)
   if (.is_quo_null(report_listing))
     report_listing <-
-    rlang::quo(dplyr::filter(., lgl_condition) |> dplyr::select(all_of(!!columns)) |> dplyr::distinct()) |>
+    rlang::quo(
+      dplyr::filter(., lgl_condition) |>
+        dplyr::select(all_of(!!columns)) |>
+        # Adds dupe info to the actual report listing
+        dplyr::mutate(
+          flag_duplicate = dplyr:: n() > 1,
+          record_id = dplyr::row_number()
+        )) |>
     structure(.Environment = rlang::caller_env())
 
   # construct `condition=` argument --------------------------------------------
   quo_condition <-
-    rlang::quo(dplyr::select(., all_of(!!columns)) |> Negate(f = duplicated)()) |>
+    rlang::quo(
+      dplyr::select(., all_of(!!columns)) |>
+        dplyr::mutate(
+          .by = c(all_of(!!columns)),
+          flag_duplicate = dplyr:: n() > 1
+        ) |>
+        dplyr::pull(flag_duplicate)
+    ) |>
     structure(.Environment = rlang::caller_env())
 
+  # Add dupe info to the actual data output ------------------------------------
+  data_out <-
+    data |>
+    dplyr::mutate(
+      .by = all_of(!!columns),
+      flag_duplicate = dplyr:: n() > 1
+    ) |>
+    dplyr::mutate(
+      record_id = dplyr::row_number()
+    )
+
   # pass arguments to affirm_true() --------------------------------------------
-  affirm_true(data = data,
+  affirm_true(data = data_out,
               label = label,
               condition = !!quo_condition,
               id = id,

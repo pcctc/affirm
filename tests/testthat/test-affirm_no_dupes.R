@@ -14,7 +14,7 @@ test_that("affirm_no_dupes() works", {
     affirm_no_dupes(
       mtcars,
       label = "duplicates in one var",
-      columns = cyl
+      columns = disp
     )
     affirm_report_raw_data()
   })
@@ -24,14 +24,14 @@ test_that("affirm_no_dupes() works", {
     affirm_no_dupes(
       mtcars,
       label = "duplicates in two vars",
-      columns = c(cyl, am)
+      columns = c(disp, am)
     )
     affirm_report_raw_data()
   })
 })
 
 test_that("affirm_no_dupes() throws errors", {
-  # ! The `columm` argument must select at least one column from `data`.
+  # ! The `column` argument must select at least one column from `data`.
   expect_error({
     affirm_init(replace = TRUE)
     affirm_no_dupes(

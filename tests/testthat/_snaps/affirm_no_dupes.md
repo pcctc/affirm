@@ -8,7 +8,7 @@
       affirm_no_dupes(mtcars, label = "duplicates in all vars", columns = everything())
     Message
       * duplicates in all vars
-        0 issues identified.
+        32 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -43,13 +43,46 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+                          flag_duplicate record_id
+      Mazda RX4                    FALSE         1
+      Mazda RX4 Wag                FALSE         2
+      Datsun 710                   FALSE         3
+      Hornet 4 Drive               FALSE         4
+      Hornet Sportabout            FALSE         5
+      Valiant                      FALSE         6
+      Duster 360                   FALSE         7
+      Merc 240D                    FALSE         8
+      Merc 230                     FALSE         9
+      Merc 280                     FALSE        10
+      Merc 280C                    FALSE        11
+      Merc 450SE                   FALSE        12
+      Merc 450SL                   FALSE        13
+      Merc 450SLC                  FALSE        14
+      Cadillac Fleetwood           FALSE        15
+      Lincoln Continental          FALSE        16
+      Chrysler Imperial            FALSE        17
+      Fiat 128                     FALSE        18
+      Honda Civic                  FALSE        19
+      Toyota Corolla               FALSE        20
+      Toyota Corona                FALSE        21
+      Dodge Challenger             FALSE        22
+      AMC Javelin                  FALSE        23
+      Camaro Z28                   FALSE        24
+      Pontiac Firebird             FALSE        25
+      Fiat X1-9                    FALSE        26
+      Porsche 914-2                FALSE        27
+      Lotus Europa                 FALSE        28
+      Ford Pantera L               FALSE        29
+      Ferrari Dino                 FALSE        30
+      Maserati Bora                FALSE        31
+      Volvo 142E                   FALSE        32
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        mpg, c~       0      32          0 <df> 
+      1    NA duplicate~       NA <NA>        mpg, c~      32      32          1 <df> 
 
 ---
 
@@ -58,10 +91,10 @@
     Message
       v We're ready to make data affirmations...
     Code
-      affirm_no_dupes(mtcars, label = "duplicates in one var", columns = cyl)
+      affirm_no_dupes(mtcars, label = "duplicates in one var", columns = disp)
     Message
       * duplicates in one var
-        29 issues identified.
+        23 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -96,13 +129,46 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+                          flag_duplicate record_id
+      Mazda RX4                     TRUE         1
+      Mazda RX4 Wag                 TRUE         2
+      Datsun 710                   FALSE         3
+      Hornet 4 Drive               FALSE         4
+      Hornet Sportabout             TRUE         5
+      Valiant                      FALSE         6
+      Duster 360                    TRUE         7
+      Merc 240D                    FALSE         8
+      Merc 230                     FALSE         9
+      Merc 280                      TRUE        10
+      Merc 280C                     TRUE        11
+      Merc 450SE                    TRUE        12
+      Merc 450SL                    TRUE        13
+      Merc 450SLC                   TRUE        14
+      Cadillac Fleetwood           FALSE        15
+      Lincoln Continental          FALSE        16
+      Chrysler Imperial            FALSE        17
+      Fiat 128                     FALSE        18
+      Honda Civic                  FALSE        19
+      Toyota Corolla               FALSE        20
+      Toyota Corona                FALSE        21
+      Dodge Challenger             FALSE        22
+      AMC Javelin                  FALSE        23
+      Camaro Z28                   FALSE        24
+      Pontiac Firebird             FALSE        25
+      Fiat X1-9                    FALSE        26
+      Porsche 914-2                FALSE        27
+      Lotus Europa                 FALSE        28
+      Ford Pantera L               FALSE        29
+      Ferrari Dino                 FALSE        30
+      Maserati Bora                FALSE        31
+      Volvo 142E                   FALSE        32
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        cyl          29      32      0.906 <df> 
+      1    NA duplicate~       NA <NA>        disp         23      32      0.719 <df> 
 
 ---
 
@@ -111,10 +177,10 @@
     Message
       v We're ready to make data affirmations...
     Code
-      affirm_no_dupes(mtcars, label = "duplicates in two vars", columns = c(cyl, am))
+      affirm_no_dupes(mtcars, label = "duplicates in two vars", columns = c(disp, am))
     Message
       * duplicates in two vars
-        26 issues identified.
+        23 issues identified.
     Output
                            mpg cyl  disp  hp drat    wt  qsec vs am gear carb
       Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
@@ -149,11 +215,44 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
+                          flag_duplicate record_id
+      Mazda RX4                     TRUE         1
+      Mazda RX4 Wag                 TRUE         2
+      Datsun 710                   FALSE         3
+      Hornet 4 Drive               FALSE         4
+      Hornet Sportabout             TRUE         5
+      Valiant                      FALSE         6
+      Duster 360                    TRUE         7
+      Merc 240D                    FALSE         8
+      Merc 230                     FALSE         9
+      Merc 280                      TRUE        10
+      Merc 280C                     TRUE        11
+      Merc 450SE                    TRUE        12
+      Merc 450SL                    TRUE        13
+      Merc 450SLC                   TRUE        14
+      Cadillac Fleetwood           FALSE        15
+      Lincoln Continental          FALSE        16
+      Chrysler Imperial            FALSE        17
+      Fiat 128                     FALSE        18
+      Honda Civic                  FALSE        19
+      Toyota Corolla               FALSE        20
+      Toyota Corona                FALSE        21
+      Dodge Challenger             FALSE        22
+      AMC Javelin                  FALSE        23
+      Camaro Z28                   FALSE        24
+      Pontiac Firebird             FALSE        25
+      Fiat X1-9                    FALSE        26
+      Porsche 914-2                FALSE        27
+      Lotus Europa                 FALSE        28
+      Ford Pantera L               FALSE        29
+      Ferrari Dino                 FALSE        30
+      Maserati Bora                FALSE        31
+      Volvo 142E                   FALSE        32
     Code
       affirm_report_raw_data()
     Output
       # A tibble: 1 x 9
            id label      priority data_frames columns error_n total_n error_rate data 
         <int> <chr>         <int> <chr>       <chr>     <int>   <int>      <dbl> <lis>
-      1    NA duplicate~       NA <NA>        cyl, am      26      32      0.812 <df> 
+      1    NA duplicate~       NA <NA>        disp, ~      23      32      0.719 <df> 
 
