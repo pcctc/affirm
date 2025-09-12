@@ -63,11 +63,13 @@ affirm_no_dupes <- function(data,
   if (.is_quo_null(report_listing))
     report_listing <-
     rlang::quo(
-      dplyr::filter(., lgl_condition) |>
+      dplyr::filter(., !lgl_condition) |>
         dplyr::select(all_of(!!columns)) |>
         # Adds dupe info to the actual report listing
         dplyr::mutate(
-          flag_duplicate = dplyr::n() > 1,
+          .by = c(all_of(!!columns)),
+          row_num = dplyr::row_number(),
+          flag_duplicate = .data$row_num != 1,
           record_id = dplyr::row_number()
         )) |>
     structure(.Environment = rlang::caller_env())
