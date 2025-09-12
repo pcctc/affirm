@@ -1,3 +1,7 @@
+# affirm 0.2.2
+
+* Updated `affirm_no_dupes()` to add `record_id` and `flag_duplicate` columns to the output, providing better visibility into duplicate detection logic.
+
 # affirm 0.2.1
 
 * Added the `previous_file` argument to `affirm_report_excel()` to enable newly created Excel affirm reports to be updated with data from a previous report. This allows `assigned_to`, `status`, and `comment` columns to be preserved when regenerating reports.

@@ -1,8 +1,10 @@
 #' Affirm Range
 #'
-#'A wrapper for `affirm_true()`.
-#' The columns argument is used to construct the
-#' `affirm_true(condition = dplyr::select(., all_of(columns)) |> duplicated())` argument.
+#' A wrapper for `affirm_true()`.
+#' The columns argument specifies which columns to check for duplicates. The function
+#' creates a record ID, `record_id` for each row, then identifies whether each row represents
+#' the first occurrence of a unique combination of values in the specified columns.
+#' The resulting logical vector, `flag_duplicate` is passed to `affirm_true()`.
 #'
 #' @inheritParams affirm_true
 #' @param columns columns to check duplicates among
@@ -15,16 +17,30 @@
 #' @export
 #' @family Data Affirmations
 #'
+#' @section Using `affirm_no_dupes()` to detect duplicate values in specified columns:
+#' `affirm_no_dupes()` adds two columns to the output data:
+#'
+#' \itemize{
+#'   \item **`record_id`:** The row number from the original data frame.
+#'   \item **`flag_duplicate`:** A Boolean (`TRUE`/`FALSE`) that indicates whether a row
+#'   represents the first occurrence of a unique combination. The first instance
+#'   of each unique combination is flagged as `TRUE`, while subsequent duplicates
+#'   are flagged as `FALSE`.
+#' }
+#'
 #' @examples
 #' affirm_init(replace = TRUE)
 #'
 #' dplyr::as_tibble(mtcars) |>
+#' dplyr::select(-c(am, vs)) |>
+#' dplyr::arrange(cyl) |>
 #'  affirm_no_dupes(
 #'    label = "No duplicates in the number of cylinders",
 #'    columns = cyl
 #'  )
 #'
 #' affirm_close()
+#'
 affirm_no_dupes <- function(data,
                             label,
                             columns,

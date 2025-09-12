@@ -51,19 +51,37 @@ data frame
 }
 \description{
 A wrapper for \code{affirm_true()}.
-The columns argument is used to construct the
-\code{affirm_true(condition = dplyr::select(., all_of(columns)) |> duplicated())} argument.
+The columns argument specifies which columns to check for duplicates. The function
+creates a record ID, \code{record_id} for each row, then identifies whether each row represents
+the first occurrence of a unique combination of values in the specified columns.
+The resulting logical vector, \code{flag_duplicate} is passed to \code{affirm_true()}.
 }
+\section{Using \code{affirm_no_dupes()} to detect duplicate values in specified columns}{
+
+\code{affirm_no_dupes()} adds two columns to the output data:
+
+\itemize{
+\item \strong{\code{record_id}:} The row number from the original data frame.
+\item \strong{\code{flag_duplicate}:} A Boolean (\code{TRUE}/\code{FALSE}) that indicates whether a row
+represents the first occurrence of a unique combination. The first instance
+of each unique combination is flagged as \code{TRUE}, while subsequent duplicates
+are flagged as \code{FALSE}.
+}
+}
+
 \examples{
 affirm_init(replace = TRUE)
 
 dplyr::as_tibble(mtcars) |>
+dplyr::select(-c(am, vs)) |>
+dplyr::arrange(cyl) |>
  affirm_no_dupes(
    label = "No duplicates in the number of cylinders",
    columns = cyl
  )
 
 affirm_close()
+
 }
 \seealso{
 Other Data Affirmations: 
