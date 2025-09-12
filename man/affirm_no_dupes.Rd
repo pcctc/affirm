@@ -2,7 +2,7 @@
 % Please edit documentation in R/affirm_no_dupes.R
 \name{affirm_no_dupes}
 \alias{affirm_no_dupes}
-\title{Affirm Range}
+\title{Affirm No Duplicates}
 \usage{
 affirm_no_dupes(
   data,

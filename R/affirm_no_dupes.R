@@ -1,4 +1,4 @@
-#' Affirm Range
+#' Affirm No Duplicates
 #'
 #' A wrapper for `affirm_true()`.
 #' The columns argument specifies which columns to check for duplicates. The function
