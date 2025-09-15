@@ -43,39 +43,39 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          record_id flag_duplicate
-      Mazda RX4                   1          FALSE
-      Mazda RX4 Wag               2          FALSE
-      Datsun 710                  3          FALSE
-      Hornet 4 Drive              4          FALSE
-      Hornet Sportabout           5          FALSE
-      Valiant                     6          FALSE
-      Duster 360                  7          FALSE
-      Merc 240D                   8          FALSE
-      Merc 230                    9          FALSE
-      Merc 280                   10          FALSE
-      Merc 280C                  11          FALSE
-      Merc 450SE                 12          FALSE
-      Merc 450SL                 13          FALSE
-      Merc 450SLC                14          FALSE
-      Cadillac Fleetwood         15          FALSE
-      Lincoln Continental        16          FALSE
-      Chrysler Imperial          17          FALSE
-      Fiat 128                   18          FALSE
-      Honda Civic                19          FALSE
-      Toyota Corolla             20          FALSE
-      Toyota Corona              21          FALSE
-      Dodge Challenger           22          FALSE
-      AMC Javelin                23          FALSE
-      Camaro Z28                 24          FALSE
-      Pontiac Firebird           25          FALSE
-      Fiat X1-9                  26          FALSE
-      Porsche 914-2              27          FALSE
-      Lotus Europa               28          FALSE
-      Ford Pantera L             29          FALSE
-      Ferrari Dino               30          FALSE
-      Maserati Bora              31          FALSE
-      Volvo 142E                 32          FALSE
+                          flag_duplicate duplicate_of record_id
+      Mazda RX4                    FALSE           NA         1
+      Mazda RX4 Wag                FALSE           NA         2
+      Datsun 710                   FALSE           NA         3
+      Hornet 4 Drive               FALSE           NA         4
+      Hornet Sportabout            FALSE           NA         5
+      Valiant                      FALSE           NA         6
+      Duster 360                   FALSE           NA         7
+      Merc 240D                    FALSE           NA         8
+      Merc 230                     FALSE           NA         9
+      Merc 280                     FALSE           NA        10
+      Merc 280C                    FALSE           NA        11
+      Merc 450SE                   FALSE           NA        12
+      Merc 450SL                   FALSE           NA        13
+      Merc 450SLC                  FALSE           NA        14
+      Cadillac Fleetwood           FALSE           NA        15
+      Lincoln Continental          FALSE           NA        16
+      Chrysler Imperial            FALSE           NA        17
+      Fiat 128                     FALSE           NA        18
+      Honda Civic                  FALSE           NA        19
+      Toyota Corolla               FALSE           NA        20
+      Toyota Corona                FALSE           NA        21
+      Dodge Challenger             FALSE           NA        22
+      AMC Javelin                  FALSE           NA        23
+      Camaro Z28                   FALSE           NA        24
+      Pontiac Firebird             FALSE           NA        25
+      Fiat X1-9                    FALSE           NA        26
+      Porsche 914-2                FALSE           NA        27
+      Lotus Europa                 FALSE           NA        28
+      Ford Pantera L               FALSE           NA        29
+      Ferrari Dino                 FALSE           NA        30
+      Maserati Bora                FALSE           NA        31
+      Volvo 142E                   FALSE           NA        32
     Code
       affirm_report_raw_data()
     Output
@@ -129,39 +129,39 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          record_id flag_duplicate
-      Mazda RX4                   1          FALSE
-      Mazda RX4 Wag               2           TRUE
-      Datsun 710                  3          FALSE
-      Hornet 4 Drive              4          FALSE
-      Hornet Sportabout           5          FALSE
-      Valiant                     6          FALSE
-      Duster 360                  7           TRUE
-      Merc 240D                   8          FALSE
-      Merc 230                    9          FALSE
-      Merc 280                   10          FALSE
-      Merc 280C                  11           TRUE
-      Merc 450SE                 12          FALSE
-      Merc 450SL                 13           TRUE
-      Merc 450SLC                14           TRUE
-      Cadillac Fleetwood         15          FALSE
-      Lincoln Continental        16          FALSE
-      Chrysler Imperial          17          FALSE
-      Fiat 128                   18          FALSE
-      Honda Civic                19          FALSE
-      Toyota Corolla             20          FALSE
-      Toyota Corona              21          FALSE
-      Dodge Challenger           22          FALSE
-      AMC Javelin                23          FALSE
-      Camaro Z28                 24          FALSE
-      Pontiac Firebird           25          FALSE
-      Fiat X1-9                  26          FALSE
-      Porsche 914-2              27          FALSE
-      Lotus Europa               28          FALSE
-      Ford Pantera L             29          FALSE
-      Ferrari Dino               30          FALSE
-      Maserati Bora              31          FALSE
-      Volvo 142E                 32          FALSE
+                          flag_duplicate duplicate_of record_id
+      Mazda RX4                    FALSE           NA         1
+      Mazda RX4 Wag                 TRUE            1         2
+      Datsun 710                   FALSE           NA         3
+      Hornet 4 Drive               FALSE           NA         4
+      Hornet Sportabout            FALSE           NA         5
+      Valiant                      FALSE           NA         6
+      Duster 360                    TRUE            5         7
+      Merc 240D                    FALSE           NA         8
+      Merc 230                     FALSE           NA         9
+      Merc 280                     FALSE           NA        10
+      Merc 280C                     TRUE           10        11
+      Merc 450SE                   FALSE           NA        12
+      Merc 450SL                    TRUE           12        13
+      Merc 450SLC                   TRUE           12        14
+      Cadillac Fleetwood           FALSE           NA        15
+      Lincoln Continental          FALSE           NA        16
+      Chrysler Imperial            FALSE           NA        17
+      Fiat 128                     FALSE           NA        18
+      Honda Civic                  FALSE           NA        19
+      Toyota Corolla               FALSE           NA        20
+      Toyota Corona                FALSE           NA        21
+      Dodge Challenger             FALSE           NA        22
+      AMC Javelin                  FALSE           NA        23
+      Camaro Z28                   FALSE           NA        24
+      Pontiac Firebird             FALSE           NA        25
+      Fiat X1-9                    FALSE           NA        26
+      Porsche 914-2                FALSE           NA        27
+      Lotus Europa                 FALSE           NA        28
+      Ford Pantera L               FALSE           NA        29
+      Ferrari Dino                 FALSE           NA        30
+      Maserati Bora                FALSE           NA        31
+      Volvo 142E                   FALSE           NA        32
     Code
       affirm_report_raw_data()
     Output
@@ -215,39 +215,39 @@
       Ferrari Dino        19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
       Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
       Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-                          record_id flag_duplicate
-      Mazda RX4                   1          FALSE
-      Mazda RX4 Wag               2           TRUE
-      Datsun 710                  3          FALSE
-      Hornet 4 Drive              4          FALSE
-      Hornet Sportabout           5          FALSE
-      Valiant                     6          FALSE
-      Duster 360                  7           TRUE
-      Merc 240D                   8          FALSE
-      Merc 230                    9          FALSE
-      Merc 280                   10          FALSE
-      Merc 280C                  11           TRUE
-      Merc 450SE                 12          FALSE
-      Merc 450SL                 13           TRUE
-      Merc 450SLC                14           TRUE
-      Cadillac Fleetwood         15          FALSE
-      Lincoln Continental        16          FALSE
-      Chrysler Imperial          17          FALSE
-      Fiat 128                   18          FALSE
-      Honda Civic                19          FALSE
-      Toyota Corolla             20          FALSE
-      Toyota Corona              21          FALSE
-      Dodge Challenger           22          FALSE
-      AMC Javelin                23          FALSE
-      Camaro Z28                 24          FALSE
-      Pontiac Firebird           25          FALSE
-      Fiat X1-9                  26          FALSE
-      Porsche 914-2              27          FALSE
-      Lotus Europa               28          FALSE
-      Ford Pantera L             29          FALSE
-      Ferrari Dino               30          FALSE
-      Maserati Bora              31          FALSE
-      Volvo 142E                 32          FALSE
+                          flag_duplicate duplicate_of record_id
+      Mazda RX4                    FALSE           NA         1
+      Mazda RX4 Wag                 TRUE            1         2
+      Datsun 710                   FALSE           NA         3
+      Hornet 4 Drive               FALSE           NA         4
+      Hornet Sportabout            FALSE           NA         5
+      Valiant                      FALSE           NA         6
+      Duster 360                    TRUE            5         7
+      Merc 240D                    FALSE           NA         8
+      Merc 230                     FALSE           NA         9
+      Merc 280                     FALSE           NA        10
+      Merc 280C                     TRUE           10        11
+      Merc 450SE                   FALSE           NA        12
+      Merc 450SL                    TRUE           12        13
+      Merc 450SLC                   TRUE           12        14
+      Cadillac Fleetwood           FALSE           NA        15
+      Lincoln Continental          FALSE           NA        16
+      Chrysler Imperial            FALSE           NA        17
+      Fiat 128                     FALSE           NA        18
+      Honda Civic                  FALSE           NA        19
+      Toyota Corolla               FALSE           NA        20
+      Toyota Corona                FALSE           NA        21
+      Dodge Challenger             FALSE           NA        22
+      AMC Javelin                  FALSE           NA        23
+      Camaro Z28                   FALSE           NA        24
+      Pontiac Firebird             FALSE           NA        25
+      Fiat X1-9                    FALSE           NA        26
+      Porsche 914-2                FALSE           NA        27
+      Lotus Europa                 FALSE           NA        28
+      Ford Pantera L               FALSE           NA        29
+      Ferrari Dino                 FALSE           NA        30
+      Maserati Bora                FALSE           NA        31
+      Volvo 142E                   FALSE           NA        32
     Code
       affirm_report_raw_data()
     Output

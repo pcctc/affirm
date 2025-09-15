@@ -58,14 +58,15 @@ The resulting logical vector, \code{flag_duplicate} is passed to \code{affirm_tr
 }
 \section{Using \code{affirm_no_dupes()} to detect duplicate values in specified columns}{
 
-\code{affirm_no_dupes()} adds two columns to the output data:
+\code{affirm_no_dupes()} adds three columns to the output data:
 
 \itemize{
-\item \strong{\code{record_id}:} The row number from the original data frame.
-\item \strong{\code{flag_duplicate}:} A Boolean (\code{TRUE}/\code{FALSE}) that indicates whether a row
-represents the first occurrence of a unique combination. The first instance
-of each unique combination is flagged as \code{TRUE}, while subsequent duplicates
-are flagged as \code{FALSE}.
+\item \strong{\code{record_id}:} The original row number from the input data frame.
+\item \strong{\code{flag_duplicate}:} A Boolean (\code{TRUE}/\code{FALSE}) indicating whether this row
+is a duplicate. The first occurrence of each unique combination is \code{FALSE},
+while subsequent duplicates are \code{TRUE}.
+\item \strong{\code{duplicate_of}:} For duplicate rows, the \code{record_id} of the first
+occurrence of this combination. \code{NA} for non-duplicate rows.
 }
 }
 

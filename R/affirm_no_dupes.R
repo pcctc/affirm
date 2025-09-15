@@ -18,14 +18,15 @@
 #' @family Data Affirmations
 #'
 #' @section Using `affirm_no_dupes()` to detect duplicate values in specified columns:
-#' `affirm_no_dupes()` adds two columns to the output data:
+#' `affirm_no_dupes()` adds three columns to the output data:
 #'
 #' \itemize{
-#'   \item **`record_id`:** The row number from the original data frame.
-#'   \item **`flag_duplicate`:** A Boolean (`TRUE`/`FALSE`) that indicates whether a row
-#'   represents the first occurrence of a unique combination. The first instance
-#'   of each unique combination is flagged as `TRUE`, while subsequent duplicates
-#'   are flagged as `FALSE`.
+#'   \item **`record_id`:** The original row number from the input data frame.
+#'   \item **`flag_duplicate`:** A Boolean (`TRUE`/`FALSE`) indicating whether this row
+#'   is a duplicate. The first occurrence of each unique combination is `FALSE`,
+#'   while subsequent duplicates are `TRUE`.
+#'   \item **`duplicate_of`:** For duplicate rows, the `record_id` of the first
+#'   occurrence of this combination. `NA` for non-duplicate rows.
 #' }
 #'
 #' @examples
@@ -63,15 +64,17 @@ affirm_no_dupes <- function(data,
   if (.is_quo_null(report_listing))
     report_listing <-
     rlang::quo(
-      dplyr::filter(., !lgl_condition) |>
-        dplyr::select(all_of(!!columns)) |>
-        # Adds dupe info to the actual report listing
+      dplyr::mutate(., record_id = dplyr::row_number()) |>
         dplyr::mutate(
           .by = c(all_of(!!columns)),
           row_num = dplyr::row_number(),
           flag_duplicate = .data$row_num != 1,
-          record_id = dplyr::row_number()
-        )) |>
+          duplicate_of = ifelse(.data$flag_duplicate, min(.data$record_id), NA_integer_)
+        ) |>
+        dplyr::filter(!lgl_condition) |>
+        dplyr::select(-"row_num") |>
+        dplyr::relocate("flag_duplicate", "duplicate_of", "record_id", .after = last_col())
+    ) |>
     structure(.Environment = rlang::caller_env())
 
   # construct `condition=` argument --------------------------------------------
@@ -95,9 +98,11 @@ affirm_no_dupes <- function(data,
     dplyr::mutate(
       .by = c(all_of(!!columns)),
       row_num = dplyr::row_number(),
-      flag_duplicate = .data$row_num != 1
+      flag_duplicate = .data$row_num != 1,
+      duplicate_of = ifelse(.data$flag_duplicate, min(.data$record_id), NA_integer_)
     ) |>
-    dplyr::select(-"row_num")
+    dplyr::select(-"row_num") |>
+    dplyr::relocate("flag_duplicate", "duplicate_of", "record_id", .after = last_col())
 
   # pass arguments to affirm_true() --------------------------------------------
   affirm_true(data = data_out,
