@@ -1,6 +1,8 @@
 # affirm 0.2.2
 
-* Updated `affirm_no_dupes()` to add `record_id`, `flag_duplicate`, and `duplicate_of` columns to the output, providing better visibility into duplicate detection logic.
+* Renamed `affirm_no_dupes()` to `affirm_dupe_free()` to follow affirm's convention of using positive assertions (e.g., `affirm_class()`, `affirm_true()`, `affirm_values()`).
+
+* Updated `affirm_dupe_free()` to add `record_id`, `flag_duplicate`, and `duplicate_of` columns to the output, providing better visibility into duplicate detection logic.
 
 # affirm 0.2.1
 

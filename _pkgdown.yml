@@ -34,7 +34,7 @@ reference:
   - affirm_values
   - affirm_class
   - affirm_na
-  - affirm_no_dupes
+  - affirm_dupe_free
   - affirm_range
   - affirm_false
   - affirm_clean_join

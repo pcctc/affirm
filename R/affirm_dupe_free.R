@@ -17,8 +17,8 @@
 #' @export
 #' @family Data Affirmations
 #'
-#' @section Using `affirm_no_dupes()` to detect duplicate values in specified columns:
-#' `affirm_no_dupes()` adds three columns to the output data:
+#' @section Using `affirm_dupe_free()` to detect duplicate values in specified columns:
+#' `affirm_dupe_free()` adds three columns to the output data:
 #'
 #' \itemize{
 #'   \item **`record_id`:** The original row number from the input data frame.
@@ -35,14 +35,14 @@
 #' dplyr::as_tibble(mtcars) |>
 #' dplyr::select(-c(am, vs)) |>
 #' dplyr::arrange(cyl) |>
-#'  affirm_no_dupes(
+#'  affirm_dupe_free(
 #'    label = "No duplicates in the number of cylinders",
 #'    columns = cyl
 #'  )
 #'
 #' affirm_close()
 #'
-affirm_no_dupes <- function(data,
+affirm_dupe_free <- function(data,
                             label,
                             columns,
                             id = NA_integer_,

@@ -1,11 +1,11 @@
-# affirm_no_dupes() works
+# affirm_dupe_free() works
 
     Code
       affirm_init(replace = TRUE)
     Message
       v We're ready to make data affirmations...
     Code
-      affirm_no_dupes(mtcars, label = "duplicates in all vars", columns = everything())
+      affirm_dupe_free(mtcars, label = "duplicates in all vars", columns = everything())
     Message
       * duplicates in all vars
         0 issues identified.
@@ -91,7 +91,7 @@
     Message
       v We're ready to make data affirmations...
     Code
-      affirm_no_dupes(mtcars, label = "duplicates in one var", columns = disp)
+      affirm_dupe_free(mtcars, label = "duplicates in one var", columns = disp)
     Message
       * duplicates in one var
         5 issues identified.
@@ -177,7 +177,7 @@
     Message
       v We're ready to make data affirmations...
     Code
-      affirm_no_dupes(mtcars, label = "duplicates in two vars", columns = c(disp, am))
+      affirm_dupe_free(mtcars, label = "duplicates in two vars", columns = c(disp, am))
     Message
       * duplicates in two vars
         5 issues identified.

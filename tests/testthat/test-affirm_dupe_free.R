@@ -1,7 +1,7 @@
-test_that("affirm_no_dupes() works", {
+test_that("affirm_dupe_free() works", {
   expect_snapshot({
     affirm_init(replace = TRUE)
-    affirm_no_dupes(
+    affirm_dupe_free(
       mtcars,
       label = "duplicates in all vars",
       columns = everything()
@@ -11,7 +11,7 @@ test_that("affirm_no_dupes() works", {
 
   expect_snapshot({
     affirm_init(replace = TRUE)
-    affirm_no_dupes(
+    affirm_dupe_free(
       mtcars,
       label = "duplicates in one var",
       columns = disp
@@ -21,7 +21,7 @@ test_that("affirm_no_dupes() works", {
 
   expect_snapshot({
     affirm_init(replace = TRUE)
-    affirm_no_dupes(
+    affirm_dupe_free(
       mtcars,
       label = "duplicates in two vars",
       columns = c(disp, am)
@@ -30,11 +30,11 @@ test_that("affirm_no_dupes() works", {
   })
 })
 
-test_that("affirm_no_dupes() throws errors", {
+test_that("affirm_dupe_free() throws errors", {
   # ! The `column` argument must select at least one column from `data`.
   expect_error({
     affirm_init(replace = TRUE)
-    affirm_no_dupes(
+    affirm_dupe_free(
       mtcars,
       label = "duplicates in two vars",
       columns = any_of("not_a_variable")
@@ -45,7 +45,7 @@ test_that("affirm_no_dupes() throws errors", {
   # ! Arguments `data`, `label`, and `columns` are required.
   expect_error({
     affirm_init(replace = TRUE)
-    affirm_no_dupes()},
+    affirm_dupe_free()},
     "are required"
   )
 })
