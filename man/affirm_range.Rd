@@ -79,9 +79,9 @@ affirm_close()
 }
 \seealso{
 Other Data Affirmations: 
+\code{\link{affirm_dupe_free}()},
 \code{\link{affirm_false}()},
 \code{\link{affirm_na}()},
-\code{\link{affirm_no_dupes}()},
 \code{\link{affirm_true}()},
 \code{\link{affirm_values}()}
 }

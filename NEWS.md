@@ -1,3 +1,13 @@
+# affirm 0.3.0
+
+## Breaking Changes
+
+* Renamed `affirm_no_dupes()` to `affirm_dupe_free()` for consistency with positive assertion naming (like `affirm_true()` rather than `affirm_not_false()`). Users should update all references to use the new function name.
+
+## New Features / Improvements
+
+* Updated `affirm_dupe_free()` to add `record_id`, `flag_duplicate`, and `duplicate_of` columns to the output, providing better visibility into duplicate detection logic.
+
 # affirm 0.2.1
 
 * Added the `previous_file` argument to `affirm_report_excel()` to enable newly created Excel affirm reports to be updated with data from a previous report. This allows `assigned_to`, `status`, and `comment` columns to be preserved when regenerating reports.
