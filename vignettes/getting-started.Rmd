@@ -114,6 +114,12 @@ The table includes
 affirm_report_gt()
 ```
 
+You can also use `details = TRUE` to create a more compact report with expandable sections showing validation failures inline:
+
+```{r}
+affirm_report_gt(details = TRUE)
+```
+
 
 ## Validate Derived Variables
 

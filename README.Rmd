@@ -53,6 +53,7 @@ Load the package and initialize a new affirmation session with `affirm_init()`
 
 ```{r example}
 library(affirm)
+library(dplyr)
 
 # initiate an affirmation session
 affirm_init(replace = TRUE)
@@ -87,6 +88,38 @@ gt::gtsave(affirm_report_gt(), filename = "man/figures/README-gt-report.png")
 ```
 
 ![](man/figures/README-gt-report.png)
+
+### Expandable Details View
+
+Use `details = TRUE` to create a more compact report with expandable sections showing validation failures inline:
+
+```{r}
+affirm_init(replace = TRUE)
+
+as_tibble(mtcars) |>
+  affirm_true(
+    label = "No. cylinders must be 4, 6, or 8",
+    condition = cyl %in% c(4, 6, 8),
+    id = 1,
+    data_frames = "mtcars"
+  ) |>
+  affirm_true(
+    label = "MPG should be less than 33",
+    condition = mpg < 33,
+    id = 2,
+    data_frames = "mtcars"
+  )
+```
+
+```r
+affirm_report_gt(details = TRUE)
+```
+
+```{r, include=FALSE, echo=FALSE}
+gt::gtsave(affirm_report_gt(details = TRUE), filename = "man/figures/README-gt-report-details.png")
+```
+
+![](man/figures/README-gt-report-details.png)
 
 ### About the hex logo
 
