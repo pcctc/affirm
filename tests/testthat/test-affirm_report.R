@@ -36,6 +36,42 @@ test_that("affirm_report() works", {
     NA
   )
 
+  # Test details parameter
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33",
+      condition = mpg > 33
+    )
+    affirm_report_gt(details = TRUE)},
+    NA
+  )
+  
+  # Test details returns gt table when TRUE
+  expect_s3_class({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33", 
+      condition = mpg > 33
+    )
+    affirm_report_gt(details = TRUE)},
+    "gt_tbl"
+  )
+  
+  # Test details returns gt table when FALSE
+  expect_s3_class({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33",
+      condition = mpg > 33  
+    )
+    affirm_report_gt(details = FALSE)},
+    "gt_tbl"
+  )
+
   # names are added according to glue syntax
   expect_snapshot({
     affirm_init(replace = TRUE)

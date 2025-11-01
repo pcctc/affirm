@@ -89,12 +89,80 @@
           padding = "5px",
           `font-weight` = "bold",
           cursor = "pointer",
-          `border-radius` = "4px"
+          `border-radius` = "4px",
+          `vertical-align` = "middle",
+          margin = "0"
         ),
         "CSV"
       )
     )
   )
+}
+
+# creates expandable details for gt table with full-width summary and data table
+.create_gt_expandable_details_fullwidth <- function(data, id, label, priority, data_frames, columns, error_n, total_n, error_rate, csv_download_link) {
+  # Build the summary information
+  summary_parts <- c()
+  if (!is.na(id) && id != "") {
+    summary_parts <- c(summary_parts, paste0("<strong>ID:</strong>&nbsp;", id))
+  }
+  if (!is.na(label) && label != "") {
+    summary_parts <- c(summary_parts, paste0("<strong>Affirmation:</strong>&nbsp;", label))
+  }
+  if (!is.na(priority) && priority != "") {
+    summary_parts <- c(summary_parts, paste0("<strong>Priority:</strong>&nbsp;", priority))
+  }
+  if (!is.na(data_frames) && data_frames != "") {
+    summary_parts <- c(summary_parts, paste0("<strong>Data Frames:</strong>&nbsp;", data_frames))
+  }
+  if (!is.na(columns) && columns != "") {
+    summary_parts <- c(summary_parts, paste0("<strong>Columns:</strong>&nbsp;", columns))
+  }
+  summary_parts <- c(
+    summary_parts,
+    paste0("<strong>No. Errors:</strong>&nbsp;", error_n),
+    paste0("<strong>Total No. Checks:</strong>&nbsp;", total_n),
+    paste0("<strong>Error Rate:</strong>&nbsp;", sprintf("%.1f%%", error_rate * 100)),
+    paste0("<strong>Listing Download:</strong>&nbsp;", csv_download_link)
+  )
+  
+  summary_html <- paste0(
+    '<div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 10px; font-size: 13px;">',
+    paste(paste0('<span style="display: inline-flex; align-items: center;">', summary_parts, '</span>'), collapse = ' | '),
+    '</div>'
+  )
+  
+  # Create the data table HTML if there are errors
+  if (is.null(data) || nrow(data) == 0) {
+    data_section <- '<div style="color: #666; font-style: italic; font-size: 13px;">No validation failures</div>'
+  } else {
+    table_html <- data |>
+      gt::gt() |>
+      gt::tab_options(
+        table.font.size = 12,
+        data_row.padding = gt::px(2),
+        column_labels.font.weight = "bold"
+      ) |>
+      gt::as_raw_html()
+    
+    data_section <- as.character(htmltools::tags$details(
+      htmltools::tags$summary(
+        style = "cursor: pointer; color: #0066cc; font-size: 13px; user-select: none; font-weight: 500;",
+        paste0("▸ View ", nrow(data), " validation failure", if(nrow(data) > 1) "s" else "")
+      ),
+      htmltools::tags$div(
+        style = "margin-top: 8px; padding: 8px; background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto;",
+        htmltools::HTML(table_html)
+      )
+    ))
+  }
+  
+  # Combine summary and data sections
+  as.character(htmltools::div(
+    style = "padding: 8px; background-color: #f8f9fa; border-radius: 4px; margin: -1px;",
+    htmltools::HTML(summary_html),
+    htmltools::HTML(data_section)
+  ))
 }
 
 
