@@ -31,8 +31,9 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
+    tibble (>= 3.2.1),
     webshot2 (>= 0.1.0),
-    tibble (>= 3.2.1)
+    withr
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3

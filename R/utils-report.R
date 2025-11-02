@@ -148,7 +148,7 @@
     data_section <- as.character(htmltools::tags$details(
       htmltools::tags$summary(
         style = "cursor: pointer; color: #0066cc; font-size: 13px; user-select: none; font-weight: 500;",
-        paste0("▸ View ", nrow(data), " validation failure", if(nrow(data) > 1) "s" else "")
+        paste0("View ", nrow(data), " validation failure", if(nrow(data) > 1) "s" else "")
       ),
       htmltools::tags$div(
         style = "margin-top: 8px; padding: 8px; background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 4px; overflow-x: auto;",
