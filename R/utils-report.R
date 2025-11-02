@@ -64,7 +64,7 @@
 # converts a data frame to a clickable CSV download link
 .as_csv_encoded_html_download_link <- function(data,
                                                output_file_name = "extract.csv") {
-  if (is.null(data)) return("&mdash;")
+  if (is.null(data) || nrow(data) == 0) return("&mdash;")
 
   temp_file <-
     tempfile(pattern = paste0("csv_file"), fileext = ".csv")
