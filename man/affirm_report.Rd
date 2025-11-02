@@ -7,7 +7,7 @@
 \alias{affirm_report_raw_data}
 \title{Affirmation Report}
 \usage{
-affirm_report_gt(details = FALSE)
+affirm_report_gt(inline_data = FALSE)
 
 affirm_report_excel(
   file,
@@ -19,7 +19,7 @@ affirm_report_excel(
 affirm_report_raw_data()
 }
 \arguments{
-\item{details}{A logical indicating whether to include expandable
+\item{inline_data}{A logical indicating whether to include expandable
 details within the summary table showing validation failure data.
 Defaults to \code{FALSE}. When \code{TRUE}, adds a "Details" column with expandable
 sections containing nested gt tables of validation failures.}
@@ -41,7 +41,7 @@ gt table, Excel file, or a df of raw data.
 \description{
 \itemize{
 \item \code{affirm_report_gt()} returns styled gt table summarizing results of affirmation session.
-When \code{details = TRUE}, adds expandable "Details" column showing detailed
+When \code{inline_data = TRUE}, adds expandable "Details" column showing detailed
 validation failures within the table itself.
 \item \code{affirm_report_excel()} returns excel file with one sheet per affirmation (excluding those with no errors)
 \item \code{affirm_report_raw_data()} returns raw data used to generate summary in \code{affirm_report_gt()}
@@ -92,7 +92,7 @@ gt_report <- affirm_report_gt()
 
 affirm_close()
 
-# Example using details = TRUE for full-width expandable validation details
+# Example using inline_data = TRUE for full-width expandable validation details
 affirm_init(replace = TRUE)
 
 dplyr::as_tibble(mtcars) |>
@@ -107,7 +107,7 @@ dplyr::as_tibble(mtcars) |>
       dplyr::select(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
  )
 
-gt_report <- affirm_report_gt(details = TRUE)
+gt_report <- affirm_report_gt(inline_data = TRUE)
 
 affirm_close()
 

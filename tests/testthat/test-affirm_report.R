@@ -36,7 +36,7 @@ test_that("affirm_report() works", {
     NA
   )
 
-  # Test details parameter
+  # Test inline_data parameter
   expect_error({
     affirm_init(replace = TRUE)
     affirm_true(
@@ -44,11 +44,11 @@ test_that("affirm_report() works", {
       label = "mpg should be greater than 33",
       condition = mpg > 33
     )
-    affirm_report_gt(details = TRUE)},
+    affirm_report_gt(inline_data = TRUE)},
     NA
   )
   
-  # Test details returns gt table when TRUE
+  # Test inline_data returns gt table when TRUE
   expect_s3_class({
     affirm_init(replace = TRUE)
     affirm_true(
@@ -56,11 +56,11 @@ test_that("affirm_report() works", {
       label = "mpg should be greater than 33", 
       condition = mpg > 33
     )
-    affirm_report_gt(details = TRUE)},
+    affirm_report_gt(inline_data = TRUE)},
     "gt_tbl"
   )
   
-  # Test details returns gt table when FALSE
+  # Test inline_data returns gt table when FALSE
   expect_s3_class({
     affirm_init(replace = TRUE)
     affirm_true(
@@ -68,12 +68,13 @@ test_that("affirm_report() works", {
       label = "mpg should be greater than 33",
       condition = mpg > 33  
     )
-    affirm_report_gt(details = FALSE)},
+    affirm_report_gt(inline_data = FALSE)},
     "gt_tbl"
   )
 
   # names are added according to glue syntax
   expect_snapshot({
+    withr::local_options(affirm.id_cols = NULL)  # Ensure clean state
     affirm_init(replace = TRUE)
     affirm_true(
       mtcars,

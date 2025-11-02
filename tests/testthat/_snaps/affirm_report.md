@@ -1,6 +1,7 @@
 # affirm_report() works
 
     Code
+      withr::local_options(affirm.id_cols = NULL)
       affirm_init(replace = TRUE)
     Message
       v We're ready to make data affirmations...

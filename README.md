@@ -110,9 +110,9 @@ affirm_report_gt()
 
 ![](man/figures/README-gt-report.png)
 
-### Expandable Details View
+### Inline Data View
 
-Use `details = TRUE` to create a more compact report with expandable
+Use `inline_data = TRUE` to create a more compact report with expandable
 sections showing validation failures inline:
 
 ``` r
@@ -146,10 +146,10 @@ as_tibble(mtcars) |>
 ```
 
 ``` r
-affirm_report_gt(details = TRUE)
+affirm_report_gt(inline_data = TRUE)
 ```
 
-![](man/figures/README-gt-report-details.png)
+![](man/figures/README-gt-report-inline-data.png)
 
 ### About the hex logo
 

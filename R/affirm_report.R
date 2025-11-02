@@ -1,7 +1,7 @@
 #' Affirmation Report
 #'
 #' - `affirm_report_gt()` returns styled gt table summarizing results of affirmation session.
-#'   When `details = TRUE`, adds expandable "Details" column showing detailed
+#'   When `inline_data = TRUE`, adds expandable "Details" column showing detailed
 #'   validation failures within the table itself.
 #' - `affirm_report_excel()` returns excel file with one sheet per affirmation (excluding those with no errors)
 #' - `affirm_report_raw_data()` returns raw data used to generate summary in `affirm_report_gt()`
@@ -12,7 +12,7 @@
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #' Defaults to `"{data_frames}{id}"`.
 #' @param previous_file A string of the file path to the previous affirmation Excel workbook containing `assigned_to`, `status`, and `comment` fields that need to be carried forward to this report
-#' @param details A logical indicating whether to include expandable
+#' @param inline_data A logical indicating whether to include expandable
 #' details within the summary table showing validation failure data.
 #' Defaults to `FALSE`. When `TRUE`, adds a "Details" column with expandable
 #' sections containing nested gt tables of validation failures.
@@ -63,7 +63,7 @@
 #'
 #' affirm_close()
 #'
-#' # Example using details = TRUE for full-width expandable validation details
+#' # Example using inline_data = TRUE for full-width expandable validation details
 #' affirm_init(replace = TRUE)
 #'
 #' dplyr::as_tibble(mtcars) |>
@@ -78,7 +78,7 @@
 #'       dplyr::select(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
 #'  )
 #'
-#' gt_report <- affirm_report_gt(details = TRUE)
+#' gt_report <- affirm_report_gt(inline_data = TRUE)
 #'
 #' affirm_close()
 #'
@@ -87,10 +87,10 @@ NULL
 
 #' @rdname affirm_report
 #' @export
-affirm_report_gt <- function(details = FALSE) {
+affirm_report_gt <- function(inline_data = FALSE) {
   raw_data <- affirm_report_raw_data()
   
-  if (details) {
+  if (inline_data) {
     # Create gt table with embedded expandable details using HTML
     # The details will be in a dedicated column that spans most of the visual space
     
