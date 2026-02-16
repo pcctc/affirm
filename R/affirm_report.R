@@ -90,88 +90,74 @@ NULL
 affirm_report_gt <- function(inline_data = FALSE) {
   raw_data <- affirm_report_raw_data()
   
+  # Add status_color and CSV links to all rows upfront
+  raw_data_prepared <- raw_data |>
+  dplyr::mutate(status_color = NA_character_, .before = 1L) |>
+  dplyr::mutate(
+    csv_download_link = mapply(
+      FUN = .as_csv_encoded_html_download_link,
+      .data$data,
+      paste0("extract_", dplyr::row_number(), ".csv"),
+      SIMPLIFY = TRUE,
+      USE.NAMES = FALSE
+    )
+  )
+  
   if (inline_data) {
-    # Create gt table with embedded expandable details using HTML
-    # The details will be in a dedicated column that spans most of the visual space
-    
-    # First, create the CSV download links
-    raw_data_with_csv <- raw_data |>
-      dplyr::mutate(
-        csv_download_link =
-          mapply(
-            FUN = .as_csv_encoded_html_download_link,
-            # these two args are the ones being passed to FUN
-            .data$data,
-            paste0("extract_", dplyr::row_number(), ".csv"),
-            # additional mapply args
-            SIMPLIFY = TRUE,
-            USE.NAMES = FALSE
-          )
+    # Full-width expandable details mode: hides individual columns,
+    # shows all details in a single expandable "Details" column
+    gt_table <- raw_data_prepared |>
+    dplyr::select(-"data") |>
+    gt::gt() |>
+    .affirm_report_gt_stylings() |>
+    gt::cols_add(details = NA_character_, .after = "status_color") |>
+    gt::text_transform(
+      locations = gt::cells_body(columns = "details"),
+      fn = function(x) {
+        mapply(
+          FUN = .create_gt_expandable_details_fullwidth,
+          data = raw_data_prepared$data,
+          id = raw_data_prepared$id,
+          label = raw_data_prepared$label,
+          priority = raw_data_prepared$priority,
+          data_frames = raw_data_prepared$data_frames,
+          columns = raw_data_prepared$columns,
+          error_n = raw_data_prepared$error_n,
+          total_n = raw_data_prepared$total_n,
+          error_rate = raw_data_prepared$error_rate,
+          csv_download_link = raw_data_prepared$csv_download_link,
+          SIMPLIFY = FALSE,
+          USE.NAMES = FALSE
+        )
+      }
+    ) |>
+    gt::cols_label(details = "") |>
+    gt::cols_width(
+      status_color ~ gt::px(6),
+      details ~ gt::pct(100)
+    ) |>
+    gt::cols_hide(
+      columns = c(
+        "id",
+        "label",
+        "priority",
+        "data_frames",
+        "columns",
+        "error_n",
+        "total_n",
+        "error_rate",
+        "csv_download_link"
       )
-    
-    gt_table <- raw_data_with_csv |>
-      dplyr::mutate(status_color = NA_character_, .before = 1L) |>
-      dplyr::select(-"data") |>
-      gt::gt() |>
-      .affirm_report_gt_stylings() |>
-      # Add a new column for expandable details
-      gt::cols_add(
-        details = NA_character_,
-        .after = "status_color"
-      ) |>
-      gt::text_transform(
-        locations = gt::cells_body(columns = "details"),
-        fn = function(x) {
-          mapply(
-            FUN = .create_gt_expandable_details_fullwidth,
-            data = raw_data_with_csv$data,
-            id = raw_data_with_csv$id,
-            label = raw_data_with_csv$label,
-            priority = raw_data_with_csv$priority,
-            data_frames = raw_data_with_csv$data_frames,
-            columns = raw_data_with_csv$columns,
-            error_n = raw_data_with_csv$error_n,
-            total_n = raw_data_with_csv$total_n,
-            error_rate = raw_data_with_csv$error_rate,
-            csv_download_link = raw_data_with_csv$csv_download_link,
-            SIMPLIFY = FALSE,
-            USE.NAMES = FALSE
-          )
-        }
-      ) |>
-      gt::cols_label(details = "") |>
-      # Make the details column span the full width
-      gt::cols_width(
-        status_color ~ gt::px(6),
-        details ~ gt::pct(100)
-      ) |>
-      # Hide the redundant columns since they're shown in the details
-      gt::cols_hide(columns = c("id", "label", "priority", "data_frames", "columns", "error_n", "total_n", "error_rate", "csv_download_link"))
-    
-    return(gt_table)
-    
+    )
   } else {
-    # Original gt table behavior
-    gt_table <- raw_data |>
-      dplyr::mutate(status_color = NA_character_, .before = 1L) |>
-      dplyr::mutate(
-        csv_download_link =
-          mapply(
-            FUN = .as_csv_encoded_html_download_link,
-            # these two args are the ones being passed to FUN
-            .data$data,
-            paste0("extract_", dplyr::row_number(), ".csv"),
-            # additional mapply args
-            SIMPLIFY = TRUE,
-            USE.NAMES = FALSE
-          )
-      ) |>
-      dplyr::select(-"data") |>
-      gt::gt() |>
-      .affirm_report_gt_stylings()
-    
-    return(gt_table)
+    # Summary mode: displays all columns with CSV download links
+    gt_table <- raw_data_prepared |>
+    dplyr::select(-"data") |>
+    gt::gt() |>
+    .affirm_report_gt_stylings()
   }
+  
+  gt_table
 }
 
 
