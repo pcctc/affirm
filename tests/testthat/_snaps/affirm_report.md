@@ -1,4 +1,4 @@
-# affirm_report() works
+# affirm_report() works / affirm_report_gt(inline_data = TRUE) executes text_transform with mapply
 
     Code
       withr::local_options(affirm.id_cols = NULL)
