@@ -1,6 +1,8 @@
 #' Affirmation Report
 #'
 #' - `affirm_report_gt()` returns styled gt table summarizing results of affirmation session.
+#'   When `inline_data = TRUE`, adds expandable "Details" column showing detailed
+#'   validation failures within the table itself.
 #' - `affirm_report_excel()` returns excel file with one sheet per affirmation (excluding those with no errors)
 #' - `affirm_report_raw_data()` returns raw data used to generate summary in `affirm_report_gt()`
 #'
@@ -10,8 +12,12 @@
 #' accepted include: `id`, `label`, `priority`, `data_frames`, `columns`, `error_n`, `total_n`.
 #' Defaults to `"{data_frames}{id}"`.
 #' @param previous_file A string of the file path to the previous affirmation Excel workbook containing `assigned_to`, `status`, and `comment` fields that need to be carried forward to this report
+#' @param inline_data A logical indicating whether to include expandable
+#' details within the summary table showing validation failure data.
+#' Defaults to `FALSE`. When `TRUE`, adds a "Details" column with expandable
+#' sections containing nested gt tables of validation failures.
 #'
-#' @return gt table, Excel file, or a df of raw data
+#' @return gt table, Excel file, or a df of raw data.
 #' @name affirm_report
 #'
 #' @section Updating Previous Excel Affirm Reports with `affirm_report_excel()`:
@@ -56,28 +62,102 @@
 #' gt_report <- affirm_report_gt()
 #'
 #' affirm_close()
+#'
+#' # Example using inline_data = TRUE for full-width expandable validation details
+#' affirm_init(replace = TRUE)
+#'
+#' dplyr::as_tibble(mtcars) |>
+#'  affirm_true(
+#'    label = "No. cylinders must be 4, 6, or 8",
+#'    condition = cyl %in% c(4, 6, 8)
+#'  ) |>
+#'  affirm_true(
+#'     label = "MPG should be less than 33",
+#'     condition = mpg < 33,
+#'     report_listing = dplyr::filter(., !lgl_condition) |>
+#'       dplyr::select(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+#'  )
+#'
+#' gt_report <- affirm_report_gt(inline_data = TRUE)
+#'
+#' affirm_close()
+#'
+#' gt_report
 NULL
 
 #' @rdname affirm_report
 #' @export
-affirm_report_gt <- function() {
-  affirm_report_raw_data() |>
-    dplyr::mutate(status_color = NA_character_, .before = 1L) |>
-    dplyr::mutate(
-      csv_download_link =
+affirm_report_gt <- function(inline_data = FALSE) {
+  raw_data <- affirm_report_raw_data()
+  
+  # Add status_color and CSV links to all rows upfront
+  raw_data_prepared <- raw_data |>
+  dplyr::mutate(status_color = NA_character_, .before = 1L) |>
+  dplyr::mutate(
+    csv_download_link = mapply(
+      FUN = .as_csv_encoded_html_download_link,
+      .data$data,
+      paste0("extract_", dplyr::row_number(), ".csv"),
+      SIMPLIFY = TRUE,
+      USE.NAMES = FALSE
+    )
+  )
+  
+  if (inline_data) {
+    # Full-width expandable details mode: hides individual columns,
+    # shows all details in a single expandable "Details" column
+    gt_table <- raw_data_prepared |>
+    dplyr::select(-"data") |>
+    gt::gt() |>
+    .affirm_report_gt_stylings() |>
+    gt::cols_add(details = NA_character_, .after = "status_color") |>
+    gt::text_transform(
+      locations = gt::cells_body(columns = "details"),
+      fn = function(x) {
         mapply(
-          FUN = .as_csv_encoded_html_download_link,
-          # these two args are the ones being passed to FUN
-          .data$data,
-          paste0("extract_", dplyr::row_number(), ".csv"),
-          # additional mapply args
-          SIMPLIFY = TRUE,
+          FUN = .create_gt_expandable_details_fullwidth,
+          data = raw_data_prepared$data,
+          id = raw_data_prepared$id,
+          label = raw_data_prepared$label,
+          priority = raw_data_prepared$priority,
+          data_frames = raw_data_prepared$data_frames,
+          columns = raw_data_prepared$columns,
+          error_n = raw_data_prepared$error_n,
+          total_n = raw_data_prepared$total_n,
+          error_rate = raw_data_prepared$error_rate,
+          csv_download_link = raw_data_prepared$csv_download_link,
+          SIMPLIFY = FALSE,
           USE.NAMES = FALSE
         )
+      }
     ) |>
+    gt::cols_label(details = "") |>
+    gt::cols_width(
+      status_color ~ gt::px(6),
+      details ~ gt::pct(100)
+    ) |>
+    gt::cols_hide(
+      columns = c(
+        "id",
+        "label",
+        "priority",
+        "data_frames",
+        "columns",
+        "error_n",
+        "total_n",
+        "error_rate",
+        "csv_download_link"
+      )
+    )
+  } else {
+    # Summary mode: displays all columns with CSV download links
+    gt_table <- raw_data_prepared |>
     dplyr::select(-"data") |>
     gt::gt() |>
     .affirm_report_gt_stylings()
+  }
+  
+  gt_table
 }
 
 

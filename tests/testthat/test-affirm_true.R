@@ -151,20 +151,37 @@ test_that("affirm_true() error messaging", {
     "ust be a string of length one"
   )
 
-  expect_error({
-    affirm_init(replace = TRUE);
-    affirm_true(
-      mtcars,
-      label = "a label",
-      condition = TRUE
-    );
-    affirm_true(
-      mtcars,
-      label = "a label",
-      condition = TRUE
-    )},
-    "Duplicated labels"
+  # Test that duplicate labels throw an error (or warning in interactive mode)
+  # When tests are run via devtools::test(), interactive() is FALSE and we get an error
+  # When tests are run interactively in RStudio, interactive() is TRUE and we get a warning
+  affirm_init(replace = TRUE)
+  affirm_true(
+    mtcars,
+    label = "a label",
+    condition = TRUE
   )
+  
+  if (interactive()) {
+    # In interactive mode, expect a warning
+    expect_warning(
+      affirm_true(
+        mtcars,
+        label = "a label",
+        condition = TRUE
+      ),
+      "Duplicated labels"
+    )
+  } else {
+    # In non-interactive mode (automated tests), expect an error
+    expect_error(
+      affirm_true(
+        mtcars,
+        label = "a label",
+        condition = TRUE
+      ),
+      "Duplicated labels"
+    )
+  }
 
   # ✖ First run `affirm_init()` to begin affirmations.
   expect_error({

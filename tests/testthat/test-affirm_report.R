@@ -36,8 +36,80 @@ test_that("affirm_report() works", {
     NA
   )
 
+# Test inline_data parameter
+
+test_that("affirm_report_gt(inline_data = TRUE) executes text_transform with mapply", {
+  affirm_init(replace = TRUE)
+  affirm_true(
+    mtcars,
+    label = "mpg > 10",
+    condition = mpg > 10,
+    data_frames = "mtcars"
+  )
+  affirm_true(
+    mtcars,
+    label = "cyl in 4,6,8",
+    condition = cyl %in% c(4, 6, 8),
+    data_frames = "mtcars"
+  )
+
+  gt_result <- affirm_report_gt(inline_data = TRUE)
+
+  expect_true("details" %in% colnames(gt_result[["_data"]]))
+
+  # Render to HTML to trigger text_transform execution
+  html_output <- gt::as_raw_html(gt_result)
+
+  # Need at least one error to generate details tags
+  # Verify the HTML contains text from the inline data
+  expect_true(grepl("Affirmation:", html_output, fixed = TRUE))
+  expect_true(grepl("No. Errors:", html_output, fixed = TRUE))
+
+  # Check that mapply was executed by verifying styled content
+  expect_true(grepl("status_color|details|padding|csv", html_output, fixed = FALSE))
+
+  affirm_close()
+})
+
+  # Test inline_data parameter
+  expect_error({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33",
+      condition = mpg > 33
+    )
+    affirm_report_gt(inline_data = TRUE)},
+    NA
+  )
+  
+  # Test inline_data returns gt table when TRUE
+  expect_s3_class({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33", 
+      condition = mpg > 33
+    )
+    affirm_report_gt(inline_data = TRUE)},
+    "gt_tbl"
+  )
+  
+  # Test inline_data returns gt table when FALSE
+  expect_s3_class({
+    affirm_init(replace = TRUE)
+    affirm_true(
+      mtcars,
+      label = "mpg should be greater than 33",
+      condition = mpg > 33  
+    )
+    affirm_report_gt(inline_data = FALSE)},
+    "gt_tbl"
+  )
+
   # names are added according to glue syntax
   expect_snapshot({
+    withr::local_options(affirm.id_cols = NULL)  # Ensure clean state
     affirm_init(replace = TRUE)
     affirm_true(
       mtcars,

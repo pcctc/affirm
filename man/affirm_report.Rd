@@ -7,7 +7,7 @@
 \alias{affirm_report_raw_data}
 \title{Affirmation Report}
 \usage{
-affirm_report_gt()
+affirm_report_gt(inline_data = FALSE)
 
 affirm_report_excel(
   file,
@@ -19,6 +19,11 @@ affirm_report_excel(
 affirm_report_raw_data()
 }
 \arguments{
+\item{inline_data}{A logical indicating whether to include expandable
+details within the summary table showing validation failure data.
+Defaults to \code{FALSE}. When \code{TRUE}, adds a "Details" column with expandable
+sections containing nested gt tables of validation failures.}
+
 \item{file}{A file path to save the xlsx file}
 
 \item{affirmation_name}{A string for affirmation names; the item name
@@ -31,11 +36,13 @@ Defaults to \code{"{data_frames}{id}"}.}
 \item{previous_file}{A string of the file path to the previous affirmation Excel workbook containing \code{assigned_to}, \code{status}, and \code{comment} fields that need to be carried forward to this report}
 }
 \value{
-gt table, Excel file, or a df of raw data
+gt table, Excel file, or a df of raw data.
 }
 \description{
 \itemize{
 \item \code{affirm_report_gt()} returns styled gt table summarizing results of affirmation session.
+When \code{inline_data = TRUE}, adds expandable "Details" column showing detailed
+validation failures within the table itself.
 \item \code{affirm_report_excel()} returns excel file with one sheet per affirmation (excluding those with no errors)
 \item \code{affirm_report_raw_data()} returns raw data used to generate summary in \code{affirm_report_gt()}
 }
@@ -84,4 +91,25 @@ dplyr::as_tibble(mtcars) |>
 gt_report <- affirm_report_gt()
 
 affirm_close()
+
+# Example using inline_data = TRUE for full-width expandable validation details
+affirm_init(replace = TRUE)
+
+dplyr::as_tibble(mtcars) |>
+ affirm_true(
+   label = "No. cylinders must be 4, 6, or 8",
+   condition = cyl \%in\% c(4, 6, 8)
+ ) |>
+ affirm_true(
+    label = "MPG should be less than 33",
+    condition = mpg < 33,
+    report_listing = dplyr::filter(., !lgl_condition) |>
+      dplyr::select(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+ )
+
+gt_report <- affirm_report_gt(inline_data = TRUE)
+
+affirm_close()
+
+gt_report
 }

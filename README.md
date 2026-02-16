@@ -58,11 +58,15 @@ Load the package and initialize a new affirmation session with
 
 ``` r
 library(affirm)
+library(dplyr)
 #> 
-#> Attaching package: 'affirm'
-#> The following object is masked from 'package:stats':
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
 #> 
-#>     filter
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 
 # initiate an affirmation session
 affirm_init(replace = TRUE)
@@ -105,6 +109,47 @@ affirm_report_gt()
 ```
 
 ![](man/figures/README-gt-report.png)
+
+### Inline Data View
+
+Use `inline_data = TRUE` to create a more compact report with expandable
+sections showing validation failures inline:
+
+``` r
+affirm_init(replace = TRUE)
+#> ✔ We're ready to make data affirmations...
+
+as_tibble(mtcars) |>
+  affirm_true(
+    label = "No. cylinders must be 4, 6, or 8",
+    condition = cyl %in% c(4, 6, 8),
+    id = 1,
+    data_frames = "mtcars"
+  ) |>
+  affirm_true(
+    label = "MPG should be less than 33",
+    condition = mpg < 33,
+    id = 2,
+    data_frames = "mtcars"
+  )
+#> • No. cylinders must be 4, 6, or 8
+#>   0 issues identified.
+#> • MPG should be less than 33
+#>   1 issue identified.
+#> # A tibble: 32 × 11
+#>     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  21       6   160   110  3.9   2.62  16.5     0     1     4     4
+#> 2  21       6   160   110  3.9   2.88  17.0     0     1     4     4
+#> 3  22.8     4   108    93  3.85  2.32  18.6     1     1     4     1
+#> # ℹ 29 more rows
+```
+
+``` r
+affirm_report_gt(inline_data = TRUE)
+```
+
+![](man/figures/README-gt-report-inline-data.png)
 
 ### About the hex logo
 

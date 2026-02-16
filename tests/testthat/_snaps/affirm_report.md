@@ -1,6 +1,7 @@
-# affirm_report() works
+# affirm_report() works / affirm_report_gt(inline_data = TRUE) executes text_transform with mapply
 
     Code
+      withr::local_options(affirm.id_cols = NULL)
       affirm_init(replace = TRUE)
     Message
       v We're ready to make data affirmations...
